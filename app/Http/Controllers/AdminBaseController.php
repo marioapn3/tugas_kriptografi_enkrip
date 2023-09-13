@@ -76,5 +76,5 @@ class AdminBaseController extends Controller
 
 
         return $data['results']->setPath(url()->current() . '?' . http_build_query(['per_page' => $per_page]));
-    } 
+    }
 }

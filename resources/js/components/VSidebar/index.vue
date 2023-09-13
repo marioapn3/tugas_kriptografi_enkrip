@@ -73,11 +73,11 @@ watch(sidebarExpanded, () => {
 <template>
     <div>
         <!-- Sidebar backdrop (mobile only) -->
-        <div class="fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200"
+        <div class="fixed inset-0 bg-slate-800 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200"
             :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'" aria-hidden="true" />
         <!-- Sidebar -->
         <div id="sidebar" ref="sidebar"
-            class="flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-60 lg:w-[72px] lg:sidebar-expanded:!w-60 shrink-0 bg-slate-800 p-4 transition-all duration-200 ease-in-out"
+            class="flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-60 lg:w-[72px] lg:sidebar-expanded:!w-60 shrink-0 bg-slate-700 p-4 transition-all duration-200 ease-in-out"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'">
             <!-- Sidebar header -->
             <div class="mb-4 w-full">
@@ -85,8 +85,8 @@ watch(sidebarExpanded, () => {
                 <div class="flex w-full sidebar-expanded:justify-between justify-end">
                     <Link :class="sidebarExpanded ?  'block' : 'hidden'" class="pl-2 transition-all duration-200" href="/">
                         <div class="flex justify-start w-full">
-                            <img class="w-8 h-8 rounded-full" src="https://static.vecteezy.com/system/resources/previews/012/697/294/original/3d-laravel-programming-framework-logo-free-png.png" alt="Company Logo" />
-                            <div class="ml-2 my-auto text-white font-bold text-lg">Logo</div>
+                            <img class="w-14 rounded-full" src="https://user-images.githubusercontent.com/80609220/267597133-dd2b54bd-7929-4d4f-94f6-e00db9b38272.png" alt="Jurnalin Logo" />
+                            <div class="ml-2 my-auto text-white font-bold text-lg">Jurnalin</div>
                         </div>
                     </Link>
                     <div @click.prevent="sidebarExpanded = !sidebarExpanded" :class="!sidebarExpanded ? 'mx-1' : ''"

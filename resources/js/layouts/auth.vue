@@ -4,9 +4,9 @@ import VNotification from "@/components/VNotification/Index.vue";
 
 <template>
     <VNotification></VNotification>
-    <main class="bg-white">
+    <main class="bg-slate-50">
         <!-- Content -->
-        <div class="w-full flex justify-center">
+        <div class="relative flex">
             <slot />
         </div>
     </main>
