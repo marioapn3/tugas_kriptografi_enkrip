@@ -85,7 +85,7 @@ watch(sidebarExpanded, () => {
                 <div class="flex w-full sidebar-expanded:justify-between justify-end">
                     <Link :class="sidebarExpanded ?  'block' : 'hidden'" class="pl-2 transition-all duration-200" href="/">
                         <div class="flex justify-start w-full">
-                            <img class="w-14 rounded-full" src="https://user-images.githubusercontent.com/80609220/267597133-dd2b54bd-7929-4d4f-94f6-e00db9b38272.png" alt="Jurnalin Logo" />
+                            <img class="w-11 rounded-full" src="https://user-images.githubusercontent.com/80609220/267639120-e27f7b97-7e05-4ef1-a67b-35d169661edd.png" alt="Jurnalin Logo" />
                             <div class="ml-2 my-auto text-white font-bold text-lg">Jurnalin</div>
                         </div>
                     </Link>
