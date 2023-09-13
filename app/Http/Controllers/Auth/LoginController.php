@@ -42,7 +42,7 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         return Inertia::render('admin/auth/login', [
-            "title" => 'Login'
+            "title" => 'Login | Jurnalin'
         ]);
     }
 
