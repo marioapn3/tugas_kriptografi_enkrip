@@ -137,25 +137,25 @@ const closeAlert = () => {
     openAlert.value = false
 }
 
-// const deleteHandle = async () => {
-//     axios.delete(route('customer.delete', { 'id': itemSelected.value.id })
-//     ).then((res) => {
-//         notify({
-//             type: "success",
-//             group: "top",
-//             text: res.data.meta.message
-//         }, 2500)
-//         openAlert.value = false
-//         isLoading.value = true
-//         getData(pagination.value.current_page)
-//     }).catch((res) => {
-//         notify({
-//             type: "error",
-//             group: "top",
-//             text: res.response.data.message
-//         }, 2500)
-//     })
-// };
+const deleteHandle = async () => {
+    axios.delete(route('contacts.customer.delete', { 'id': itemSelected.value.id })
+    ).then((res) => {
+        notify({
+            type: "success",
+            group: "top",
+            text: res.data.meta.message
+        }, 2500)
+        openAlert.value = false
+        isLoading.value = true
+        getData(pagination.value.current_page)
+    }).catch((res) => {
+        notify({
+            type: "error",
+            group: "top",
+            text: res.response.data.message
+        }, 2500)
+    })
+};
 
 onMounted(() => {
     getData(1);
@@ -197,7 +197,7 @@ onMounted(() => {
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="px-4 whitespace-nowrap h-16"> {{ index + 1}} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.name }} </td>
-                <td class="px-4 whitespace-nowrap h-16"> {{ data.description ?? '-' }} </td>
+                <td class="px-4 h-16"> {{ data.description ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.email ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.phone_number ?? '-' }} </td>
                 <td class="px-4 h-16"> {{ data.address ?? '-' }} </td>

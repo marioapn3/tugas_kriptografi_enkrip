@@ -57,7 +57,15 @@ class ContactService
 
         $contact = Contact::findOrFail($contact->id);
         $contact->update($data);
-        
+
+        return $contact;
+    }
+
+    public function deleteData($id)
+    {
+        $contact = Contact::findOrFail($id);
+        $contact->delete();
+
         return $contact;
     }
 }

@@ -75,7 +75,14 @@ class CustomerController extends AdminBaseController
         }
     }
 
-    public function deleteData(Request $request)
+    public function deleteData($id, Request $request)
     {
+        try {
+            $data = $this->contactService->deleteData($id, $request, $this->typeCustomer);
+            $result = new SubmitDefaultResource($data, 'Success delete customer');
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
     }
 }

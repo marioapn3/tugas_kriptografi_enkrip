@@ -8,5 +8,6 @@ Route::prefix('contacts')->name('contacts.')->group(function () {
         Route::get('/get-data', 'getData')->name('getdata');
         Route::post('/create-data', 'createData')->name('create');
         Route::put('/update-data/{contact}', 'updateData')->name('update');
+        Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
     });
 });
