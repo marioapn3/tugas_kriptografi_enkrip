@@ -65,6 +65,11 @@ class GetSidebarMenuAction
                         'text' => 'Customer',
                         'url'  => route('contacts.customer.index'),
                         'can'  => ['view_systems_role_management']
+                    ],
+                    [
+                        'text' => 'Supplier',
+                        'url'  => route('contacts.supplier.index'),
+                        'can'  => ['view_systems_role_management']
                     ]
                 ],
             ],
