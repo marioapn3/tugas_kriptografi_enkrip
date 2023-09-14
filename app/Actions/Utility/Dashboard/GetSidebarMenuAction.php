@@ -59,17 +59,17 @@ class GetSidebarMenuAction
                 'text' => 'Contacts',
                 'icon' => 'VUser',
                 'group' => true,
-                'can' => ['view_systems_role_management'],
+                'can' => ['view_customer', 'view_supplier'],
                 'submenu' => [
                     [
                         'text' => 'Customer',
                         'url'  => route('contacts.customer.index'),
-                        'can'  => ['view_systems_role_management']
+                        'can'  => ['view_customer']
                     ],
                     [
                         'text' => 'Supplier',
                         'url'  => route('contacts.supplier.index'),
-                        'can'  => ['view_systems_role_management']
+                        'can'  => ['view_supplier']
                     ]
                 ],
             ],
@@ -77,12 +77,12 @@ class GetSidebarMenuAction
                 'text' => 'Settings',
                 'icon' => 'VSetting',
                 'group' => true,
-                'can' => ['view_systems_role_management'],
+                'can' => ['view_systems_role_management', 'view_systems_user_management'],
                 'submenu' => [
                     [
                         'text' => 'Systems',
                         'url'  => $getSystemSettingMenu->handle()[1]['url'] ?? route('settings.systems.role.index'),
-                        'can'  => ['view_systems_role_management']
+                        'can'  => ['view_systems_role_management', 'view_systems_user_management']
                     ]
                 ],
             ]

@@ -34,7 +34,7 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Systems Settings",
+        name: "System Settings",
         active: false,
         to: route('settings.systems.role.index')
     },
@@ -175,7 +175,7 @@ onMounted(() => {
                     <section>
                         <header class="block justify-between items-center sm:flex py-6">
                             <h2 class="font-semibold text-slate-800">
-                                All Role <span class="text-slate-400 !font-medium ml">{{ pagination.total }}</span>
+                                All Role <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
                             </h2>
                             <div class="mt-3 sm:mt-0 flex space-x-2 sm:justify-between justify-end">
                                 <!-- Filter -->
