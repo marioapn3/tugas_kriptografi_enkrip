@@ -31,7 +31,7 @@ class PermissionSeeder extends Seeder
                 ]
             ],
 
-            // Setting Systems
+            // Audit Trails
             [
                 'group' => 'audit_trails',
                 'sub_group' => [
@@ -53,6 +53,30 @@ class PermissionSeeder extends Seeder
                             ]
                         ]
                     ]
+                ]
+            ],
+            // Audit Trails
+            [
+                'group' => 'contacts',
+                'sub_group' => [
+                    [
+                        'name' => 'contact_customer',
+                        'permission' => [
+                            [
+                                'name' => 'view_customer',
+                                'label' => 'View Customer Contact',
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'contact_supplier',
+                        'permission' => [
+                            [
+                                'name' => 'view_supplier',
+                                'label' => 'View Supplier Contact',
+                            ]
+                        ]
+                    ],
                 ]
             ],
             // Setting Systems

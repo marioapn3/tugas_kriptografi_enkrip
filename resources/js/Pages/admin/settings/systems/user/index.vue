@@ -34,7 +34,7 @@ const breadcrumb = [
         to: route("dashboard.index"),
     },
     {
-        name: "Settings",
+        name: "System Settings",
         active: false,
         to: route("settings.systems.role.index"),
     },
@@ -195,7 +195,7 @@ onMounted(() => {
                 <!-- Panel Header -->
                 <div class="border-b">
                     <h2 class="text-2xl text-slate-800 font-bold p-6">
-                        Role Management
+                        User Management
                     </h2>
                 </div>
 
@@ -203,13 +203,13 @@ onMounted(() => {
                     <!-- Table  -->
                     <section>
                         <header
-                            class="block justify-between items-center sm:flex py-6 px-4"
+                            class="block justify-between items-center sm:flex py-6"
                         >
                             <h2 class="font-semibold text-slate-800">
                                 All Users
-                                <span class="text-slate-400 !font-medium ml">{{
+                                <span class="text-slate-400 !font-medium ml">({{
                                     pagination.total
-                                }}</span>
+                                }})</span>
                             </h2>
                             <div
                                 class="mt-3 sm:mt-0 flex space-x-2 sm:justify-between justify-end"
@@ -225,7 +225,7 @@ onMounted(() => {
                             </div>
                         </header>
 
-                        <VDataTable :heads="heads" :isLoading="isLoading">
+                        <VDataTable :heads="heads" :isLoading="isLoading" wrapperClass="!px-0">
                             <tr v-if="isLoading">
                                 <td
                                     class="h-[100%] overflow-hidden my-2"
