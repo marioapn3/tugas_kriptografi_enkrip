@@ -4,6 +4,6 @@ namespace App\Enum\Contacts;
 
 enum ContactType: string
 {
-    case customer = 'customer';
-    case supplier = 'supplier';
+    case CUSTOMER = 'customer';
+    case SUPPLIER = 'supplier';
 }

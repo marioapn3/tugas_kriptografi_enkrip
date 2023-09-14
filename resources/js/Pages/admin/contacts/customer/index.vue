@@ -59,30 +59,30 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["Name", "Description","Email", "Phone", "Address", "City", "Zip Code", ""]
+const heads = ["No", "Name", "Description", "Email", "Phone", "Address", "City", "Zip Code", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
     title: string()
 })
 
-// const getData = debounce(async (page) => {
-//     axios.get(route('customer.getdata'), {
-//         params: {
-//             page: page,
-//             search: searchFilter.value
-//         }
-//     }).then((res) => {
-//         query.value = res.data.data
-//         pagination.value = res.data.meta.pagination
-//     }).catch((res) => {
-//         notify({
-//             type: "error",
-//             group: "top",
-//             text: res.response.data.message
-//         }, 2500)
-//     }).finally(() => isLoading.value = false)
-// }, 500);
+const getData = debounce(async (page) => {
+    axios.get(route('contacts.customer.getdata'), {
+        params: {
+            page: page,
+            search: searchFilter.value
+        }
+    }).then((res) => {
+        query.value = res.data.data
+        pagination.value = res.data.meta.pagination
+    }).catch((res) => {
+        notify({
+            type: "error",
+            group: "top",
+            text: res.response.data.message
+        }, 2500)
+    }).finally(() => isLoading.value = false)
+}, 500);
 
 const nextPaginate = () => {
     pagination.value.current_page += 1
@@ -171,7 +171,7 @@ onMounted(() => {
     <div class="bg-white shadow-lg rounded-sm border border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="block justify-between items-center sm:flex py-6 px-4">
             <h2 class="font-semibold text-slate-800">
-                All Customers <span class="text-slate-400 !font-medium ml">{{ pagination.total }}</span>
+                All Customers <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="mt-3 sm:mt-0 flex space-x-2 sm:justify-between justify-end">
                 <!-- Filter -->
@@ -195,12 +195,14 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
+                <td class="px-4 whitespace-nowrap h-16"> {{ index + 1}} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.name }} </td>
+                <td class="px-4 whitespace-nowrap h-16"> {{ data.description ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.email ?? '-' }} </td>
-                <td class="px-4 whitespace-nowrap h-16"> {{ data.phone }} </td>
-                <td class="px-4 h-16"> {{ data.address }} </td>
-                <td class="px-4 whitespace-nowrap h-16"> {{ data.city }} </td>
-                <td class="px-4 whitespace-nowrap h-16"> {{ data.zip_code ?? '-' }} </td>
+                <td class="px-4 whitespace-nowrap h-16"> {{ data.phone ?? '-' }} </td>
+                <td class="px-4 h-16"> {{ data.address ?? '-' }} </td>
+                <td class="px-4 whitespace-nowrap h-16"> {{ data.city ?? '-' }} </td>
+                <td class="px-4 whitespace-nowrap h-16"> {{ data.portal_code ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16 text-right">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
