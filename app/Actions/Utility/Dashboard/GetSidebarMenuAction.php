@@ -9,7 +9,6 @@ class GetSidebarMenuAction
 {
     public function handle()
     {
-        $getContactMenu = new GetContactMenuAction();
         $getSystemSettingMenu = new GetSystemSettingMenuAction();
 
         return [

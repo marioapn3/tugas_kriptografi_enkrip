@@ -34,9 +34,6 @@ class CustomerController extends AdminBaseController
     {
         return Inertia::render($this->source . 'contacts/customer/index', [
             "title" => 'Customer | Jurnalin',
-            "additional" => [
-                "menu" => $this->getContactMenuAction->handle()
-            ],
         ]);
     }
 

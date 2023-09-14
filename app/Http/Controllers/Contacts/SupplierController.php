@@ -18,13 +18,11 @@ class SupplierController extends AdminBaseController
 {
     // This not required for defining
     private $contactService;
-    private $getContactMenuAction;
     private $typeSupplier;
 
-    public function __construct(GetContactMenuAction $getContactMenuAction, ContactService $contactService)
+    public function __construct(ContactService $contactService)
     {
         $this->contactService = $contactService;
-        $this->getContactMenuAction = $getContactMenuAction;
 
         $this->typeSupplier = ContactType::SUPPLIER;
     }
@@ -33,9 +31,6 @@ class SupplierController extends AdminBaseController
     {
         return Inertia::render($this->source . 'contacts/supplier/index', [
             "title" => 'Supplier | Jurnalin',
-            "additional" => [
-                "menu" => $this->getContactMenuAction->handle()
-            ],
         ]);
     }
 
