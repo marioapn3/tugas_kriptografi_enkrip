@@ -19,4 +19,21 @@ class ContactService
 
         return $query->paginate(10);
     }
+
+    public function createData($request, $type)
+    {
+        $data = $request->only([
+            'name',
+            'description',
+            'email',
+            'phone_number',
+            'address',
+            'city',
+            'portal_code',
+        ]);
+
+        $data['type'] = $type;
+
+        return Contact::create($data);
+    }
 }

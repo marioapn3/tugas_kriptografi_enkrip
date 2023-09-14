@@ -233,6 +233,6 @@ onMounted(() => {
     <VAlert :open-dialog="openAlert" @closeAlert="closeAlert" @submitAlert="deleteHandle" type="danger"
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
-    <!-- <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit"/> -->
+    <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
+        @successSubmit="successSubmit"/>
 </template>

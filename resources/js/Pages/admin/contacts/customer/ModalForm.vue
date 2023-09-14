@@ -5,7 +5,7 @@ import { bool, object } from "vue-types";
 import { notify } from "notiwind";
 import VDialog from '@/components/VDialog/index.vue';
 import VButton from '@/components/VButton/index.vue';
-import VSelect from '@/components/VSelect/index.vue';
+import VTextarea from '@/components/VTextarea/index.vue';
 import VInput from '@/components/VInput/index.vue';
 
 const props = defineProps({
@@ -79,7 +79,7 @@ const update = async () => {
 
 const create = async () => {
     isLoading.value = true
-    axios.post(route('settings.systems.user.create'), form.value)
+    axios.post(route('contacts.customer.create'), form.value)
         .then((res) => {
             emit('close')
             emit('successSubmit')
@@ -118,7 +118,8 @@ const create = async () => {
 </script>
 
 <template>
-    <VDialog :showModal="openDialog" :title="updateAction ? 'Update User' : 'Create User'" @opened="openForm" @closed="closeForm" size="xl">
+    <VDialog :showModal="openDialog" :title="updateAction ? 'Update Customer' : 'Create New Customer'" @opened="openForm"
+        @closed="closeForm" size="xl">
         <template v-slot:close>
             <button class="text-slate-400 hover:text-slate-500" @click="$emit('close')">
                 <div class="sr-only">Close</div>
@@ -132,24 +133,29 @@ const create = async () => {
             <div class="grid grid-cols-2 gap-3">
                 <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
                     :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
-                <VInput placeholder="Insert Email" label="Email" :required="true" v-model="form.email"
-                    :errorMessage="formError.email" @update:modelValue="formError.email = ''"
-                    type="email" />
-                <div class="col-span-2">
-                    <VSelect placeholder="Choose Role" :required="true" v-model="form.role_id" :options="additional.role_list"
-                        label="Role" :errorMessage="formError.role_id" @update:modelValue="formError.role_id = ''" />
-                </div>
-                <VInput placeholder="Insert Password" label="Password" :required="!updateAction" v-model="form.password"
-                    :errorMessage="formError.password" @update:modelValue="formError.password = ''" type="password" />
-                <VInput placeholder="Confirm Password" label="Confirm Password" :required="!updateAction" v-model="form.password_confirmation"
-                    :errorMessage="formError.password_confirmation" @update:modelValue="formError.password_confirmation = '', formError.password = ''"
-                    type="password" />
+                <VInput placeholder="Insert Email" label="Email" v-model="form.email" :errorMessage="formError.email"
+                    @update:modelValue="formError.email = ''" type="email" />
+                <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone" :errorMessage="formError.phone"
+                    @update:modelValue="formError.phone = ''" type="number" />
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-3">
+                <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
+                    :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                <VTextarea placeholder="Insert Address" label="Address" v-model="form.address"
+                    :errorMessage="formError.address" @update:modelValue="formError.address = ''" />
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-3">
+                <VInput placeholder="Insert City" label="City" v-model="form.city" :errorMessage="formError.city"
+                    @update:modelValue="formError.city = ''" />
+                <VInput placeholder="Insert Zip Code" label="Zip Code" v-model="form.portal_code"
+                    :errorMessage="formError.portal_code" @update:modelValue="formError.portal_code = ''" type="number" />
             </div>
         </template>
         <template v-slot:footer>
             <div class="flex flex-wrap justify-end space-x-2">
                 <VButton label="Cancel" type="default" @click="$emit('close')" />
-                <VButton :is-loading="isLoading" :label="updateAction ? 'Update' : 'Create'" type="primary" @click="submit" />
+                <VButton :is-loading="isLoading" :label="updateAction ? 'Update' : 'Create'" type="primary"
+                    @click="submit" />
             </div>
         </template>
     </VDialog>
