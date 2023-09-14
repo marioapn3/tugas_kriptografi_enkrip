@@ -2,12 +2,14 @@
 
 namespace App\Actions\Utility\Dashboard;
 
+use App\Actions\Utility\Contact\GetContactMenuAction;
 use App\Actions\Utility\Setting\GetSystemSettingMenuAction;
 
 class GetSidebarMenuAction
 {
     public function handle()
     {
+        $getContactMenu = new GetContactMenuAction();
         $getSystemSettingMenu = new GetSystemSettingMenuAction();
 
         return [
@@ -50,6 +52,19 @@ class GetSidebarMenuAction
                         'text' => 'Test 2',
                         'url'  => route('test2'),
                         // 'can'  => ['view_systems_role_management']
+                    ]
+                ],
+            ],
+            [
+                'text' => 'Contacts',
+                'icon' => 'VUser',
+                'group' => true,
+                'can' => ['view_systems_role_management'],
+                'submenu' => [
+                    [
+                        'text' => 'Customer',
+                        'url'  => route('contacts.customer.index'),
+                        'can'  => ['view_systems_role_management']
                     ]
                 ],
             ],
