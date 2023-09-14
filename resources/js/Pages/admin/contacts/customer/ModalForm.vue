@@ -40,7 +40,7 @@ const submit = async () => {
 
 const update = async () => {
     isLoading.value = true
-    axios.post(route('settings.systems.user.update', { 'id': props.data.id }), form.value)
+    axios.put(route('contacts.customer.update', { 'contact': props.data.id }), form.value)
         .then((res) => {
             emit('close')
             emit('successSubmit')
@@ -135,8 +135,8 @@ const create = async () => {
                     :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
                 <VInput placeholder="Insert Email" label="Email" v-model="form.email" :errorMessage="formError.email"
                     @update:modelValue="formError.email = ''" type="email" />
-                <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone" :errorMessage="formError.phone"
-                    @update:modelValue="formError.phone = ''" type="number" />
+                <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone_number"
+                    :errorMessage="formError.phone_number" @update:modelValue="formError.phone_number = ''" type="number" />
             </div>
             <div class="grid grid-cols-2 gap-3 mt-3">
                 <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"

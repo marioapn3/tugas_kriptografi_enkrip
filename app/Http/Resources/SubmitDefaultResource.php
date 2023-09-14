@@ -26,7 +26,7 @@ class SubmitDefaultResource extends JsonResource
     {
         return [
             'data' => [
-                'id' => $this->id,
+                'id' => $this->id ?? null,
             ],
             'meta' => [
                 'success' => true,

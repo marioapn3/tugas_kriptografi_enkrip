@@ -6,8 +6,10 @@ use App\Actions\Utility\Contact\GetContactMenuAction;
 use App\Enum\Contacts\ContactType;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Contacts\ContactRequest;
+use App\Http\Requests\Contacts\UpdateContactRequest;
 use App\Http\Resources\Contacts\Customer\CustomerListResource;
 use App\Http\Resources\SubmitDefaultResource;
+use App\Models\Contact;
 use App\Services\Contacts\ContactService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -62,8 +64,15 @@ class CustomerController extends AdminBaseController
         }
     }
 
-    public function updateData(Request $request)
+    public function updateData(Contact $contact, UpdateContactRequest $request)
     {
+        try {
+            $data = $this->contactService->updateData($contact, $request, $this->typeCustomer);
+            $result = new SubmitDefaultResource($data, 'Success update customer');
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
     }
 
     public function deleteData(Request $request)

@@ -34,6 +34,30 @@ class ContactService
 
         $data['type'] = $type;
 
-        return Contact::create($data);
+        $contact = Contact::create($data);
+
+        return $contact;
+    }
+
+    public function updateData($contact, $request, $type)
+    {
+        // dd($contact, $request, $type);
+
+        $data = $request->only([
+            'name',
+            'description',
+            'email',
+            'phone_number',
+            'address',
+            'city',
+            'portal_code',
+        ]);
+
+        $data['type'] = $type;
+
+        $contact = Contact::findOrFail($contact->id);
+        $contact->update($data);
+        
+        return $contact;
     }
 }

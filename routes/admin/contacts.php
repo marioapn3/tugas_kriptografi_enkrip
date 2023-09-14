@@ -7,5 +7,6 @@ Route::prefix('contacts')->name('contacts.')->group(function () {
         Route::get('/', 'customerIndex')->name('index');
         Route::get('/get-data', 'getData')->name('getdata');
         Route::post('/create-data', 'createData')->name('create');
+        Route::put('/update-data/{contact}', 'updateData')->name('update');
     });
 });
