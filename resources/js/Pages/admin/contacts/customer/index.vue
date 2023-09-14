@@ -23,6 +23,7 @@ import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VFilter from './Filter.vue';
 import VModalForm from './ModalForm.vue';
+import { Inertia } from "@inertiajs/inertia";
 
 const query = ref([])
 const searchFilter = ref("");
@@ -101,6 +102,11 @@ const searchHandle = (search) => {
     isLoading.value = true
     getData(1)
 };
+
+
+const handleDetail = (data) => {
+    Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+}
 
 const handleAddModalForm = () => {
     updateAction.value = false
@@ -195,8 +201,9 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <td class="px-4 whitespace-nowrap h-16"> {{ index + 1}} </td>
-                <td class="px-4 whitespace-nowrap h-16"> {{ data.name }} </td>
+                <td class="px-4 whitespace-nowrap h-16"> {{ index + 1 }} </td>
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                    {{ data.name }} </td>
                 <td class="px-4 h-16"> {{ data.description ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.email ?? '-' }} </td>
                 <td class="px-4 whitespace-nowrap h-16"> {{ data.phone_number ?? '-' }} </td>
@@ -206,6 +213,14 @@ onMounted(() => {
                 <td class="px-4 whitespace-nowrap h-16 text-right">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
+                        <li class="cursor-pointer hover:bg-slate-100">
+                            <div class="flex justify-between items-center space-x-2 p-3" @click="handleDetail(data)">
+                                <span>
+                                    <VTrash color="danger" />
+                                </span>
+                                <span>Detail</span>
+                            </div>
+                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center space-x-2 p-3">
                                 <span>
@@ -234,5 +249,5 @@ onMounted(() => {
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
     <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit"/>
+        @successSubmit="successSubmit" />
 </template>

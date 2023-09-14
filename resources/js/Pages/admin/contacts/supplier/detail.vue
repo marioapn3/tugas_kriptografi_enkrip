@@ -88,7 +88,7 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="mb-4 sm:mb-6 flex justify-between items-center">
-        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Detail Customer</h1>
+        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Detail Supplier</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20"
         :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
