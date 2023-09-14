@@ -20,6 +20,13 @@ class ContactService
         return $query->paginate(10);
     }
 
+    public function getDetail($id)
+    {
+        $contact = Contact::findOrFail($id);
+
+        return $contact;
+    }
+
     public function createData($request, $type)
     {
         $data = $request->only([

@@ -34,6 +34,17 @@ class SupplierController extends AdminBaseController
         ]);
     }
 
+    public function show($id)
+    {
+        $data = $this->contactService->getDetail($id);
+        return Inertia::render($this->source . 'contacts/supplier/detail', [
+            "title" => 'Supplier Detail | Jurnalin',
+            "additional" => [
+                "data" => $data
+            ]
+        ]);
+    }
+
     public function getData(Request $request)
     {
         try {
