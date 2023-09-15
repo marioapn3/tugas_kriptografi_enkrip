@@ -19,13 +19,11 @@ class CustomerController extends AdminBaseController
 
     // This not required for defining
     private $contactService;
-    private $getContactMenuAction;
     private $typeCustomer;
 
-    public function __construct(GetContactMenuAction $getContactMenuAction, ContactService $contactService)
+    public function __construct(ContactService $contactService)
     {
         $this->contactService = $contactService;
-        $this->getContactMenuAction = $getContactMenuAction;
 
         $this->typeCustomer = ContactType::CUSTOMER;
     }
