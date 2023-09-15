@@ -23,6 +23,7 @@ import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VFilter from './Filter.vue';
 import VModalForm from './ModalForm.vue';
+import { Inertia } from "@inertiajs/inertia";
 
 const query = ref([])
 const searchFilter = ref("");
@@ -101,6 +102,11 @@ const searchHandle = (search) => {
     isLoading.value = true
     getData(1)
 };
+
+
+const handleDetail = (data) => {
+    Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+}
 
 const handleAddModalForm = () => {
     updateAction.value = false
@@ -195,7 +201,7 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1}} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
                 <td class="h-16 px-4"> {{ data.description ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.email ?? '-' }} </td>
@@ -206,6 +212,14 @@ onMounted(() => {
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
+                        <li class="cursor-pointer hover:bg-slate-100">
+                            <div class="flex items-center justify-between p-3 space-x-2" @click="handleDetail(data)">
+                                <span>
+                                    <VTrash color="danger" />
+                                </span>
+                                <span>Detail</span>
+                            </div>
+                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>

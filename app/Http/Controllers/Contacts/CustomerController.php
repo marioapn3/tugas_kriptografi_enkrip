@@ -35,6 +35,17 @@ class CustomerController extends AdminBaseController
         ]);
     }
 
+    public function show($id)
+    {
+        $data = $this->contactService->getDetail($id);
+        return Inertia::render($this->source . 'contacts/customer/detail', [
+            "title" => 'Customer Detail | Jurnalin',
+            "additional" => [
+                "data" => $data
+            ]
+        ]);
+    }
+
     public function getData(Request $request)
     {
         try {
