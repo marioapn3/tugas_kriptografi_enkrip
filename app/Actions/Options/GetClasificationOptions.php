@@ -15,6 +15,7 @@ class GetClasificationOptions
         foreach ($clasification as $data) {
             $new_clasification[$data->id] = $data->name . ' - ' . $data->debit_or_credit;
         }
+        
         return $new_clasification;
     }
 }
