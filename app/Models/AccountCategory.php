@@ -13,6 +13,7 @@ class AccountCategory extends Model
 
     protected $guarded = ['id'];
 
+    protected $with = ['classification'];
 
     /**
      * Get the user that owns the AccountCategory

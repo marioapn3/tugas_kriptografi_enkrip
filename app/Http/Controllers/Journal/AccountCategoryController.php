@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Journal;
 
+use App\Actions\Options\GetClasificationOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Journals\AccountCategoryRequest;
@@ -15,15 +16,20 @@ use Inertia\Inertia;
 class AccountCategoryController extends AdminBaseController
 {
     private $accountCategoryService;
-    public function __construct(AccountCategoryService $accountCategoryService)
+    private $getClasificationOptions;
+    public function __construct(AccountCategoryService $accountCategoryService, GetClasificationOptions $getClasificationOptions)
     {
         $this->accountCategoryService = $accountCategoryService;
+        $this->getClasificationOptions = $getClasificationOptions;
     }
 
     public function accountCategoryIndex()
     {
         return Inertia::render($this->source . 'journal/accountCategory/index', [
             "title" => 'Account Category | Jurnalin',
+            'additional' => [
+                'clasification_options' => $this->getClasificationOptions->handle()
+            ]
         ]);
     }
 

@@ -31,8 +31,11 @@ class AccountCategoryListResource extends ResourceCollection
             'id' => $data->id,
             'code' => $data->code,
             'name' => $data->name,
+            'classification_id' => $data->classification_id,
+            'classification' => $data->classification,
         ];
     }
+
     private function transformCollection($collection)
     {
         return $collection->transform(function ($data) {

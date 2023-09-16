@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('account_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Classification::class)->constrained();;
+            $table->foreignIdFor(Classification::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('code');
             $table->string('name');
             $table->timestamps();

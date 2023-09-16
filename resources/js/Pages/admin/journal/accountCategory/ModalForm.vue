@@ -5,7 +5,7 @@ import { bool, object } from "vue-types";
 import { notify } from "notiwind";
 import VDialog from '@/components/VDialog/index.vue';
 import VButton from '@/components/VButton/index.vue';
-import VTextarea from '@/components/VTextarea/index.vue';
+import VSelect from '@/components/VSelect/index.vue';
 import VInput from '@/components/VInput/index.vue';
 
 const props = defineProps({
@@ -24,6 +24,8 @@ const form = ref({})
 const openForm = () => {
     if (props.updateAction) {
         form.value = Object.assign(form.value, props.data)
+
+        console.log(form.value)
     } else {
         form.value = ref({})
     }
@@ -119,7 +121,7 @@ const create = async () => {
 
 <template>
     <VDialog :showModal="openDialog" :title="updateAction ? 'Update Account Category' : 'Create New Account Category'"
-        @opened="openForm" @closed="closeForm" size="xl">
+        @opened="openForm" @closed="closeForm" size="md">
         <template v-slot:close>
             <button class="text-slate-400 hover:text-slate-500" @click="$emit('close')">
                 <div class="sr-only">Close</div>
@@ -131,13 +133,19 @@ const create = async () => {
         </template>
         <template v-slot:content>
             <div class="grid grid-cols-2 gap-3">
-                <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
-                    :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
-                <VInput placeholder="Insert Code" label="Code" :required="true" v-model="form.code"
-                    :errorMessage="formError.code" @update:modelValue="formError.code = ''" />
-                <VInput placeholder="Insert ClassificationId" label="ClassificationId" :required="true"
-                    v-model="form.classification_id" :errorMessage="formError.classification_id"
-                    @update:modelValue="formError.classification_id = ''" />
+                <div class="col-span-2">
+                    <VSelect placeholder="Select Clasification" :required="true" v-model="form.classification_id"
+                        :options="additional.clasification_options" label="Select Clasification"
+                        :errorMessage="formError.classification_id" @update:modelValue="formError.classification_id = ''" />
+                </div>
+                <div class="col-span-2">
+                    <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
+                        :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
+                </div>
+                <div class="col-span-2">
+                    <VInput placeholder="Insert Code" label="Code" :required="true" v-model="form.code"
+                        :errorMessage="formError.code" @update:modelValue="formError.code = ''" />
+                </div>
 
             </div>
 

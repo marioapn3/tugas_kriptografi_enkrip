@@ -12,6 +12,7 @@ import VNoticeBoard from "@/components/src/icons/VNoticeBoard.vue";
 import VApproval from "@/components/src/icons/VApproval.vue";
 import VAttendanceSolid from "@/components/src/icons/VAttendanceSolid.vue";
 import VUser from "@/components/src/icons/VUser.vue";
+import VJournal from "@/components/src/icons/VJournal.vue";
 import { array, bool } from "vue-types";
 import VSidebarGroup from "@/components/VSidebarGroup/index.vue";
 import { usePage } from "@inertiajs/inertia-vue3";
@@ -25,7 +26,8 @@ const icons = {
     VPayroll,
     VNoticeBoard,
     VApproval,
-    VUser
+    VUser,
+    VJournal
 }
 const props = defineProps({
     sidebarOpen: bool().def(false),
@@ -85,11 +87,13 @@ watch(sidebarExpanded, () => {
             <div class="mb-4 w-full">
                 <!-- Close button -->
                 <div class="flex w-full sidebar-expanded:justify-between justify-end">
-                    <Link :class="sidebarExpanded ?  'block' : 'hidden'" class="pl-2 transition-all duration-200" href="/">
-                        <div class="flex justify-start w-full">
-                            <img class="w-11 rounded-full" src="https://user-images.githubusercontent.com/80609220/267639120-e27f7b97-7e05-4ef1-a67b-35d169661edd.png" alt="Jurnalin Logo" />
-                            <div class="ml-2 my-auto text-white font-bold text-lg">Jurnalin</div>
-                        </div>
+                    <Link :class="sidebarExpanded ? 'block' : 'hidden'" class="pl-2 transition-all duration-200" href="/">
+                    <div class="flex justify-start w-full">
+                        <img class="w-11 rounded-full"
+                            src="https://user-images.githubusercontent.com/80609220/267639120-e27f7b97-7e05-4ef1-a67b-35d169661edd.png"
+                            alt="Jurnalin Logo" />
+                        <div class="ml-2 my-auto text-white font-bold text-lg">Jurnalin</div>
+                    </div>
                     </Link>
                     <div @click.prevent="sidebarExpanded = !sidebarExpanded" :class="!sidebarExpanded ? 'mx-1' : ''"
                         class="cursor-pointer hidden lg:block lg:justify-end transition-all duration-200">
@@ -118,7 +122,7 @@ watch(sidebarExpanded, () => {
                                             </component>
                                             <span
                                                 class="text-sm font-medium ml-2 lg:opacity-0 lg:sidebar-expanded:opacity-100 duration-200">{{
-                                                route.text }}</span>
+                                                    route.text }}</span>
                                         </div>
                                     </div>
                                 </a>
@@ -136,13 +140,13 @@ watch(sidebarExpanded, () => {
                                                 :isActive="$page.url.split('/')[2] === getUrlPathName(route.submenu[0].url).split('/')[2]">
                                             </component>
                                             <span
-                                                class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">{{ route.text }}</span>
+                                                class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">{{
+                                                    route.text }}</span>
                                         </div>
                                         <!-- Icon -->
                                         <div class="flex shrink-0 ml-2">
                                             <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400"
-                                                :class="parentLink.expanded && 'transform rotate-180'"
-                                                viewBox="0 0 12 12">
+                                                :class="parentLink.expanded && 'transform rotate-180'" viewBox="0 0 12 12">
                                                 <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
                                             </svg>
                                         </div>
@@ -157,7 +161,7 @@ watch(sidebarExpanded, () => {
                                                     :class="($page.url.split('/')[3] === getUrlPathName(item.url).split('/')[3] && $page.url.split('/')[2] === getUrlPathName(route.submenu[0].url).split('/')[2]) && '!text-blue-500'">
                                                     <span
                                                         class="text-sm font-medium ml-2 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">{{
-                                                        item.text }}</span>
+                                                            item.text }}</span>
                                                 </a>
                                             </li>
                                             </Link>

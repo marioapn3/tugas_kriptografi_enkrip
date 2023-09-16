@@ -6,7 +6,7 @@ export default {
 <script setup>
 import axios from "axios";
 import { notify } from "notiwind";
-import { string } from "vue-types";
+import { any, object, string } from "vue-types";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, reactive } from "vue";
 import AppLayout from '@/layouts/apps.vue';
@@ -59,11 +59,12 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Name", "Code", ""]
+const heads = ["Code", "Name", "Clasification", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
-    title: string()
+    title: string(),
+    additional: object(),
 })
 
 const getData = debounce(async (page) => {
@@ -195,9 +196,11 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
+                <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
                 <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.classification.name }} - {{
+                    data.classification.debit_or_credit }} </td>
 
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
@@ -230,5 +233,5 @@ onMounted(() => {
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
     <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" />
+        @successSubmit="successSubmit" :additional="additional" />
 </template>

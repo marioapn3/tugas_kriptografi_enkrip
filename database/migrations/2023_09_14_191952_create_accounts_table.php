@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(AccountCategory::class)->constrained();
+            $table->foreignIdFor(AccountCategory::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name');
             $table->string('code');
             $table->timestamps();
