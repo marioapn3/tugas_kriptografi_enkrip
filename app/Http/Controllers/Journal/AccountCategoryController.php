@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Journals\AccountCategoryRequest;
 use App\Http\Resources\Journal\AccountCategoryListResource;
+use App\Http\Resources\Journal\CategoryCodeResource;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Models\AccountCategory;
 use App\Services\Journal\AccountCategoryService;
@@ -39,6 +40,17 @@ class AccountCategoryController extends AdminBaseController
         try {
             $data = $this->accountCategoryService->getData($request);
             $result = new AccountCategoryListResource($data);
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function generateCode($id_classification)
+    {
+        try {
+            $data = $this->accountCategoryService->generateCode($id_classification);
+            $result = new CategoryCodeResource($data, 'Success generate code');
             return $this->respond($result);
         } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());

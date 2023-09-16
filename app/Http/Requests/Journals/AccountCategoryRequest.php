@@ -25,8 +25,8 @@ class AccountCategoryRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => 'required|integer|max:100',
-            'classification_id' => 'required'
+            'code' => 'required|max:100|unique:account_categories,code,' . $this->id,
+            'classification_id' => 'required|exists:classifications,id'
         ];
     }
 }

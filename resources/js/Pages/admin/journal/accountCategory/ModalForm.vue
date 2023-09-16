@@ -40,6 +40,20 @@ const submit = async () => {
     props.updateAction ? update() : create()
 }
 
+const handleSelectClassification = () => {
+    // get axios
+    axios.get(route('journals.account-categories.generatecode', { id_classification: form.value.classification_id })
+    ).then((res) => {
+       form.value.code = res.data.data.code
+    }).catch((res) => {
+        notify({
+            type: "error",
+            group: "top",
+            text: res.response.data.message
+        }, 2500)
+    }).finally(() => isLoading.value = false)
+}
+
 const update = async () => {
     isLoading.value = true
     axios.put(route('journals.account-categories.update', { 'account_category': props.data.id }), form.value)
@@ -136,7 +150,7 @@ const create = async () => {
                 <div class="col-span-2">
                     <VSelect placeholder="Select Clasification" :required="true" v-model="form.classification_id"
                         :options="additional.clasification_options" label="Select Clasification"
-                        :errorMessage="formError.classification_id" @update:modelValue="formError.classification_id = ''" />
+                        :errorMessage="formError.classification_id" @update:modelValue="handleSelectClassification" />
                 </div>
                 <div class="col-span-2">
                     <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"

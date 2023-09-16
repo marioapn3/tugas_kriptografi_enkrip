@@ -18,46 +18,46 @@ class AccountCategorySeeder extends Seeder
         $data = [
             [
                 'classification_id' => 1,
-                'code' => '1',
+                'code' => '1-1',
                 'name' => 'Asset'
 
             ],
             [
                 'classification_id' => 1,
-                'code' => '2',
+                'code' => '1-2',
                 'name' => 'Piutang Usaha'
 
             ], [
                 'classification_id' => 1,
-                'code' => '3',
+                'code' => '1-3',
                 'name' => 'Perlengkapan'
 
             ], [
                 'classification_id' => 1,
-                'code' => '4',
+                'code' => '1-4',
                 'name' => 'Persediaan'
 
             ], [
                 'classification_id' => 2,
-                'code' => '1',
+                'code' => '2-1',
                 'name' => 'Utang Usaha'
 
             ],
             [
                 'classification_id' => 3,
-                'code' => '1',
+                'code' => '3-1',
                 'name' => 'Modal Usaha'
 
             ],
             [
                 'classification_id' => 4,
-                'code' => '1',
+                'code' => '4-1',
                 'name' => 'Pendapatan Penjualan'
 
             ],
             [
                 'classification_id' => 5,
-                'code' => '1',
+                'code' => '5-1',
                 'name' => 'Beban'
 
             ],
