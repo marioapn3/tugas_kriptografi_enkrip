@@ -54,6 +54,7 @@ Route::prefix('admin')->group(function () {
         require __DIR__ . '/admin/contacts.php';
         require __DIR__ . '/admin/settings.php';
         require __DIR__ . '/admin/audits.php';
+        require __DIR__ . '/admin/journal.php';
 
         Route::get('data/test', function () {
             return Inertia::render('admin/test/test1');
