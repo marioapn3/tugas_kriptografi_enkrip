@@ -14,8 +14,13 @@ Route::prefix('journals')->name('journals.')->group(function () {
         Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
     });
 
-    // Route::controller(SupplierController::class)->middleware('can:view_supplier')->prefix('supplier')->name('supplier.')->group(function () {
-    //     Route::get('/', 'supplierIndex')->name('index');
-    //     Route::get('/get-data', 'getData')->name('getdata');
-    // });
+    Route::controller(AccountController::class)->prefix('accounts')->name('accounts.')->group(function () {
+        Route::get('/', 'accountIndex')->name('index');
+        Route::get('/get-data', 'getData')->name('getdata');
+
+        Route::get('/generate-code/{account_category_id}', 'generateCode')->name('generatecode');
+        Route::post('/create-data', 'createData')->name('create');
+        Route::put('/update-data/{account}', 'updateData')->name('update');
+        Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
+    });
 });

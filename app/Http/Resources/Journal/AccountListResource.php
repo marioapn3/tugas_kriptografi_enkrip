@@ -5,7 +5,7 @@ namespace App\Http\Resources\Journal;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AccountCategoryListResource extends ResourceCollection
+class AccountListResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,7 @@ class AccountCategoryListResource extends ResourceCollection
             'data' => $this->transformCollection($this->collection),
             'meta' => [
                 "success" => true,
-                "message" => "Success get Account Category list",
+                "message" => "Success get Account list",
                 'pagination' => $this->metaData()
             ]
         ];
@@ -29,10 +29,10 @@ class AccountCategoryListResource extends ResourceCollection
     {
         return [
             'id' => $data->id,
+            'account_category_id' => $data->account_category_id,
             'code' => $data->code,
             'name' => $data->name,
-            'classification_id' => $data->classification_id,
-            'classification' => $data->classification,
+            'account_category' => $data->AccountCategory,
         ];
     }
 
