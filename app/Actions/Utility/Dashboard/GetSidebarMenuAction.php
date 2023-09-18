@@ -58,7 +58,7 @@ class GetSidebarMenuAction
                 'text' => 'Journals',
                 'icon' => 'VJournal',
                 'group' => true,
-                // 'can' => ['view_customer', 'view_supplier'],
+                'can' => ['view_account', 'view_account_category'],
                 'submenu' => [
                     [
                         'text' => 'Account',
