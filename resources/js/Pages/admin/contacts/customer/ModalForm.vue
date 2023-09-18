@@ -131,24 +131,40 @@ const create = async () => {
         </template>
         <template v-slot:content>
             <div class="grid grid-cols-2 gap-3">
-                <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
-                    :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
-                <VInput placeholder="Insert Email" label="Email" v-model="form.email" :errorMessage="formError.email"
-                    @update:modelValue="formError.email = ''" type="email" />
-                <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone_number"
-                    :errorMessage="formError.phone_number" @update:modelValue="formError.phone_number = ''" type="number" />
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
+                        :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Email" label="Email" v-model="form.email" :errorMessage="formError.email"
+                        @update:modelValue="formError.email = ''" type="email" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone_number"
+                        :errorMessage="formError.phone_number" @update:modelValue="formError.phone_number = ''"
+                        type="number" />
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mt-3">
-                <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
-                    :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
-                <VTextarea placeholder="Insert Address" label="Address" v-model="form.address"
-                    :errorMessage="formError.address" @update:modelValue="formError.address = ''" />
+                <div class="col-span-2 md:col-span-1">
+                    <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
+                        :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VTextarea placeholder="Insert Address" label="Address" v-model="form.address"
+                        :errorMessage="formError.address" @update:modelValue="formError.address = ''" />
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-3 mt-3">
-                <VInput placeholder="Insert City" label="City" v-model="form.city" :errorMessage="formError.city"
-                    @update:modelValue="formError.city = ''" />
-                <VInput placeholder="Insert Zip Code" label="Zip Code" v-model="form.portal_code"
-                    :errorMessage="formError.portal_code" @update:modelValue="formError.portal_code = ''" type="number" />
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert City" label="City" v-model="form.city" :errorMessage="formError.city"
+                        @update:modelValue="formError.city = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Zip Code" label="Zip Code" v-model="form.portal_code"
+                        :errorMessage="formError.portal_code" @update:modelValue="formError.portal_code = ''"
+                        type="number" />
+                </div>
             </div>
         </template>
         <template v-slot:footer>

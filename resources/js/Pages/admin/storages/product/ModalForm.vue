@@ -132,29 +132,45 @@ const create = async () => {
         </template>
         <template v-slot:content>
             <div class="grid grid-cols-2 gap-3">
-                <VInput placeholder="Insert Code" label="Code" v-model="form.code" :errorMessage="formError.code"
-                    @update:modelValue="formError.code = ''" />
-                <VInput placeholder="Insert Name" label="Product Name" :required="true" v-model="form.name"
-                    :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
-                <div class="col-span-2">
-                    <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
-                        :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Code" label="Code" v-model="form.code" :errorMessage="formError.code"
+                        @update:modelValue="formError.code = ''" />
                 </div>
-                <VInput placeholder="Insert Purchase Price" label="Purchase Price" :required="true"
-                    v-model="form.purchase_price" :errorMessage="formError.purchase_price"
-                    @update:modelValue="formError.purchase_price = ''" type="number" />
-                <VSelect placeholder="Select Purchase Account" :required="true" v-model="form.purchase_account"
-                    :options="additional.clasification_options" label="Purchase Account"
-                    :errorMessage="formError.purchase_account" @update:modelValue="handleSelectClassification" />
-                <VInput placeholder="Insert Selling Price" label="Selling Price" :required="true"
-                    v-model="form.sale_price" :errorMessage="formError.sale_price"
-                    @update:modelValue="formError.sale_price = ''" type="number" />
-                <VSelect placeholder="Select Purchase Account" :required="true" v-model="form.sale_account"
-                    :options="additional.clasification_options" label="Purchase Account"
-                    :errorMessage="formError.sale_account" @update:modelValue="handleSelectClassification" />
-                <VSelect placeholder="Select Inventory Account" :required="true" v-model="form.inventory_account"
-                    :options="additional.clasification_options" label="Purchase Account"
-                    :errorMessage="formError.inventory_account" @update:modelValue="handleSelectClassification" />
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Name" label="Product Name" :required="true" v-model="form.name"
+                        :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
+                </div>
+                <div class="col-span-2">
+                    <div class="col-span-2">
+                        <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
+                            :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                    </div>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Purchase Price" label="Purchase Price" :required="true"
+                        v-model="form.purchase_price" :errorMessage="formError.purchase_price"
+                        @update:modelValue="formError.purchase_price = ''" type="number" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Purchase Account" :required="true" v-model="form.purchase_account"
+                        :options="additional.clasification_options" label="Purchase Account"
+                        :errorMessage="formError.purchase_account" @update:modelValue="handleSelectClassification" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Selling Price" label="Selling Price" :required="true"
+                        v-model="form.sale_price" :errorMessage="formError.sale_price"
+                        @update:modelValue="formError.sale_price = ''" type="number" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Purchase Account" :required="true" v-model="form.sale_account"
+                        :options="additional.clasification_options" label="Purchase Account"
+                        :errorMessage="formError.sale_account" @update:modelValue="handleSelectClassification" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Inventory Account" :required="true" v-model="form.inventory_account"
+                        :options="additional.clasification_options" label="Purchase Account"
+                        :errorMessage="formError.inventory_account" @update:modelValue="handleSelectClassification" />
+                </div>
             </div>
 
         </template>
