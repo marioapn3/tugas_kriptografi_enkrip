@@ -97,6 +97,30 @@ class PermissionSeeder extends Seeder
                     ],
                 ]
             ],
+            //Journal Permission
+            [
+                'group' => 'journals',
+                'sub_group' => [
+                    [
+                        'name' => 'account_category',
+                        'permission' => [
+                            [
+                                'name' => 'view_account_category',
+                                'label' => 'View Account Category',
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'account_journal',
+                        'permission' => [
+                            [
+                                'name' => 'view_account',
+                                'label' => 'View Account Journal',
+                            ]
+                        ]
+                    ],
+                ]
+            ],
             // Setting Systems
             [
                 'group' => 'setting_systems',
@@ -123,7 +147,7 @@ class PermissionSeeder extends Seeder
             ],
         ];
 
-        // Create permissions 
+        // Create permissions
         try {
             $newPermission = [];
             foreach ($permissions as $group) {
