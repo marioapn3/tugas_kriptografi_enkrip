@@ -106,8 +106,7 @@ const searchHandle = (search) => {
 
 
 const handleDetail = (data) => {
-    // Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
-    alert(data.id)
+    Inertia.visit(route('storages.product.show', { 'id': data.id }));
 }
 
 const handleAddModalForm = () => {
