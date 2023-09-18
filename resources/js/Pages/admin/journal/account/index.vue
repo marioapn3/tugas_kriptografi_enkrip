@@ -177,7 +177,7 @@ onMounted(() => {
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
                 <VFilter @search="searchHandle" />
-                <VButton label="Add Category" type="primary" @click="handleAddModalForm" class="mt-auto" />
+                <VButton label="Add Account" type="primary" @click="handleAddModalForm" class="mt-auto" />
             </div>
         </header>
 

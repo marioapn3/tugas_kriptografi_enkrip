@@ -61,14 +61,14 @@ class GetSidebarMenuAction
                 // 'can' => ['view_customer', 'view_supplier'],
                 'submenu' => [
                     [
-                        'text' => 'Account Category',
-                        'url'  => route('journals.account-categories.index'),
-                        'can'  => ['view_account_category']
-                    ],
-                    [
                         'text' => 'Account',
                         'url'  => route('journals.accounts.index'),
                         'can'  => ['view_account']
+                    ],
+                    [
+                        'text' => 'Account Category',
+                        'url'  => route('journals.account-categories.index'),
+                        'can'  => ['view_account_category']
                     ],
 
                 ],
