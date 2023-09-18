@@ -20,7 +20,7 @@ class SystemController extends AdminBaseController
     public function roleSettingIndex()
     {
         return Inertia::render($this->source . 'settings/systems/role/Index', [
-            "title" => 'Bookstore | Setting System Authentication',
+            "title" => 'Jurnalin | Setting System Authentication',
             "additional" => [
                 'menu' => $this->getSystemSettingMenu->handle()
             ]
@@ -30,7 +30,7 @@ class SystemController extends AdminBaseController
     public function userSettingIndex()
     {
         return Inertia::render($this->source . 'settings/systems/user/index', [
-            "title" => 'Bookstore | User managements',
+            "title" => 'Jurnalin | User managements',
             "additional" => [
                 'role_list' => $this->getRoleOptions->handle(),
                 'menu' => $this->getSystemSettingMenu->handle()

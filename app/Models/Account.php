@@ -12,6 +12,8 @@ class Account extends Model
 
     protected $guarded = ['id'];
 
+    protected $with = ['AccountCategory'];
+
     /**
      * Get the user that owns the Account
      *

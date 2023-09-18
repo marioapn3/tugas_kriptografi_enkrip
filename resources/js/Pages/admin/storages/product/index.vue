@@ -6,7 +6,7 @@ export default {
 <script setup>
 import axios from "axios";
 import { notify } from "notiwind";
-import { string } from "vue-types";
+import { object, string } from "vue-types";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, reactive } from "vue";
 import AppLayout from '@/layouts/apps.vue';
@@ -21,7 +21,7 @@ import VButton from '@/components/VButton/index.vue';
 import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
-import VFilter from './Filter.vue';
+// import VFilter from './Filter.vue';
 import VModalForm from './ModalForm.vue';
 import { Inertia } from "@inertiajs/inertia";
 
@@ -34,13 +34,13 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Contacts",
+        name: "Storages",
         active: false,
     },
     {
-        name: "Customer",
+        name: "Product",
         active: true,
-        to: route('contacts.customer.index')
+        to: route('storages.product.index')
     },
 ]
 const pagination = ref({
@@ -60,15 +60,16 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Name", "Description", "Email", "Phone", "Address", "City", "Zip Code", ""]
+const heads = ["Code", "Name", "Stock", "Avegare Price", "Last Purchase Price", "Purchase Price", "Selling Price", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
-    title: string()
+    title: string(),
+    additional: object()
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('contacts.customer.getdata'), {
+    axios.get(route('storages.product.getdata'), {
         params: {
             page: page,
             search: searchFilter.value
@@ -105,7 +106,8 @@ const searchHandle = (search) => {
 
 
 const handleDetail = (data) => {
-    Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+    // Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+    alert(data.id)
 }
 
 const handleAddModalForm = () => {
@@ -144,7 +146,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('contacts.customer.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('storages.product.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",
@@ -172,17 +174,17 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Customer</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Product</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Customers <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Products <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
-                <VFilter @search="searchHandle" />
-                <VButton label="Add Customer" type="primary" @click="handleAddModalForm" class="mt-auto" />
+                <!-- <VFilter @search="searchHandle" /> -->
+                <VButton label="Add Product" type="primary" @click="handleAddModalForm" class="mt-auto" />
             </div>
         </header>
 
@@ -201,26 +203,17 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.code }} </td>
                 <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
                     {{ data.name }} </td>
-                <td class="h-16 px-4"> {{ data.description ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.email ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.phone_number ?? '-' }} </td>
-                <td class="h-16 px-4"> {{ data.address ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.city ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.portal_code ?? '-' }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.purchase_price }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.sale_price }} </td>
                 <td class="h-16 px-4 text-right whitespace-nowrap">
-                    <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
+                    <VDropdownEditMenu class="relative inline-flex r-0 t-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
-                        <li class="cursor-pointer hover:bg-slate-100">
-                            <div class="flex items-center justify-between p-3 space-x-2" @click="handleDetail(data)">
-                                <span>
-                                    <VTrash color="danger" />
-                                </span>
-                                <span>Detail</span>
-                            </div>
-                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>
@@ -249,5 +242,5 @@ onMounted(() => {
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
     <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" />
+        @successSubmit="successSubmit" :additional="additional" />
 </template>

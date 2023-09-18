@@ -7,6 +7,7 @@ import VDialog from '@/components/VDialog/index.vue';
 import VButton from '@/components/VButton/index.vue';
 import VTextarea from '@/components/VTextarea/index.vue';
 import VInput from '@/components/VInput/index.vue';
+import VSelect from '@/components/VSelect/index.vue';
 
 const props = defineProps({
     openDialog: bool(),
@@ -17,21 +18,46 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'successSubmit'])
 
+const previewPicUrl = ref('')
+
 const isLoading = ref(false);
 const formError = ref({})
 const form = ref({})
 
+
+const fileSelected = (evt) => {
+    formError.value.image = ''
+    form.value.image = evt.target.files[0];
+    previewPicUrl.value = URL.createObjectURL(evt.target.files[0]);
+}
+
 const openForm = () => {
     if (props.updateAction) {
         form.value = Object.assign(form.value, props.data)
+        previewPicUrl.value = props.data.image_preview
     } else {
         form.value = ref({})
+
+        axios.get(route('storages.product.generatecode')
+        ).then((res) => {
+            form.value.code = res.data.data.code
+        }).catch((res) => {
+            notify({
+                type: "error",
+                group: "top",
+                text: res.response.data.message
+            }, 2500)
+        }).finally(() => isLoading.value = false)
     }
 }
 
 const closeForm = () => {
     form.value = ref({})
     formError.value = ref({})
+
+    if (document.getElementById("imagePic")) {
+        document.getElementById("imagePic").value = null
+    }
 }
 
 const submit = async () => {
@@ -40,7 +66,19 @@ const submit = async () => {
 
 const update = async () => {
     isLoading.value = true
-    axios.put(route('contacts.customer.update', { 'contact': props.data.id }), form.value)
+
+    const fd = new FormData();
+    if (form.value.image != null) {
+        fd.append("image", form.value.image, form.value.image.name);
+    }
+
+    Object.keys(form.value).forEach(key => {
+        fd.append(key, form.value[key]);
+    })
+
+    console.log(fd, form.value)
+
+    axios.post(route('storages.product.update', { 'id': props.data.id }), fd)
         .then((res) => {
             emit('close')
             emit('successSubmit')
@@ -79,7 +117,17 @@ const update = async () => {
 
 const create = async () => {
     isLoading.value = true
-    axios.post(route('contacts.customer.create'), form.value)
+
+    const fd = new FormData();
+    if (form.value.image != null) {
+        fd.append("image", form.value.image, form.value.image.name);
+    }
+
+    Object.keys(form.value).forEach(key => {
+        fd.append(key, form.value[key]);
+    })
+
+    axios.post(route('storages.product.create'), fd)
         .then((res) => {
             emit('close')
             emit('successSubmit')
@@ -118,8 +166,8 @@ const create = async () => {
 </script>
 
 <template>
-    <VDialog :showModal="openDialog" :title="updateAction ? 'Update Customer' : 'Create New Customer'" @opened="openForm"
-        @closed="closeForm" size="xl">
+    <VDialog :showModal="openDialog" :title="updateAction ? 'Update Product' : 'Create Product'" @opened="openForm"
+        @closed="closeForm" size="2xl">
         <template v-slot:close>
             <button class="text-slate-400 hover:text-slate-500" @click="$emit('close')">
                 <div class="sr-only">Close</div>
@@ -132,40 +180,64 @@ const create = async () => {
         <template v-slot:content>
             <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2 md:col-span-1">
-                    <VInput placeholder="Insert Name" label="Name" :required="true" v-model="form.name"
+                    <VInput placeholder="Insert Code" label="Code" v-model="form.code" :errorMessage="formError.code"
+                        @update:modelValue="formError.code = ''" />
+                    <span class="text-xs mt-1 text-slate-500">This code auto generate, you can create custom create</span>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Name" label="Product Name" :required="true" v-model="form.name"
                         :errorMessage="formError.name" @update:modelValue="formError.name = ''" />
                 </div>
-                <div class="col-span-2 md:col-span-1">
-                    <VInput placeholder="Insert Email" label="Email" v-model="form.email" :errorMessage="formError.email"
-                        @update:modelValue="formError.email = ''" type="email" />
+                <div class="col-span-2">
+                    <div class="col-span-2">
+                        <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
+                            :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                    </div>
                 </div>
                 <div class="col-span-2 md:col-span-1">
-                    <VInput placeholder="Insert Phone" label="Phone" v-model="form.phone_number"
-                        :errorMessage="formError.phone_number" @update:modelValue="formError.phone_number = ''"
-                        type="number" />
+                    <VInput placeholder="Insert Purchase Price" label="Purchase Price" :required="true"
+                        v-model="form.purchase_price" :errorMessage="formError.purchase_price"
+                        @update:modelValue="formError.purchase_price = ''" type="number" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Purchase Account" :required="true" v-model="form.purchase_account"
+                        :options="additional.account_options" label="Purchase Account"
+                        :errorMessage="formError.purchase_account" @update:modelValue="formError.purchase_account = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Selling Price" label="Selling Price" :required="true"
+                        v-model="form.sale_price" :errorMessage="formError.sale_price"
+                        @update:modelValue="formError.sale_price = ''" type="number" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Selling Account" :required="true" v-model="form.sale_account"
+                        :options="additional.account_options" label="Selling Account" :errorMessage="formError.sale_account"
+                        @update:modelValue="formError.sale_account = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VInput placeholder="Insert Stock" label="Stock" v-model="form.stock" :errorMessage="formError.stock"
+                        @update:modelValue="formError.stock = ''" type="number" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <VSelect placeholder="Select Inventory Account" :required="true" v-model="form.inventory_account"
+                        :options="additional.account_options" label="Inventory Account"
+                        :errorMessage="formError.inventory_account" @update:modelValue="formError.inventory_account = ''" />
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <label class="block text-sm font-medium text-slate-600 mb-1" for="profilePic">Image</label>
+                    <img class="w-20 h-20 rounded-full mb-1" :src="previewPicUrl" width="80" height="80"
+                        v-if="previewPicUrl" />
+                    <input
+                        class="block w-full cursor-pointer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-md"
+                        type="file" id="imagePic" accept=".jpg, .jpeg, .png" @change="fileSelected">
+                    <div class="text-xs mt-1" :class="[{
+                        'text-rose-500': formError.image
+                    }]" v-if="formError.image">
+                        {{ formError.image }}
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-3 mt-3">
-                <div class="col-span-2 md:col-span-1">
-                    <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
-                        :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
-                </div>
-                <div class="col-span-2 md:col-span-1">
-                    <VTextarea placeholder="Insert Address" label="Address" v-model="form.address"
-                        :errorMessage="formError.address" @update:modelValue="formError.address = ''" />
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 mt-3">
-                <div class="col-span-2 md:col-span-1">
-                    <VInput placeholder="Insert City" label="City" v-model="form.city" :errorMessage="formError.city"
-                        @update:modelValue="formError.city = ''" />
-                </div>
-                <div class="col-span-2 md:col-span-1">
-                    <VInput placeholder="Insert Zip Code" label="Zip Code" v-model="form.portal_code"
-                        :errorMessage="formError.portal_code" @update:modelValue="formError.portal_code = ''"
-                        type="number" />
-                </div>
-            </div>
+
         </template>
         <template v-slot:footer>
             <div class="flex flex-wrap justify-end space-x-2">

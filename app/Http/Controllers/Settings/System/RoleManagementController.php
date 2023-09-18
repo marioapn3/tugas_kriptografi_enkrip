@@ -33,7 +33,7 @@ class RoleManagementController extends AdminBaseController
     public function createRolePage()
     {
         return Inertia::render($this->source . 'settings/systems/role/create', [
-            "title" => 'Bookstore | Setting System Authentication',
+            "title" => 'Jurnalin | Setting System Authentication',
             "additional" => [
                 'permission_list' => $this->roleManagementService->getPermissionList()
             ]
@@ -43,7 +43,7 @@ class RoleManagementController extends AdminBaseController
     public function editRolePage($id)
     {
         return Inertia::render($this->source . 'settings/systems/role/edit', [
-            "title" => 'Bookstore | Setting System Authentication',
+            "title" => 'Jurnalin | Setting System Authentication',
             "additional" => [
                 'permission_list' => $this->roleManagementService->getPermissionList(),
                 'role' => $this->roleManagementService->findRoleById($id),
