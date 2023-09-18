@@ -37,6 +37,13 @@ class ProductService
         return $query->paginate(10);
     }
 
+    public function getDetail($id)
+    {
+        $product = Product::with(['purchaseAccount', 'saleAccount', 'inventoryAccount'])->findOrFail($id);
+
+        return $product;
+    }
+
     public function createData($request)
     {
         $fileService = new FileService();

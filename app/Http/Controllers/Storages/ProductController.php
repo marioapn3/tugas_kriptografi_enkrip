@@ -7,6 +7,7 @@ use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Storages\Product\CreateProductRequest;
 use App\Http\Requests\Storages\Product\UpdateProductRequest;
 use App\Http\Resources\Storages\Product\ProductCodeResource;
+use App\Http\Resources\Storages\Product\ProductDetailResource;
 use App\Http\Resources\Storages\Product\ProductListResource;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Services\Storages\ProductService;
@@ -28,6 +29,18 @@ class ProductController extends AdminBaseController
             'additional' => [
                 'account_options' => $this->getAccountOptions->handle()
             ],
+        ]);
+    }
+
+    public function show($id)
+    {
+        $data = $this->productService->getDetail($id);
+        $result = new ProductDetailResource($data, 'Success get product detail');
+        return Inertia::render($this->source . 'storages/product/detail', [
+            "title" => 'Product Detail | Jurnalin',
+            "additional" => [
+                "data" => $result
+            ]
         ]);
     }
 
