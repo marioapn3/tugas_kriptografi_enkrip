@@ -55,7 +55,25 @@ class PermissionSeeder extends Seeder
                     ]
                 ]
             ],
-            // Audit Trails
+
+            // product
+            [
+                'group' => 'storage',
+                'sub_group' => [
+                    [
+                        'name' => 'product',
+                        'permission' => [
+                            [
+                                'name' => 'view_storage_product',
+                                'label' => 'View Storage Product',
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+
+
+            // Contact
             [
                 'group' => 'contacts',
                 'sub_group' => [

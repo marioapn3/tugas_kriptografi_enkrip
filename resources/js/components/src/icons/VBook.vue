@@ -7,6 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <font-awesome-icon icon="fa-solid fa-book" class="w-5 h-5 text-slate-400" :class="isActive && '!text-blue-500'"/>
+    <!-- <font-awesome-icon icon="book" class="w-5 h-5 text-slate-400" :class="isActive && '!text-blue-500'"/> -->
+    <font-awesome-icon icon="book" />
 </template>
  

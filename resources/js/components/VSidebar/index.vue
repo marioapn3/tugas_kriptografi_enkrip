@@ -13,6 +13,8 @@ import VApproval from "@/components/src/icons/VApproval.vue";
 import VAttendanceSolid from "@/components/src/icons/VAttendanceSolid.vue";
 import VUser from "@/components/src/icons/VUser.vue";
 import VJournal from "@/components/src/icons/VJournal.vue";
+import VProduct from "@/components/src/icons/VProduct.vue";
+import VBook from "@/components/src/icons/VBook.vue";
 import { array, bool } from "vue-types";
 import VSidebarGroup from "@/components/VSidebarGroup/index.vue";
 import { usePage } from "@inertiajs/inertia-vue3";
@@ -27,7 +29,9 @@ const icons = {
     VNoticeBoard,
     VApproval,
     VUser,
-    VJournal
+    VJournal,
+    VProduct,
+    VBook
 }
 const props = defineProps({
     sidebarOpen: bool().def(false),

@@ -2,7 +2,6 @@
 
 namespace App\Actions\Utility\Dashboard;
 
-use App\Actions\Utility\Contact\GetContactMenuAction;
 use App\Actions\Utility\Setting\GetSystemSettingMenuAction;
 
 class GetSidebarMenuAction
@@ -68,7 +67,12 @@ class GetSidebarMenuAction
 
                 ],
             ],
-
+            [
+                'text' => 'Product',
+                'url'  => route('storages.product.index'),
+                'icon' => 'VProduct',
+                'can'  => 'view_storage_product'
+            ],
             [
                 'text' => 'Contacts',
                 'icon' => 'VUser',
