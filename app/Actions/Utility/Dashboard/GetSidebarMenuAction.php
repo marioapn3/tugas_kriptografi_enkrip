@@ -63,12 +63,12 @@ class GetSidebarMenuAction
                     [
                         'text' => 'Account Category',
                         'url'  => route('journals.account-categories.index'),
-                        // 'can'  => ['view_customer']
+                        'can'  => ['view_account_category']
                     ],
                     [
                         'text' => 'Account',
                         'url'  => route('journals.accounts.index'),
-                        // 'can'  => ['view_customer']
+                        'can'  => ['view_account']
                     ],
 
                 ],

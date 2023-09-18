@@ -56,7 +56,7 @@ const handleSelectClassification = () => {
 
 const update = async () => {
     isLoading.value = true
-    axios.put(route('journals.accounts.update', { 'account_category': props.data.id }), form.value)
+    axios.put(route('journals.accounts.update', { 'account': props.data.id }), form.value)
         .then((res) => {
             emit('close')
             emit('successSubmit')

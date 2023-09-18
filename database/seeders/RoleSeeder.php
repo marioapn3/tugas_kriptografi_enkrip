@@ -18,7 +18,7 @@ class RoleSeeder extends Seeder
             [
                 'name' => 'super admin',
                 'is_default' => true,
-                'permissions' => ['view_general_dashboard', 'view_customer', 'view_supplier', 'view_systems_role_management', 'view_systems_user_management']
+                'permissions' => ['view_general_dashboard', 'view_customer', 'view_supplier', 'view_systems_role_management', 'view_systems_user_management', 'view_account', 'view_account_category']
             ],
             [
                 'name' => 'user',
@@ -41,7 +41,7 @@ class RoleSeeder extends Seeder
                 $role->givePermissionTo($value['permissions']);
             } catch (\Exception $exception) {
                 $this->command->info($exception->getMessage());
-                // Do something when the exception 
+                // Do something when the exception
             }
         }
     }
