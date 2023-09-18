@@ -3,12 +3,14 @@
 namespace App\Services\Storages;
 
 use App\Models\Product;
+use App\Services\FileService;
+use Illuminate\Support\Facades\Storage;
 
 class ProductService
 {
     public function generateCode()
     {
-        $product = Product::orderBy('code', 'desc')->first();
+        $product = Product::orderBy('code', 'desc')->withTrashed()->first();
 
         if ($product) {
             $code = (int) substr($product->code, 5) + 1;
@@ -33,5 +35,78 @@ class ProductService
         });
 
         return $query->paginate(10);
+    }
+
+    public function createData($request)
+    {
+        $fileService = new FileService();
+
+        $inputs = $request->only([
+            'code',
+            'name',
+            'description',
+            'purchase_price',
+            'sale_price',
+            'purchase_account',
+            'sale_account',
+            'inventory_account',
+            'image',
+            'stock'
+        ]);
+
+        if ($request->hasFile('image')) {
+            $image = $fileService->uploadFile($request->file('image'), 'product/image');
+            $inputs['image'] = $image;
+        }
+
+
+        $product = Product::create($inputs);
+
+        return $product;
+    }
+
+    public function updateData($id, $request)
+    {
+        $product = Product::findOrFail($id);
+        $fileService = new FileService();
+
+        $inputs = $request->only([
+            'code',
+            'name',
+            'description',
+            'purchase_price',
+            'sale_price',
+            'purchase_account',
+            'sale_account',
+            'inventory_account',
+            'image',
+            'stock'
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($product->image) {
+                Storage::delete('public' . substr($product->image, 8));
+            }
+
+            $image = $fileService->uploadFile($request->file('image'), 'product/image');
+            $inputs['image'] = $image;
+        }
+
+        $product = $product->update($inputs);
+
+        return $product;
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+
+        if ($product->image) {
+            Storage::delete('public' . substr($product->image, 8));
+        }
+
+        $product->delete();
+
+        return $product;
     }
 }

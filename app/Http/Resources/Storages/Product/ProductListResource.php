@@ -29,7 +29,15 @@ class ProductListResource extends ResourceCollection
         return [
             'id' => $data->id,
             'name' => $data->name,
-            'code' => $data->code
+            'code' => $data->code,
+            'description' => $data->description,
+            'purchase_price' => number_format($data->purchase_price, 0, ',', '.'),
+            'sale_price' => number_format($data->sale_price, 0, ',', '.'),
+            'stock' => $data->stock,
+            'purchase_account' => $data->purchase_account,
+            'sale_account' => $data->sale_account,
+            'inventory_account' => $data->inventory_account,
+            'image_preview' => config('app.file_upload_endpoint') . $data->image,
         ];
     }
 

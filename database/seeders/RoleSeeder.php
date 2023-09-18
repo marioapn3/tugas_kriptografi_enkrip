@@ -18,7 +18,7 @@ class RoleSeeder extends Seeder
             [
                 'name' => 'super admin',
                 'is_default' => true,
-                'permissions' => ['view_general_dashboard', 'view_customer', 'view_supplier', 'view_systems_role_management', 'view_systems_user_management', 'view_account', 'view_account_category']
+                'permissions' => ['view_general_dashboard', 'view_customer', 'view_supplier', 'view_systems_role_management', 'view_systems_user_management', 'view_account', 'view_account_category','view_storage_product']
             ],
             [
                 'name' => 'user',

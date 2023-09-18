@@ -18,14 +18,17 @@ return new class extends Migration
             $table->string('code', 20)->unique();
             $table->string('name', 100);
             $table->string('description', 255)->nullable();
-            $table->decimal('purchase_price', 48, 4);
-            // purchase account
-            $table->decimal('sale_price', 48, 4);
-            // purchase account
+            $table->decimal('purchase_price', 48, 2);
+            $table->foreignId('purchase_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->decimal('sale_price', 48, 2);
+            $table->foreignId('sale_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
 
             // inventory account 
+            $table->foreignId('inventory_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
 
             $table->integer('stock')->default(0);
+            $table->string('unit', 20)->nullable();
+            $table->string('image', 255)->nullable();
 
             $table->softDeletes();
             $table->timestamps();

@@ -6,7 +6,7 @@ export default {
 <script setup>
 import axios from "axios";
 import { notify } from "notiwind";
-import { string } from "vue-types";
+import { object, string } from "vue-types";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, reactive } from "vue";
 import AppLayout from '@/layouts/apps.vue';
@@ -64,7 +64,8 @@ const heads = ["Code", "Name", "Stock", "Avegare Price", "Last Purchase Price", 
 const isLoading = ref(true)
 
 const props = defineProps({
-    title: string()
+    title: string(),
+    additional: object()
 })
 
 const getData = debounce(async (page) => {
@@ -105,7 +106,8 @@ const searchHandle = (search) => {
 
 
 const handleDetail = (data) => {
-    Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+    // Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
+    alert(data.id)
 }
 
 const handleAddModalForm = () => {
@@ -144,7 +146,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('contacts.customer.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('storages.product.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",
@@ -201,25 +203,17 @@ onMounted(() => {
                 </td>
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
-                <td class="h-16 px-4"> {{ data.description ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.email ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.phone_number ?? '-' }} </td>
-                <td class="h-16 px-4"> {{ data.address ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.city ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.portal_code ?? '-' }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.code }} </td>
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                    {{ data.name }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.purchase_price }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.sale_price }} </td>
                 <td class="h-16 px-4 text-right whitespace-nowrap">
-                    <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
+                    <VDropdownEditMenu class="relative inline-flex r-0 t-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
-                        <li class="cursor-pointer hover:bg-slate-100">
-                            <div class="flex items-center justify-between p-3 space-x-2" @click="handleDetail(data)">
-                                <span>
-                                    <VTrash color="danger" />
-                                </span>
-                                <span>Detail</span>
-                            </div>
-                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>
@@ -248,5 +242,5 @@ onMounted(() => {
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
     <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" />
+        @successSubmit="successSubmit" :additional="additional" />
 </template>
