@@ -58,12 +58,17 @@ class GetSidebarMenuAction
                 'text' => 'Journals',
                 'icon' => 'VJournal',
                 'group' => true,
-                // 'can' => ['view_customer', 'view_supplier'],
+                'can' => ['view_account', 'view_account_category'],
                 'submenu' => [
+                    [
+                        'text' => 'Account',
+                        'url'  => route('journals.accounts.index'),
+                        'can'  => ['view_account']
+                    ],
                     [
                         'text' => 'Account Category',
                         'url'  => route('journals.account-categories.index'),
-                        // 'can'  => ['view_customer']
+                        'can'  => ['view_account_category']
                     ],
 
                 ],

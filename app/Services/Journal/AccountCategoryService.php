@@ -43,9 +43,9 @@ class AccountCategoryService
             'classification_id'
         ]);
 
-        $contact = AccountCategory::create($data);
+        $account_category = AccountCategory::create($data);
 
-        return $contact;
+        return $account_category;
     }
 
     public function updateData($account_category, $request)
@@ -58,17 +58,17 @@ class AccountCategoryService
         ]);
 
 
-        $contact = AccountCategory::findOrFail($account_category->id);
-        $contact->update($data);
+        $account_category = AccountCategory::findOrFail($account_category->id);
+        $account_category->update($data);
 
-        return $contact;
+        return $account_category;
     }
 
     public function deleteData($id)
     {
-        $contact = AccountCategory::findOrFail($id);
-        $contact->delete();
+        $account_category = AccountCategory::findOrFail($id);
+        $account_category->delete();
 
-        return $contact;
+        return $account_category;
     }
 }

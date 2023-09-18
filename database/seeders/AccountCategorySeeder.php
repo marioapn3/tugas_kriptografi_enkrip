@@ -20,14 +20,13 @@ class AccountCategorySeeder extends Seeder
                 'classification_id' => 1,
                 'code' => '1-1',
                 'name' => 'Asset'
-
             ],
             [
                 'classification_id' => 1,
                 'code' => '1-2',
                 'name' => 'Piutang Usaha'
-
-            ], [
+            ],
+            [
                 'classification_id' => 1,
                 'code' => '1-3',
                 'name' => 'Perlengkapan'

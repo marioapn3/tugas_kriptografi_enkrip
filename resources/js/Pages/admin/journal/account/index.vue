@@ -6,7 +6,7 @@ export default {
 <script setup>
 import axios from "axios";
 import { notify } from "notiwind";
-import { string } from "vue-types";
+import { any, object, string } from "vue-types";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, reactive } from "vue";
 import AppLayout from '@/layouts/apps.vue';
@@ -23,7 +23,6 @@ import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VFilter from './Filter.vue';
 import VModalForm from './ModalForm.vue';
-import { Inertia } from "@inertiajs/inertia";
 
 const query = ref([])
 const searchFilter = ref("");
@@ -34,13 +33,13 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Contacts",
+        name: "Journals",
         active: false,
     },
     {
-        name: "Customer",
+        name: "Account",
         active: true,
-        to: route('contacts.customer.index')
+        to: route('journals.accounts.index')
     },
 ]
 const pagination = ref({
@@ -60,15 +59,16 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Name", "Description", "Email", "Phone", "Address", "City", "Zip Code", ""]
+const heads = ["No", "Code", "Name", "Account Category", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
-    title: string()
+    title: string(),
+    additional: object(),
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('contacts.customer.getdata'), {
+    axios.get(route('journals.accounts.getdata'), {
         params: {
             page: page,
             search: searchFilter.value
@@ -102,11 +102,6 @@ const searchHandle = (search) => {
     isLoading.value = true
     getData(1)
 };
-
-
-const handleDetail = (data) => {
-    Inertia.visit(route('contacts.customer.show', { 'id': data.id }));
-}
 
 const handleAddModalForm = () => {
     updateAction.value = false
@@ -144,7 +139,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('contacts.customer.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('journals.accounts.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",
@@ -172,17 +167,17 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Customer</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Account</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Customers <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Accounts <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
                 <VFilter @search="searchHandle" />
-                <VButton label="Add Customer" type="primary" @click="handleAddModalForm" class="mt-auto" />
+                <VButton label="Add Account" type="primary" @click="handleAddModalForm" class="mt-auto" />
             </div>
         </header>
 
@@ -202,24 +197,13 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
+                <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
-                <td class="h-16 px-4"> {{ data.description ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.email ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.phone_number ?? '-' }} </td>
-                <td class="h-16 px-4"> {{ data.address ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.city ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.portal_code ?? '-' }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> {{ data.account_category.name }} </td>
+
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
-                        <li class="cursor-pointer hover:bg-slate-100">
-                            <div class="flex items-center justify-between p-3 space-x-2" @click="handleDetail(data)">
-                                <span>
-                                    <VTrash color="danger" />
-                                </span>
-                                <span>Detail</span>
-                            </div>
-                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>
@@ -248,5 +232,5 @@ onMounted(() => {
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
     <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" />
+        @successSubmit="successSubmit" :additional="additional" />
 </template>
