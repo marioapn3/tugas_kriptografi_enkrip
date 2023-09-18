@@ -19,7 +19,7 @@ class AccountCategoryListResource extends ResourceCollection
             'data' => $this->transformCollection($this->collection),
             'meta' => [
                 "success" => true,
-                "message" => "Success get customer list",
+                "message" => "Success get category account list",
                 'pagination' => $this->metaData()
             ]
         ];
