@@ -213,8 +213,17 @@ const submit = () => {
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 mb-5">
-            <VInput placeholder="Auto" label="No Transaction" :required="false" v-model="form.no_transaction"
-                :errorMessage="formError.no_transaction" @update:modelValue="formError.no_transaction = ''" />
+            <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
+                v-model="form.no_transaction" :errorMessage="formError.no_transaction"
+                @update:modelValue="formError.no_transaction = ''">
+                <template v-slot:tooltip>
+                    <div class="text-xs">
+                        <div class="font-semibold text-slate-800 mb-1">No Transaction.</div>
+                        <div class="mb-0.5">The transaction number will be automatically created by the system, and you can
+                            create your own version</div>
+                    </div>
+                </template>
+            </VInput>
             <div>
                 <label class="block text-sm font-medium text-slate-600 mb-1">
                     Date <span class="text-rose-500">*</span>
