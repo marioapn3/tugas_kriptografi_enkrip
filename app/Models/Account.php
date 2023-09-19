@@ -23,4 +23,10 @@ class Account extends Model
     {
         return $this->belongsTo(AccountCategory::class, 'account_category_id', 'id');
     }
+
+
+    public function journal_details()
+    {
+        return $this->hasMany(JournalDetail::class, 'account_id', 'id');
+    }
 }
