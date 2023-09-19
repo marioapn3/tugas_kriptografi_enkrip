@@ -4,24 +4,12 @@ export default {
 }
 </script>
 <script setup>
-import axios from "axios";
-import { notify } from "notiwind";
-import { any, string } from "vue-types";
-import { Head } from "@inertiajs/inertia-vue3";
-import { ref, onMounted, reactive } from "vue";
-import AppLayout from '@/layouts/apps.vue';
-import debounce from "@/composables/debounce"
-import VDropdownEditMenu from '@/components/VDropdownEditMenu/index.vue';
-import VDataTable from '@/components/VDataTable/index.vue';
-import VPagination from '@/components/VPagination/index.vue'
 import VBreadcrumb from '@/components/VBreadcrumb/index.vue';
-import VLoading from '@/components/VLoading/index.vue';
-import VEmpty from '@/components/src/icons/VEmpty.vue';
-import VButton from '@/components/VButton/index.vue';
-import VAlert from '@/components/VAlert/index.vue';
-import VEdit from '@/components/src/icons/VEdit.vue';
-import VTrash from '@/components/src/icons/VTrash.vue';
-import VFilter from './Filter.vue';
+import VDataTable from '@/components/VDataTable/index.vue';
+import AppLayout from '@/layouts/apps.vue';
+import { Head } from "@inertiajs/inertia-vue3";
+import { onMounted, reactive, ref } from "vue";
+import { any, string } from "vue-types";
 
 const query = ref([])
 const searchFilter = ref("");

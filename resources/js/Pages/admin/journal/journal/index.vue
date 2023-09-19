@@ -21,8 +21,9 @@ import VButton from '@/components/VButton/index.vue';
 import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
-import VFilter from './Filter.vue';
-import VModalForm from './ModalForm.vue';
+import { Inertia } from "@inertiajs/inertia";
+// import VFilter from './Filter.vue';
+// import VModalForm from './ModalForm.vue';
 
 const query = ref([])
 const searchFilter = ref("");
@@ -37,7 +38,7 @@ const breadcrumb = [
         active: false,
     },
     {
-        name: "Account Category",
+        name: "Journal",
         active: true,
         to: route('journals.account-categories.index')
     },
@@ -103,9 +104,8 @@ const searchHandle = (search) => {
     getData(1)
 };
 
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
+const handleCreate = () => {
+    Inertia.visit(route('journals.journal.create'));
 }
 
 const handleEditModal = (data) => {
@@ -167,17 +167,17 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Account Category</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Journal</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Categories <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Journals <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
-                <VFilter @search="searchHandle" />
-                <VButton label="Add Category" type="primary" @click="handleAddModalForm" class="mt-auto" />
+                <!-- <VFilter @search="searchHandle" /> -->
+                <VButton label="Create Journal" type="primary" @click="handleCreate" class="mt-auto" />
             </div>
         </header>
 
@@ -232,6 +232,6 @@ onMounted(() => {
     <VAlert :open-dialog="openAlert" @closeAlert="closeAlert" @submitAlert="deleteHandle" type="danger"
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
-    <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" :additional="additional" />
+    <!-- <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
+        @successSubmit="successSubmit" :additional="additional" /> -->
 </template>

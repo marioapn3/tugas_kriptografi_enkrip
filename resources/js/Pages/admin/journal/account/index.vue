@@ -33,7 +33,7 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Journals",
+        name: "Accounting",
         active: false,
     },
     {
