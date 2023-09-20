@@ -108,6 +108,10 @@ const handleCreate = () => {
     Inertia.visit(route('journals.journal.create'));
 }
 
+const handleEdit = (id) => {
+    Inertia.visit(route('journals.journal.edit', id));
+}
+
 const handleEditModal = (data) => {
     updateAction.value = true
     itemSelected.value = data
@@ -231,7 +235,7 @@ onMounted(() => {
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
-                        <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
+                        <li class="cursor-pointer hover:bg-slate-100" @click="handleEdit(data.id)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>
                                     <VEdit color="primary" />

@@ -102,6 +102,15 @@ class PermissionSeeder extends Seeder
                 'group' => 'journals',
                 'sub_group' => [
                     [
+                        'name' => 'manual_journal',
+                        'permission' => [
+                            [
+                                'name' => 'view_manual_journal',
+                                'label' => 'View Manual Journal',
+                            ]
+                        ]
+                    ],
+                    [
                         'name' => 'account_category',
                         'permission' => [
                             [
