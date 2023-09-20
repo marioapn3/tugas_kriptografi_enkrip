@@ -57,12 +57,12 @@ class GetSidebarMenuAction
                 'text' => 'Accounting',
                 'icon' => 'VJournal',
                 'group' => true,
-                'can' => ['view_account', 'view_account_category'],
+                'can' => ['view_account', 'view_account_category','view_manual_journal'],
                 'submenu' => [
                     [
                         'text' => 'Journal',
                         'url'  => route('journals.journal.index'),
-                        'can'  => ['view_account']
+                        'can'  => ['view_manual_journal']
                     ],
                     [
                         'text' => 'Account',
