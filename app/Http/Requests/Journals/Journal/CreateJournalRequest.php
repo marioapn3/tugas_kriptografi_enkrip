@@ -27,6 +27,10 @@ class CreateJournalRequest extends FormRequest
             'no_transaction' => 'string|nullable|unique:journals,no_transaction',
             'date' => 'date|required',
             'description' => 'string|nullable',
+            'journal_entries' => 'required|array',
+            'journal_entries.*.account_id' => 'required|exists:accounts,id',
+            'journal_entries.*.debit' => 'required|numeric',
+            'journal_entries.*.credit' => 'required|numeric',
         ];
     }
 }

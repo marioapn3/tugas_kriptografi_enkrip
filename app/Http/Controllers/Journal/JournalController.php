@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Journal;
 
 use App\Actions\Options\GetAccountOptions;
 use App\Http\Controllers\AdminBaseController;
+use App\Http\Requests\Journals\Journal\CreateJournalRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -30,7 +31,7 @@ class JournalController extends AdminBaseController
         ]);
     }
 
-    public function store(Request $request)
+    public function store(CreateJournalRequest $request)
     {
         dd($request->all());
     }

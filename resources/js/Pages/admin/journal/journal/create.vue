@@ -229,7 +229,10 @@ const submit = () => {
                     Date <span class="text-rose-500">*</span>
                 </label>
                 <Datepicker v-model="form.date" @update:modelValue="handleDate" :enableTimePicker="false" position="left"
-                    :clearable="false" format="dd MMMM yyyy" previewFormat="dd MMMM yyyy" placeholder="Date" />
+                    :clearable="false" format="dd MMMM yyyy" previewFormat="dd MMMM yyyy" placeholder="Date" :class="{ 'date_error': formError.date }"  />
+                <div class="text-xs" :class="[{ 'text-rose-500': formError.date }]" v-if="formError.date">
+                    {{ formError.date }}
+                </div>
             </div>
         </section>
 
@@ -304,3 +307,13 @@ const submit = () => {
         </section>
     </div>
 </template>
+
+<style>
+.dp__select {
+    color: #4F8CF6 !important;
+}
+
+.date_error {
+    --dp-border-color: #dc3545 !important;
+}
+</style>
