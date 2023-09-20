@@ -139,7 +139,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('journals.account-categories.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('journals.journal.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",

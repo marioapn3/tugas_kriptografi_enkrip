@@ -44,4 +44,12 @@ class JournalService
 
         return $journal;
     }
+
+    public function destroy($id)
+    {
+        $journal = Journal::findOrFail($id);
+        $journal->delete();
+
+        return $journal;
+    }
 }

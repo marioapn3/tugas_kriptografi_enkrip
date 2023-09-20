@@ -63,4 +63,15 @@ class JournalController extends AdminBaseController
             return $this->exceptionError($e->getMessage());
         }
     }
+
+    public function deleteData($id)
+    {
+        try {
+            $data = $this->journalServices->destroy($id);
+            $result = new SubmitDefaultResource($data, 'Success delete journal');
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
+    }
 }
