@@ -80,6 +80,12 @@ const handleAddRow = () => {
 }
 
 
+const getError = (property, index) => {
+    return formError.value['journal_entries.' + index + '.' + property]
+    // console.log(formError.value)
+}
+
+
 const handleDeleteRow = (index) => {
     // if count row == 1 then not delete
     if (journalEntries.value.length == 1) {
@@ -229,7 +235,8 @@ const submit = () => {
                     Date <span class="text-rose-500">*</span>
                 </label>
                 <Datepicker v-model="form.date" @update:modelValue="handleDate" :enableTimePicker="false" position="left"
-                    :clearable="false" format="dd MMMM yyyy" previewFormat="dd MMMM yyyy" placeholder="Date" :class="{ 'date_error': formError.date }"  />
+                    :clearable="false" format="dd MMMM yyyy" previewFormat="dd MMMM yyyy" placeholder="Date"
+                    :class="{ 'date_error': formError.date }" />
                 <div class="text-xs" :class="[{ 'text-rose-500': formError.date }]" v-if="formError.date">
                     {{ formError.date }}
                 </div>
@@ -251,12 +258,12 @@ const submit = () => {
                     </td>
                     <td class="h-14 w-1/4 pl-3">
                         <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
-                            v-model="journalEntries[index].debit" :errorMessage="formError.debit"
+                            v-model="journalEntries[index].debit" :errorMessage="getError('debit', index)"
                             @update:modelValue="onChangeAmount" type="number" />
                     </td>
                     <td class="h-14 w-1/4 pl-3">
                         <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
-                            v-model="journalEntries[index].credit" :errorMessage="formError.credit"
+                            v-model="journalEntries[index].credit" :errorMessage="getError('credit', index)"
                             @update:modelValue="onChangeAmount" type="number" />
                     </td>
                     <td class="h-14">

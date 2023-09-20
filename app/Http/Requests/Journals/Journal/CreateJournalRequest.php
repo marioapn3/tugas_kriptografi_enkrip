@@ -33,4 +33,17 @@ class CreateJournalRequest extends FormRequest
             'journal_entries.*.credit' => 'required|numeric',
         ];
     }
+
+
+    public function messages()
+    {
+        return [
+            'journal_entries.*.account_id.required' => 'Account is required',
+            'journal_entries.*.account_id.exists' => 'Account is not exists',
+            'journal_entries.*.debit.required' => 'Debit is required',
+            'journal_entries.*.debit.numeric' => 'Debit must be numeric',
+            'journal_entries.*.credit.required' => 'Credit is required',
+            'journal_entries.*.credit.numeric' => 'Credit must be numeric',
+        ];
+    }
 }
