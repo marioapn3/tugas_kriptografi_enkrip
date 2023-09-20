@@ -5,13 +5,16 @@ namespace App\Http\Controllers\Journal;
 use App\Actions\Options\GetAccountOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Journals\Journal\CreateJournalRequest;
-use Illuminate\Http\Request;
+use App\Http\Resources\SubmitDefaultResource;
+use App\Services\Journal\JournalService;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class JournalController extends AdminBaseController
 {
-    public function __construct(GetAccountOptions $getAccountOptions)
+    public function __construct(JournalService $journalService, GetAccountOptions $getAccountOptions)
     {
+        $this->journalServices = $journalService;
         $this->getAccountOptions = $getAccountOptions;
     }
     public function journalIndex()
@@ -33,6 +36,16 @@ class JournalController extends AdminBaseController
 
     public function store(CreateJournalRequest $request)
     {
-        dd($request->all());
+        try {
+            DB::beginTransaction();
+            $data = $this->journalServices->createData($request);
+            $result = new SubmitDefaultResource($data, 'Success create journal');
+            DB::commit();
+
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->exceptionError($e->getMessage());
+        }
     }
 }

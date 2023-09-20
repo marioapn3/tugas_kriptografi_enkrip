@@ -4,6 +4,9 @@ export default {
 }
 </script>
 <script setup>
+import dayjs from 'dayjs';
+import axios from 'axios';
+import debounce from "@/composables/debounce"
 import VBreadcrumb from '@/components/VBreadcrumb/index.vue';
 import VButton from '@/components/VButton/index.vue';
 import VDataTable from '@/components/VDataTable/index.vue';
@@ -12,12 +15,11 @@ import VSelect from '@/components/VSelect/index.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VTextarea from '@/components/VTextarea/index.vue';
 import AppLayout from '@/layouts/apps.vue';
+import VLoading from '@/components/VLoading/index.vue';
 import { Head } from "@inertiajs/inertia-vue3";
-import dayjs from 'dayjs';
 import { ref } from 'vue';
 import { object, string } from "vue-types";
 import { notify } from 'notiwind';
-import axios from 'axios';
 
 const props = defineProps({
     title: string(),
@@ -33,12 +35,12 @@ const totalDebit = ref(0);
 const totalCredit = ref(0);
 const journalEntries = ref([
     {
-        account_id: '',
+        account_id: null,
         description: '',
         debit: 0,
         credit: 0,
     }, {
-        account_id: '',
+        account_id: null,
         description: '',
         debit: 0,
         credit: 0,
@@ -72,7 +74,7 @@ const breadcrumb = [
 
 const handleAddRow = () => {
     journalEntries.value.push({
-        account_id: '',
+        account_id: null,
         description: '',
         debit: 0,
         credit: 0,
@@ -82,7 +84,6 @@ const handleAddRow = () => {
 
 const getError = (property, index) => {
     return formError.value['journal_entries.' + index + '.' + property]
-    // console.log(formError.value)
 }
 
 
@@ -125,32 +126,9 @@ const handleDate = () => {
 }
 
 
-const validateJournalEntry = () => {
-    // validate for input journal entry 
-    let error = {}
-    journalEntries.value.forEach((item, index) => {
-        if (item.account_id == '') {
-            error.account_id = 'Account is required'
-        } else {
-            // remove account_id from error
-            delete error.account_id
-        }
-    })
 
-    formError.value = error
-}
 
 const submit = () => {
-
-    validateJournalEntry()
-
-    // check is formError empty or not
-    if (Object.keys(formError.value).length > 0) {
-        return
-    }
-
-    // if formError empty then submit
-
     const data = {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
@@ -159,22 +137,28 @@ const submit = () => {
     }
 
     isLoading.value = true
-    axios.post(route('journals.journal.store'), data)
+    debounce(axios.post(route('journals.journal.store'), data)
         .then((res) => {
+            isLoading.value = false
+
+            isBalance.value = false
+            totalDebit.value = 0
+            totalCredit.value = 0
             form.value = ref({})
-            journalEntries.value = ref([
+
+            journalEntries.value = [
                 {
-                    account_id: '',
+                    account_id: null,
                     description: '',
                     debit: 0,
                     credit: 0,
                 }, {
-                    account_id: '',
+                    account_id: null,
                     description: '',
                     debit: 0,
                     credit: 0,
                 }
-            ])
+            ]
 
             notify({
                 type: "success",
@@ -205,7 +189,7 @@ const submit = () => {
                     text: result.message
                 }, 2500)
             }
-        }).finally(() => isLoading.value = false)
+        }).finally(() => isLoading.value = false), 1000)
 
 }
 
@@ -244,73 +228,79 @@ const submit = () => {
         </section>
 
         <section class="px-1">
-            <VDataTable :heads="heads" :divide-y="false" bordered>
-                <tr v-for="(data, index) in journalEntries" :key="index">
-                    <td class="h-14 w-1/4 pl-3">
-                        <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true"
-                            v-model="journalEntries[index].account_id" :options="additional.account_options"
-                            :errorMessage="formError.account_id" @update:modelValue="''" />
-                    </td>
-                    <td class="h-14 w-1/4 pl-3">
-                        <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
-                            v-model="journalEntries[index].description" :errorMessage="formError.description"
-                            @update:modelValue="formError.description = ''" />
-                    </td>
-                    <td class="h-14 w-1/4 pl-3">
-                        <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
-                            v-model="journalEntries[index].debit" :errorMessage="getError('debit', index)"
-                            @update:modelValue="onChangeAmount" type="number" />
-                    </td>
-                    <td class="h-14 w-1/4 pl-3">
-                        <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
-                            v-model="journalEntries[index].credit" :errorMessage="getError('credit', index)"
-                            @update:modelValue="onChangeAmount" type="number" />
-                    </td>
-                    <td class="h-14">
-                        <div class="cursor-pointer" @click="handleDeleteRow(index)">
-                            <span>
-                                <VTrash color="danger" />
-                            </span>
-                        </div>
+            <VDataTable :heads="heads" :divide-y="false" bordered :isLoading="isLoading">
+                <tr v-if="isLoading">
+                    <td class="h-[100%] overflow-hidden my-2" :colspan="heads.length">
+                        <VLoading />
                     </td>
                 </tr>
-                <tr class="h-20 border-t">
-                    <td colspan="2" class="h-12 w-1/4 pl-3">
-                        <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
-                    </td>
-                    <td class="h-12 w-1/4 pl-3">
-                        <span class="font-semibold">Total Debit</span> <br>
-                        Rp. {{ totalDebit }}
-                    </td>
-                    <td class="h-12 w-1/4 pl-3">
-                        <span class="font-semibold">Total Credit</span> <br>
-                        Rp. {{ totalCredit }}
-                    </td>
-                </tr>
-                <tr class="">
-
-                    <td colspan="2" />
-                    <td class="h-12 w-1/4 pl-3">
-                        <!-- balance or not balance -->
-                        <span class="font-semibold">Status</span>
-                        <br>
-                        <span
-                            :class="[{ 'text-emerald-600': isBalance == true }, { 'text-rose-600': isBalance == false }]">{{
-                                isBalance ? 'Balance' : 'Not Balance'
-                            }}</span>
-                        <br>
-                        <br>
-                    </td>
-                    <td class="h-12 w-1/4 pl-3">
-                        <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
-                            :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
-                    </td>
-                </tr>
+                <template v-else>
+                    <tr v-for="(data, index) in journalEntries" :key="index">
+                        <td class="h-14 w-1/4 pl-3">
+                            <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true"
+                                v-model="journalEntries[index].account_id" :options="additional.account_options"
+                                :errorMessage="getError('account_id', index)" @update:modelValue="" />
+                        </td>
+                        <td class="h-14 w-1/4 pl-3">
+                            <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
+                                v-model="journalEntries[index].description" :errorMessage="formError.description"
+                                @update:modelValue="formError.description = ''" />
+                        </td>
+                        <td class="h-14 w-1/4 pl-3">
+                            <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
+                                v-model="journalEntries[index].debit" :errorMessage="getError('debit', index)"
+                                @update:modelValue="onChangeAmount" type="number" />
+                        </td>
+                        <td class="h-14 w-1/4 pl-3">
+                            <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
+                                v-model="journalEntries[index].credit" :errorMessage="getError('credit', index)"
+                                @update:modelValue="onChangeAmount" type="number" />
+                        </td>
+                        <td class="h-14">
+                            <div class="cursor-pointer" @click="handleDeleteRow(index)">
+                                <span>
+                                    <VTrash color="danger" />
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="h-20 border-t">
+                        <td colspan="2" class="h-12 w-1/4 pl-3">
+                            <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
+                        </td>
+                        <td class="h-12 w-1/4 pl-3">
+                            <span class="font-semibold">Total Debit</span> <br>
+                            Rp. {{ totalDebit }}
+                        </td>
+                        <td class="h-12 w-1/4 pl-3">
+                            <span class="font-semibold">Total Credit</span> <br>
+                            Rp. {{ totalCredit }}
+                        </td>
+                    </tr>
+                    <tr class="">
+                        <td colspan="2" />
+                        <td class="h-12 w-1/4 pl-3">
+                            <!-- balance or not balance -->
+                            <span class="font-semibold">Status</span>
+                            <br>
+                            <span
+                                :class="[{ 'text-emerald-600': isBalance == true }, { 'text-rose-600': isBalance == false }]">{{
+                                    isBalance ? 'Balance' : 'Not Balance'
+                                }}</span>
+                            <br>
+                            <br>
+                        </td>
+                        <td class="h-12 w-1/4 pl-3">
+                            <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
+                                :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+                        </td>
+                    </tr>
+                </template>
             </VDataTable>
         </section>
 
         <section class="p-4 flex justify-end">
-            <VButton :is-loading="isLoading" label="Create Journal" type="primary" @click="submit" />
+            <VButton :is-loading="isLoading" label="Create Journal" type="primary" @click="submit" :disabled="!isBalance" />
         </section>
     </div>
 </template>
