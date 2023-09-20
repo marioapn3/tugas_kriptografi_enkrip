@@ -6,13 +6,25 @@ use App\Models\Journal;
 
 class JournalService
 {
+    public function getData($request)
+    {
+        $search = $request->search;
+        $query = Journal::query();
+
+        $query->when(request('search', false), function ($q) use ($search) {
+            $q->where('no_transaction', 'like', '%' . $search . '%');
+        });
+
+        return $query->paginate(10);
+    }
+
     public function createData($request)
     {
         $inputs = $request->only(['no_transaction', 'date', 'description']);
 
         // if no transaction is empty, generate no transaction
         if (empty($inputs['no_transaction'])) {
-            $inputs['no_transaction'] = 'J-' . date('YmdHis') . rand(100, 999);
+            $inputs['no_transaction'] = 'J-' . rand(100000, 999999);
         }
 
         $journal_entries = $request->journal_entries;
@@ -27,7 +39,7 @@ class JournalService
                 'credit' => $journal_entry['credit'],
                 'description' => $journal_entry['description']
             ];
-            $journal->journal_details()->create($data);
+            $journal->journalDetails()->create($data);
         }
 
         return $journal;

@@ -60,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["Code", "Name", "Clasification", ""]
+const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -69,7 +69,7 @@ const props = defineProps({
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('journals.account-categories.getdata'), {
+    axios.get(route('journals.journal.getdata'), {
         params: {
             page: page,
             search: searchFilter.value
@@ -181,7 +181,7 @@ onMounted(() => {
             </div>
         </header>
 
-        <VDataTable :heads="heads" :isLoading="isLoading">
+        <VDataTable :heads="heads" :isLoading="isLoading" bordered>
             <tr v-if="isLoading">
                 <td class="h-[100%] overflow-hidden my-2" :colspan="heads.length">
                     <VLoading />
@@ -197,10 +197,36 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.classification.name }} - {{
-                    data.classification.debit_or_credit }} </td>
+                <td class="h-24 px-4"> {{ data.no_transaction ?? '-' }} </td>
+                <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
+                <td class="h-24 px-4 whitespace-nowrap"> no implement </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                {{ detail.account_name }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                Rp. {{ detail.debit }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                Rp. {{ detail.credit }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
 
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"

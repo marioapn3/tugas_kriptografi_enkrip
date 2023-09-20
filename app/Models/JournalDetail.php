@@ -11,15 +11,15 @@ class JournalDetail extends Model
 
     protected $guarded = ['id'];
 
-    protected $with = ['journal'];
-
-    public function journal()
-    {
-        return $this->belongsTo(Journal::class, 'journal_id', 'id');
-    }
+    protected $with = ['account'];
 
     public function account()
     {
         return $this->belongsTo(Account::class, 'account_id', 'id');
+    }
+
+    public function journal()
+    {
+        return $this->belongsTo(Journal::class);
     }
 }

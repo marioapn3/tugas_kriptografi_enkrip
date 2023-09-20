@@ -9,8 +9,8 @@ Route::prefix('journals')->name('journals.')->group(function () {
     Route::controller(JournalController::class)->prefix('journal')->name('journal.')->group(function () {
         Route::get('/', 'journalIndex')->name('index');
         Route::get('/create', 'create')->name('create');
-
         Route::post('/store', 'store')->name('store');
+        Route::get('/get-data', 'getData')->name('getdata');
     });
 
     Route::controller(AccountCategoryController::class)->prefix('account-categories')->name('account-categories.')->group(function () {

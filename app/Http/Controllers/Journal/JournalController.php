@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Journal;
 use App\Actions\Options\GetAccountOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Journals\Journal\CreateJournalRequest;
+use App\Http\Resources\Journal\JournalListResource;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Services\Journal\JournalService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -17,11 +19,24 @@ class JournalController extends AdminBaseController
         $this->journalServices = $journalService;
         $this->getAccountOptions = $getAccountOptions;
     }
+
     public function journalIndex()
     {
         return Inertia::render($this->source . 'journal/journal/index', [
             'title' => 'Journal | Jurnalin'
         ]);
+    }
+
+    public function getData(Request $request)
+    {
+        try {
+            $data = $this->journalServices->getData($request);
+            $result = new JournalListResource($data);
+
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            return $this->exceptionError($e->getMessage());
+        }
     }
 
     public function create()

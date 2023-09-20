@@ -25,7 +25,7 @@ class Account extends Model
     }
 
 
-    public function journal_details()
+    public function journalDetails()
     {
         return $this->hasMany(JournalDetail::class, 'account_id', 'id');
     }

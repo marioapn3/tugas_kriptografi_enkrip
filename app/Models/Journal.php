@@ -12,10 +12,10 @@ class Journal extends Model
 
     protected $guarded = ['id'];
 
-    protected $with = ['journal_details'];
+    // protected $with = ['journalDetails'];
 
-    public function journal_details()
+    public function journalDetails()
     {
-        return $this->hasMany(JournalDetail::class, 'journal_id', 'id');
+        return $this->hasMany(JournalDetail::class);
     }
 }
