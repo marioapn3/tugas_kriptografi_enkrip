@@ -17,7 +17,7 @@ import VTextarea from '@/components/VTextarea/index.vue';
 import AppLayout from '@/layouts/apps.vue';
 import VLoading from '@/components/VLoading/index.vue';
 import { Head } from "@inertiajs/inertia-vue3";
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { object, string } from "vue-types";
 import { notify } from 'notiwind';
 
@@ -33,6 +33,7 @@ const isLoading = ref(false);
 const isBalance = ref(false);
 const totalDebit = ref(0);
 const totalCredit = ref(0);
+
 const journalEntries = ref([
     {
         account_id: null,
@@ -46,6 +47,7 @@ const journalEntries = ref([
         credit: 0,
     }
 ])
+
 const formError = ref({})
 const form = ref({})
 
@@ -126,9 +128,15 @@ const handleDate = () => {
 }
 
 
-
-
 const submit = () => {
+    if (props.additional.data) {
+        update()
+    } else {
+        create()
+    }
+}
+
+const create = () => {
     const data = {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
@@ -192,6 +200,81 @@ const submit = () => {
         }).finally(() => isLoading.value = false), 1000)
 
 }
+
+const update = () => {
+    const data = {
+        no_transaction: form.value.no_transaction,
+        date: form.value.date,
+        description: form.value.description,
+        journal_entries: journalEntries.value
+    }
+
+    isLoading.value = true
+    debounce(axios.post(route('journals.journal.update', { id: props.additional.data.id }), data)
+        .then((res) => {
+            isLoading.value = false
+
+            isBalance.value = false
+            totalDebit.value = 0
+            totalCredit.value = 0
+            form.value = ref({})
+
+            journalEntries.value = [
+                {
+                    account_id: null,
+                    description: '',
+                    debit: 0,
+                    credit: 0,
+                }, {
+                    account_id: null,
+                    description: '',
+                    debit: 0,
+                    credit: 0,
+                }
+            ]
+
+            notify({
+                type: "success",
+                group: "top",
+                text: res.data.meta.message
+            }, 2500)
+        }).catch((res) => {
+            // Handle validation errors
+            const result = res.response.data
+            const metaError = res.response.data.meta?.error
+            if (result.hasOwnProperty('errors')) {
+                formError.value = ref({});
+                Object.keys(result.errors).map((key) => {
+                    formError.value[key] = result.errors[key].toString();
+                });
+            }
+
+            if (metaError) {
+                notify({
+                    type: "error",
+                    group: "top",
+                    text: metaError
+                }, 2500)
+            } else {
+                notify({
+                    type: "error",
+                    group: "top",
+                    text: result.message
+                }, 2500)
+            }
+        }).finally(() => isLoading.value = false), 1000)
+
+}
+
+onMounted(() => {
+    if (props.additional.data) {
+        form.value = props.additional.data
+        journalEntries.value = props.additional.data.journal_details
+        totalDebit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['debit']) || 0), 0)
+        totalCredit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['credit']) || 0), 0)
+        isBalance.value = totalDebit.value == totalCredit.value
+    }
+})
 
 </script>
 
@@ -300,7 +383,7 @@ const submit = () => {
         </section>
 
         <section class="p-4 flex justify-end">
-            <VButton :is-loading="isLoading" label="Create Journal" type="primary" @click="submit" :disabled="!isBalance" />
+            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Journal' : 'Create Journal'" type="primary" @click="submit" :disabled="!isBalance" />
         </section>
     </div>
 </template>

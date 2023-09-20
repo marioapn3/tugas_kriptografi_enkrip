@@ -12,7 +12,7 @@ class Journal extends Model
 
     protected $guarded = ['id'];
 
-    // protected $with = ['journalDetails'];
+    protected $with = ['journalDetails'];
 
     public function journalDetails()
     {

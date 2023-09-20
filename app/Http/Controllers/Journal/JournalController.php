@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Journal;
 use App\Actions\Options\GetAccountOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Journals\Journal\CreateJournalRequest;
+use App\Http\Requests\Journals\Journal\UpdateJournalRequest;
 use App\Http\Resources\Journal\JournalListResource;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Services\Journal\JournalService;
@@ -55,6 +56,33 @@ class JournalController extends AdminBaseController
             DB::beginTransaction();
             $data = $this->journalServices->createData($request);
             $result = new SubmitDefaultResource($data, 'Success create journal');
+            DB::commit();
+
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function edit($id)
+    {
+        $data = $this->journalServices->getDataById($id);
+        return Inertia::render($this->source . 'journal/journal/create', [
+            'title' => 'Create Journal | Jurnalin',
+            'additional' => [
+                'account_options' => $this->getAccountOptions->handle(),
+                'data' => $data
+            ]
+        ]);
+    }
+
+    public function updateData($id, UpdateJournalRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $this->journalServices->updateData($id, $request);
+            $result = new SubmitDefaultResource($data, 'Success update journal');
             DB::commit();
 
             return $this->respond($result);

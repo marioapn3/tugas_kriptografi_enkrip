@@ -11,6 +11,8 @@ Route::prefix('journals')->name('journals.')->group(function () {
         Route::get('/create', 'create')->name('create');
         Route::post('/store', 'store')->name('store');
         Route::get('/get-data', 'getData')->name('getdata');
+        Route::get('/edit/{id}', 'edit')->name('edit');
+        Route::post('/update-data/{id}', 'updateData')->name('update');
         Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
     });
 
