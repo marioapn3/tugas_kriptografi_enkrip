@@ -21,8 +21,9 @@ import VButton from '@/components/VButton/index.vue';
 import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
-import VFilter from './Filter.vue';
-import VModalForm from './ModalForm.vue';
+import { Inertia } from "@inertiajs/inertia";
+// import VFilter from './Filter.vue';
+// import VModalForm from './ModalForm.vue';
 
 const query = ref([])
 const searchFilter = ref("");
@@ -37,7 +38,7 @@ const breadcrumb = [
         active: false,
     },
     {
-        name: "Account Category",
+        name: "Journal",
         active: true,
         to: route('journals.account-categories.index')
     },
@@ -59,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["Code", "Name", "Clasification", ""]
+const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -68,7 +69,7 @@ const props = defineProps({
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('journals.account-categories.getdata'), {
+    axios.get(route('journals.journal.getdata'), {
         params: {
             page: page,
             search: searchFilter.value
@@ -103,9 +104,8 @@ const searchHandle = (search) => {
     getData(1)
 };
 
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
+const handleCreate = () => {
+    Inertia.visit(route('journals.journal.create'));
 }
 
 const handleEditModal = (data) => {
@@ -139,7 +139,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('journals.account-categories.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('journals.journal.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",
@@ -167,21 +167,21 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Account Category</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Journal</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Categories <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Journals <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
-                <VFilter @search="searchHandle" />
-                <VButton label="Add Category" type="primary" @click="handleAddModalForm" class="mt-auto" />
+                <!-- <VFilter @search="searchHandle" /> -->
+                <VButton label="Create Journal" type="primary" @click="handleCreate" class="mt-auto" />
             </div>
         </header>
 
-        <VDataTable :heads="heads" :isLoading="isLoading">
+        <VDataTable :heads="heads" :isLoading="isLoading" bordered>
             <tr v-if="isLoading">
                 <td class="h-[100%] overflow-hidden my-2" :colspan="heads.length">
                     <VLoading />
@@ -197,10 +197,36 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.classification.name }} - {{
-                    data.classification.debit_or_credit }} </td>
+                <td class="h-24 px-4"> {{ data.no_transaction ?? '-' }} </td>
+                <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
+                <td class="h-24 px-4 whitespace-nowrap"> no implement </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                {{ detail.account_name }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                Rp. {{ detail.debit }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <table>
+                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
+                            <td>
+                                Rp. {{ detail.credit }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
 
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
@@ -232,6 +258,6 @@ onMounted(() => {
     <VAlert :open-dialog="openAlert" @closeAlert="closeAlert" @submitAlert="deleteHandle" type="danger"
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
-    <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" :additional="additional" />
+    <!-- <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
+        @successSubmit="successSubmit" :additional="additional" /> -->
 </template>

@@ -6,6 +6,7 @@ const props = defineProps({
     freezeTable: bool().def(false),
     wrapperClass: string(),
     bordered: bool().def(false),
+    divideY: bool().def(true),
 })
 </script>
 
@@ -32,7 +33,7 @@ const props = defineProps({
                 </thead>
                 <!-- Table body -->
                 <tbody
-                    class="text-sm text-slate-600 font-normal min-h-[40%] divide-y divide-slate-200 border-b border-slate-200">
+                    class="text-sm text-slate-600 font-normal min-h-[40%] divide-slate-200 border-b border-slate-200" :class="[{'divide-y':divideY}]">
                     <slot></slot>
                 </tbody>
             </table>
