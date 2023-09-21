@@ -56,6 +56,49 @@ class PermissionSeeder extends Seeder
                 ]
             ],
 
+            // transaction
+            [
+                'group' => 'transaction',
+                'sub_group' => [
+                    [
+                        'name' => 'pos',
+                        'permission' => [
+                            [
+                                'name' => 'view_transaction_pos',
+                                'label' => 'View Transaction Pos',
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'selling',
+                        'permission' => [
+                            [
+                                'name' => 'view_transaction_selling',
+                                'label' => 'View Transaction selling',
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'purchase',
+                        'permission' => [
+                            [
+                                'name' => 'view_transaction_purchase',
+                                'label' => 'View Transaction purchase',
+                            ]
+                        ]
+                    ],
+                    [
+                        'name' => 'expanse',
+                        'permission' => [
+                            [
+                                'name' => 'view_transaction_expanse',
+                                'label' => 'View Transaction expanse',
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+
             // product
             [
                 'group' => 'storage',
