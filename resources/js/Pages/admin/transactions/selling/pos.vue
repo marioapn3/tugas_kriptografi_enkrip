@@ -5,17 +5,19 @@ export default {
 </script>
 <script setup>
 import { ref } from 'vue';
-import { array, object } from 'vue-types';
+import { array, object, string } from 'vue-types';
 import AppLayout from '@/layouts/apps.vue';
 import VSetting from "@/components/src/icons/VSetting.vue";
 import VSelect from '@/components/VSelect/index.vue';
 import VButtonRounded from "@/components/VButtonRounded/index.vue";
-import VFilter from "./Filter.vue"
+import VFilter from "./FilterPos.vue"
+import { Head } from '@inertiajs/inertia-vue3';
 
 const props = defineProps({
+    title: string(),
     filter: object(),
     query: array(),
-    modules: array()
+    modules: array(),
 })
 
 const formError = ref({})
@@ -24,6 +26,7 @@ const form = ref({})
 </script>
 
 <template>
+    <Head :title="props.title" />
     <div class="hidden sm:flex gap-3 flex-wrap ">
         <section class="h-[calc(100vh-110px)] p-5 bg-white w-full md:w-[65%] rounded-md overflow-hidden">
             <VFilter @search="searchHandle" />
