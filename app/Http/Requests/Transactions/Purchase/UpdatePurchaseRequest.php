@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Transaction\Purchase;
+namespace App\Http\Requests\Transactions\Purchase;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PurchaseRequest extends FormRequest
+class UpdatePurchaseRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class PurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'no_transaction' => 'string|nullable|unique:journals,no_transaction',
+            'no_transaction' => 'string|nullable|unique:purchases,no_transaction,' . $this->id,
             'date' => 'date|required',
             'description' => 'string|nullable',
             'account_id' => 'required|exists:accounts,id',

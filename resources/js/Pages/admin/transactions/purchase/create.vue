@@ -26,18 +26,16 @@ const props = defineProps({
     additional: object(),
 })
 
-const heads = ["Product *", "Quantity", "Price Per Unit *", "Total Price", ""]
+const heads = ["Product *", "Qty *", "Price *", "Total Price", ""]
 
 const isLoading = ref(false);
 
-// const isBalance = ref(false);
-// const totalDebit = ref(0);
-// const totalCredit = ref(0);
+const totalPrice = ref(0)
 
 const purchaseDetail = ref([
     {
         product_id: null,
-        quantity: '',
+        quantity: 0,
         price_per_unit: 0,
         total_price: 0,
     },
@@ -62,9 +60,8 @@ const breadcrumb = [
         to: route('transaction.purchase.index')
     },
     {
-        name: "Create",
+        name: props.additional.data ? 'Edit' : 'Create',
         active: true,
-        // to:
     },
 ]
 
@@ -72,7 +69,7 @@ const breadcrumb = [
 const handleAddRow = () => {
     purchaseDetail.value.push({
         product_id: null,
-        quantity: '',
+        quantity: 0,
         price_per_unit: 0,
         total_price: 0,
     })
@@ -89,11 +86,43 @@ const handleDeleteRow = (index) => {
     if (purchaseDetail.value.length == 1) {
         return
     }
-
     // slice row by index
     purchaseDetail.value.splice(index, 1)
 }
 
+const onSelectProduct = (index) => {
+    const id = purchaseDetail.value[index].product_id
+    axios.get(route('transaction.sale.getproduct', { id: id }))
+        .then((res) => {
+            purchaseDetail.value[index].quantity = 1
+            purchaseDetail.value[index].price_per_unit = parseInt(res.data.data.sale_price)
+            purchaseDetail.value[index].total_price = parseInt(purchaseDetail.value[index].price_per_unit) * parseInt(purchaseDetail.value[index].quantity)
+            onChangeSubtotal()
+        }).catch((res) => {
+            notify({
+                type: "error",
+                group: "top",
+                text: res.response.data.message
+            }, 2500)
+        }).finally(() => isLoading.value = false)
+}
+
+const onChangeQty = (index) => {
+    purchaseDetail.value[index].total_price = parseInt(purchaseDetail.value[index].price_per_unit) * parseInt(purchaseDetail.value[index].quantity)
+    onChangeSubtotal()
+}
+
+const onChangeSubtotal = () => {
+    totalPrice.value = 0
+    purchaseDetail.value.forEach((item) => {
+        totalPrice.value += parseInt(item.total_price)
+    })
+}
+
+const onChangePrice = (index) => {
+    purchaseDetail.value[index].total_price = parseInt(purchaseDetail.value[index].price_per_unit) * parseInt(purchaseDetail.value[index].quantity)
+    onChangeSubtotal()
+}
 
 const handleDate = () => {
     if (form.value.date) {
@@ -110,6 +139,7 @@ const submit = () => {
         create()
     }
 }
+
 
 const create = () => {
     const data = {
@@ -129,7 +159,7 @@ const create = () => {
             purchaseDetail.value = [
                 {
                     product_id: null,
-                    quantity: '',
+                    quantity: 0,
                     price_per_unit: 0,
                     total_price: 0,
                 },
@@ -173,8 +203,8 @@ const update = () => {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
         description: form.value.description,
-        account_id: form.account_id,
-        supplier_id: form.supplier_id,
+        account_id: form.value.account_id,
+        supplier_id: form.value.supplier_id,
         purchase_details: purchaseDetail.value
     }
 
@@ -188,7 +218,7 @@ const update = () => {
             purchaseDetail.value = [
                 {
                     product_id: null,
-                    quantity: '',
+                    quantity: 0,
                     price_per_unit: 0,
                     total_price: 0,
                 },
@@ -230,7 +260,9 @@ const update = () => {
 onMounted(() => {
     if (props.additional.data) {
         form.value = props.additional.data
-        purchaseDetail.value = props.additional.data.journal_details
+        form.value.account_id = props.additional.data.pay_with_account_id
+        purchaseDetail.value = props.additional.data.purchase_details
+        onChangeSubtotal()
     }
 })
 
@@ -240,10 +272,10 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Create Purchase</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' : 'Create' }} Purchase</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
-        <section class="grid grid-cols-1 gap-4 p-4 md:grid-cols-4">
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 pt-4">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
                 @update:modelValue="formError.no_transaction = ''">
@@ -255,10 +287,6 @@ onMounted(() => {
                     </div>
                 </template>
             </VInput>
-
-            <VSelect placeholder="Select Supplier" :required="true" v-model="form.supplier_id"
-                :options="additional.supplier_options" label="Select Supplier" :errorMessage="formError.supplier_id"
-                @update:modelValue="formError.supplier_id = ''" />
             <div>
                 <label class="block mb-1 text-sm font-medium text-slate-600">
                     Date <span class="text-rose-500">*</span>
@@ -270,6 +298,12 @@ onMounted(() => {
                     {{ formError.date }}
                 </div>
             </div>
+
+        </section>
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 mb-5 !z-60">
+            <VSelect placeholder="Select Supplier" :required="true" v-model="form.supplier_id"
+                :options="additional.supplier_options" label="Select Supplier" :errorMessage="formError.supplier_id"
+                @update:modelValue="formError.supplier_id = ''" />
 
             <VSelect placeholder="Select Account" :required="true" v-model="form.account_id"
                 :options="additional.account_options" label="Select Account Payment" :errorMessage="formError.account_id"
@@ -287,25 +321,25 @@ onMounted(() => {
                 <template v-else>
                     <tr v-for="(data, index) in purchaseDetail" :key="index">
                         <td class="w-1/4 pl-3 h-14">
-                            <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true"
+                            <VSelect class="w-60 !z-0" placeholder="Choose Product" :required="true" :clearable="false"
                                 v-model="purchaseDetail[index].product_id" :options="additional.product_options"
-                                :errorMessage="getError('product_id', index)" @update:modelValue="" />
+                                :errorMessage="getError('product_id', index)" @update:modelValue="onSelectProduct(index)" />
                         </td>
                         <td class="w-1/4 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Quantity" :required="false"
                                 v-model="purchaseDetail[index].quantity" :errorMessage="getError('quantity', index)"
-                                @update:modelValue="onChangeAmount" type="number" />
+                                @update:modelValue="onChangeQty(index)" type="number" />
                         </td>
                         <td class="w-1/4 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
+                            <VInput class="w-60 !z-0" placeholder="Input Price" :required="false"
                                 v-model="purchaseDetail[index].price_per_unit"
-                                :errorMessage="getError('price_per_unit', index)" @update:modelValue="onChangeAmount"
+                                :errorMessage="getError('price_per_unit', index)" @update:modelValue="onChangePrice(index)"
                                 type="number" />
                         </td>
                         <td class="w-1/4 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
+                            <VInput class="w-60 !z-0" placeholder="Input Subprice" :required="false"
                                 v-model="purchaseDetail[index].total_price" :errorMessage="getError('total_price', index)"
-                                @update:modelValue="onChangeAmount" type="number" />
+                                @update:modelValue="onChangeSubtotal" type="number" disabled />
                         </td>
                         <td class="h-14">
                             <div class="cursor-pointer" @click="handleDeleteRow(index)">
@@ -316,17 +350,21 @@ onMounted(() => {
                         </td>
                     </tr>
                     <tr class="h-20 border-t">
-                        <td colspan="2" class="w-1/4 h-12 pl-3">
+                        <td colspan="3" class="h-12 w-1/4 pl-3">
                             <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
                         </td>
-                        <td class="w-1/4 h-12 pl-3">
-                            <span class="font-semibold">Total Biaya</span> <br>
-                            Rp. {{ totalCredit }}
+                        <td class="h-12 w-1/4 pl-3">
+                            <span class="font-semibold text-lg">Total</span> <br>
+                            <span class="text-md">
+                                Rp. {{ isNaN(totalPrice) ? 0 : totalPrice }}
+                            </span>
                         </td>
-                        <td class="w-1/4 h-12 pl-3">
+                    </tr>
+                    <tr class="">
+                        <td colspan="3" />
+                        <td class="h-12 w-1/4 pl-3">
                             <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
                                 :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
-
                         </td>
                     </tr>
 
@@ -336,7 +374,7 @@ onMounted(() => {
 
         <section class="flex justify-end p-4">
             <VButton :is-loading="isLoading" :label="additional.data ? 'Update Purchase' : 'Create Purchase'" type="primary"
-                @click="submit" />
+                @click="submit" :disabled="isNaN(totalPrice) || totalPrice == 0" />
         </section>
     </div>
 </template>

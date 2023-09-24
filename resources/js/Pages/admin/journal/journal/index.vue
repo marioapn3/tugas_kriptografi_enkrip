@@ -22,7 +22,7 @@ import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import { Inertia } from "@inertiajs/inertia";
-// import VFilter from './Filter.vue';
+import VFilter from './Filter.vue';
 // import VModalForm from './ModalForm.vue';
 
 const query = ref([])
@@ -180,7 +180,7 @@ onMounted(() => {
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
-                <!-- <VFilter @search="searchHandle" /> -->
+                <VFilter @search="searchHandle" />
                 <VButton label="Create Journal" type="primary" @click="handleCreate" class="mt-auto" />
             </div>
         </header>

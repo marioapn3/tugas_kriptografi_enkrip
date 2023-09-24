@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
+
+    protected $with = ['purchase_details', 'pay_with_account', 'supplier'];
 
     /**
      * Get the supplier that owns the Purchase
@@ -40,5 +43,10 @@ class Purchase extends Model
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Contact::class, 'supplier_id', 'id');
+    }
+
+    public function pay_with_account()
+    {
+        return $this->belongsTo(Account::class, 'pay_with_account_id', 'id');
     }
 }

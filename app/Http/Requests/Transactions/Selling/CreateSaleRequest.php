@@ -14,7 +14,7 @@ class CreateSaleRequest extends FormRequest
     public function rules()
     {
         return [
-            'no_transaction' => 'string|nullable|unique:journals,no_transaction',
+            'no_transaction' => 'string|nullable|unique:sales,no_transaction',
             'date' => 'date|required',
             'description' => 'string|nullable',
             'customer_id' => 'required|exists:contacts,id',

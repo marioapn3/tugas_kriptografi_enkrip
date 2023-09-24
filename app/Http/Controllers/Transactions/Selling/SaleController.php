@@ -9,8 +9,9 @@ use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Transactions\Selling\CreateSaleRequest;
 use App\Http\Requests\Transactions\Selling\UpdateSaleRequest;
 use App\Http\Resources\SubmitDefaultResource;
-use App\Http\Resources\Transactions\Selling\GetProductDetailResource;
+use App\Http\Resources\Transactions\GetProductDetailResource;
 use App\Http\Resources\Transactions\Selling\SaleListResource;
+use App\Services\Storages\ProductService;
 use App\Services\Transactions\SellingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,11 +21,13 @@ class SaleController extends AdminBaseController
 {
     public function __construct(
         SellingService $sellingService,
+        ProductService $productService,
         GetAccountOptions $getAccountOptions,
         GetCustomerOptions $getCustomerOptions,
         GetProductOptions $getProductOptions
     ) {
         $this->sellingService = $sellingService;
+        $this->productService = $productService;
         $this->getAccountOptions = $getAccountOptions;
         $this->getCustomerOptions = $getCustomerOptions;
         $this->getProductOptions = $getProductOptions;
@@ -77,7 +80,7 @@ class SaleController extends AdminBaseController
     public function getProduct($id)
     {
         try {
-            $data = $this->sellingService->getProduct($id);
+            $data = $this->productService->getDetail($id);
             $result = new GetProductDetailResource($data, 'Product found');
             return $this->respond($result);
         } catch (\Exception $e) {

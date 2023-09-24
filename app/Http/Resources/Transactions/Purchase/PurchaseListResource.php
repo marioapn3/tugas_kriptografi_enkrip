@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Transactions;
+namespace App\Http\Resources\Transactions\Purchase;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -19,7 +19,7 @@ class PurchaseListResource extends ResourceCollection
             'data' => $this->transformCollection($this->collection),
             'meta' => [
                 "success" => true,
-                "message" => "Success get jounals list",
+                "message" => "Success get purchase list",
                 'pagination' => $this->metaData()
             ]
         ];
@@ -29,12 +29,17 @@ class PurchaseListResource extends ResourceCollection
     {
         return [
             'id' => $data->id,
-            'no_purchase' => $data->no_purchase,
+            'no_transaction' => $data->no_transaction,
             'date' => $data->date,
             'description' => $data->description,
             'supplier' => $data->supplier->name,
+            'supplier_id' => $data->supplier_id,
+            'total_price' => number_format($data->purchase_details->sum(function ($detail) {
+                return $detail->quantity * $detail->price_per_unit;
+            })),
             'purchase_details' => $data->purchase_details->map(function ($purchase_detail) {
                 return [
+                    'product_id' => $purchase_detail->product_id,
                     'quantity' => $purchase_detail->quantity,
                     'price_per_unit' => $purchase_detail->price_per_unit,
                     'total_price' => $purchase_detail->total_price,

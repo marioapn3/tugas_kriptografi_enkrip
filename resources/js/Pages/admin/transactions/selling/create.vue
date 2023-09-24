@@ -60,7 +60,7 @@ const breadcrumb = [
         to: route('transaction.sale.index')
     },
     {
-        name: "Create",
+        name: props.additional.data ? 'Edit' :'Create',
         active: true,
         // to: 
     },
@@ -126,27 +126,6 @@ const onChangeSubtotal = () => {
 const onChangePrice = (index) => {
     productEntries.value[index].subtotal = parseInt(productEntries.value[index].price) * parseInt(productEntries.value[index].qty)
     onChangeSubtotal()
-}
-
-const onChangeAmount = () => {
-    // count total debit and credit
-    let debit = 0
-    let credit = 0
-    productEntries.value.forEach((item) => {
-        debit += parseInt(item.debit)
-        credit += parseInt(item.credit)
-    })
-
-    totalDebit.value = debit
-    totalCredit.value = credit
-
-    // check is balance for total debit and credit
-    // if debit not equal credit then not balance
-    if (debit != credit) {
-        isBalance.value = false
-    } else {
-        isBalance.value = true
-    }
 }
 
 const handleDate = () => {
@@ -304,7 +283,7 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="mb-4 sm:mb-6 flex justify-between items-center">
-        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Create Sale</h1>
+        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">{{ additional.data ? 'Edit' :'Create' }}  Sale</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 pt-4">
@@ -383,7 +362,7 @@ onMounted(() => {
                         <td class="h-12 w-1/4 pl-3">
                             <span class="font-semibold text-lg">Total</span> <br>
                             <span class="text-md">
-                                Rp. {{ totalPrice }}
+                                Rp. {{ isNaN(totalPrice) ? 0 : totalPrice}}
                             </span>
                         </td>
                     </tr>
@@ -399,8 +378,8 @@ onMounted(() => {
         </section>
 
         <section class="p-4 flex justify-end">
-            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Journal' : 'Create Journal'" type="primary"
-                @click="submit" />
+            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Sale' : 'Create Sale'" type="primary"
+                @click="submit" :disabled="isNaN(totalPrice) || totalPrice == 0" />
         </section>
     </div>
 </template>

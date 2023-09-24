@@ -22,7 +22,7 @@ import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import { Inertia } from "@inertiajs/inertia";
-// import VFilter from './Filter.vue';
+import VFilter from './Filter.vue';
 // import VModalForm from './ModalForm.vue';
 
 const query = ref([])
@@ -60,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Date", "Supplier", "Quantity", "Product Price", "Total Price", ""]
+const heads = ["Date", "No Transaction", "Supplier", "Total", "Status", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -171,16 +171,16 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Purchase</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Purchases</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Purchase Transactions <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Purchase <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
-                <!-- <VFilter @search="searchHandle" /> -->
+                <VFilter @search="searchHandle" />
                 <VButton label="Create Purchase" type="primary" @click="handleCreate" class="mt-auto" />
             </div>
         </header>
@@ -201,37 +201,17 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-24 px-4"> {{ data.no_purchase ?? '-' }} </td>
-                <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
-                <td class="h-24 px-4 whitespace-nowrap">
+                <td class="h-16 px-4 whitespace-nowrap">{{ data.date }} </td>
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                    {{ data.no_transaction }} </td>
+                <td class="h-16 px-4 whitespace-nowrap">
                     {{ data.supplier }}
                 </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.purchase_details">
-                            <td>
-                                {{ detail.quantity }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.purchase_details">
-                            <td>
-                                Rp. {{ detail.price_per_unit }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.purchase_details">
-                            <td>
-                                Rp. {{ detail.total_price }}
-                            </td>
-                        </tr>
-                    </table>
+                <td class="h-16 px-4 whitespace-nowrap">Rp. {{ data.total_price }}</td>
+                <td class="h-16 px-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Success
+                    </span>
                 </td>
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
