@@ -17,7 +17,7 @@ const emit = defineEmits(['search'])
 
 <template>
     <!-- Search -->
-    <VInput placeholder="Search by number" is-prefix v-model="searchValue" @update:model-value="search">
+    <VInput placeholder="Search by name or code" is-prefix v-model="searchValue" @update:model-value="search">
         <template v-slot:icon>
             <span class="absolute inset-y-0 left-0 flex items-center px-2 cursor-pointer">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">

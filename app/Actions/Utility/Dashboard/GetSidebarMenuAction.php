@@ -43,7 +43,12 @@ class GetSidebarMenuAction
                 'submenu' => [
                     [
                         'text' => 'POS',
-                        'url'  => route('transaction.selling.pos.index'),
+                        'url'  => route('transaction.pos.index'),
+                        // 'can'  => ['view_systems_role_management']
+                    ],
+                    [
+                        'text' => 'Sales',
+                        'url'  => route('transaction.sale.index'),
                         // 'can'  => ['view_systems_role_management']
                     ],
                     [
@@ -57,7 +62,7 @@ class GetSidebarMenuAction
                 'text' => 'Accounting',
                 'icon' => 'VJournal',
                 'group' => true,
-                'can' => ['view_account', 'view_account_category','view_manual_journal'],
+                'can' => ['view_account', 'view_account_category', 'view_manual_journal'],
                 'submenu' => [
                     [
                         'text' => 'Journal',
