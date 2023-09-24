@@ -47,8 +47,8 @@ class GetSidebarMenuAction
                         // 'can'  => ['view_systems_role_management']
                     ],
                     [
-                        'text' => 'Test 2',
-                        'url'  => route('test2'),
+                        'text' => 'Purchase',
+                        'url'  => route('transaction.purchase.index'),
                         // 'can'  => ['view_systems_role_management']
                     ]
                 ],
@@ -57,7 +57,7 @@ class GetSidebarMenuAction
                 'text' => 'Accounting',
                 'icon' => 'VJournal',
                 'group' => true,
-                'can' => ['view_account', 'view_account_category','view_manual_journal'],
+                'can' => ['view_account', 'view_account_category', 'view_manual_journal'],
                 'submenu' => [
                     [
                         'text' => 'Journal',

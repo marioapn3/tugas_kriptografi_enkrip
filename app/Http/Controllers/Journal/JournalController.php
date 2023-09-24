@@ -15,6 +15,9 @@ use Inertia\Inertia;
 
 class JournalController extends AdminBaseController
 {
+
+    private $journalServices;
+    private $getAccountOptions;
     public function __construct(JournalService $journalService, GetAccountOptions $getAccountOptions)
     {
         $this->journalServices = $journalService;
@@ -84,7 +87,6 @@ class JournalController extends AdminBaseController
             $data = $this->journalServices->updateData($id, $request);
             $result = new SubmitDefaultResource($data, 'Success update journal');
             DB::commit();
-
             return $this->respond($result);
         } catch (\Exception $e) {
             DB::rollBack();

@@ -26,26 +26,21 @@ const props = defineProps({
     additional: object(),
 })
 
-const heads = ["Account *", "Description", "Debit *", "Credit *", ""]
+const heads = ["Product *", "Quantity", "Price Per Unit *", "Total Price", ""]
 
 const isLoading = ref(false);
 
-const isBalance = ref(false);
-const totalDebit = ref(0);
-const totalCredit = ref(0);
+// const isBalance = ref(false);
+// const totalDebit = ref(0);
+// const totalCredit = ref(0);
 
-const journalEntries = ref([
+const purchaseDetail = ref([
     {
-        account_id: null,
-        description: '',
-        debit: 0,
-        credit: 0,
-    }, {
-        account_id: null,
-        description: '',
-        debit: 0,
-        credit: 0,
-    }
+        product_id: null,
+        quantity: '',
+        price_per_unit: 0,
+        total_price: 0,
+    },
 ])
 
 const formError = ref({})
@@ -58,13 +53,13 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Accounting",
+        name: "Transaction",
         active: false,
     },
     {
-        name: "Journal",
+        name: "Purchase",
         active: false,
-        to: route('contacts.customer.index')
+        to: route('transaction.purchase.index')
     },
     {
         name: "Create",
@@ -75,50 +70,30 @@ const breadcrumb = [
 
 
 const handleAddRow = () => {
-    journalEntries.value.push({
-        account_id: null,
-        description: '',
-        debit: 0,
-        credit: 0,
+    purchaseDetail.value.push({
+        product_id: null,
+        quantity: '',
+        price_per_unit: 0,
+        total_price: 0,
     })
 }
 
 
 const getError = (property, index) => {
-    return formError.value['journal_entries.' + index + '.' + property]
+    return formError.value['purchase_details.' + index + '.' + property]
 }
 
 
 const handleDeleteRow = (index) => {
     // if count row == 1 then not delete
-    if (journalEntries.value.length == 1) {
+    if (purchaseDetail.value.length == 1) {
         return
     }
 
     // slice row by index
-    journalEntries.value.splice(index, 1)
+    purchaseDetail.value.splice(index, 1)
 }
 
-const onChangeAmount = () => {
-    // count total debit and credit
-    let debit = 0
-    let credit = 0
-    journalEntries.value.forEach((item) => {
-        debit += parseInt(item.debit)
-        credit += parseInt(item.credit)
-    })
-
-    totalDebit.value = debit
-    totalCredit.value = credit
-
-    // check is balance for total debit and credit
-    // if debit not equal credit then not balance
-    if (debit != credit) {
-        isBalance.value = false
-    } else {
-        isBalance.value = true
-    }
-}
 
 const handleDate = () => {
     if (form.value.date) {
@@ -141,31 +116,23 @@ const create = () => {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
         description: form.value.description,
-        journal_entries: journalEntries.value
+        account_id: form.value.account_id,
+        supplier_id: form.value.supplier_id,
+        purchase_details: purchaseDetail.value
     }
 
     isLoading.value = true
-    debounce(axios.post(route('journals.journal.store'), data)
+    debounce(axios.post(route('transaction.purchase.store'), data)
         .then((res) => {
             isLoading.value = false
-
-            isBalance.value = false
-            totalDebit.value = 0
-            totalCredit.value = 0
             form.value = ref({})
-
-            journalEntries.value = [
+            purchaseDetail.value = [
                 {
-                    account_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
-                }, {
-                    account_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
-                }
+                    product_id: null,
+                    quantity: '',
+                    price_per_unit: 0,
+                    total_price: 0,
+                },
             ]
 
             notify({
@@ -206,31 +173,25 @@ const update = () => {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
         description: form.value.description,
-        journal_entries: journalEntries.value
+        account_id: form.account_id,
+        supplier_id: form.supplier_id,
+        purchase_details: purchaseDetail.value
     }
 
     isLoading.value = true
-    debounce(axios.post(route('journals.journal.update', { id: props.additional.data.id }), data)
+    debounce(axios.post(route('transaction.purchase.update', { id: props.additional.data.id }), data)
         .then((res) => {
             isLoading.value = false
 
-            isBalance.value = false
-            totalDebit.value = 0
-            totalCredit.value = 0
             form.value = ref({})
 
-            journalEntries.value = [
+            purchaseDetail.value = [
                 {
-                    account_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
-                }, {
-                    account_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
-                }
+                    product_id: null,
+                    quantity: '',
+                    price_per_unit: 0,
+                    total_price: 0,
+                },
             ]
 
             notify({
@@ -269,10 +230,7 @@ const update = () => {
 onMounted(() => {
     if (props.additional.data) {
         form.value = props.additional.data
-        journalEntries.value = props.additional.data.journal_details
-        totalDebit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['debit']) || 0), 0)
-        totalCredit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['credit']) || 0), 0)
-        isBalance.value = totalDebit.value == totalCredit.value
+        purchaseDetail.value = props.additional.data.journal_details
     }
 })
 
@@ -282,10 +240,10 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Create Journal</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Create Purchase</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
-        <section class="grid grid-cols-1 gap-4 p-4 mb-5 md:grid-cols-4">
+        <section class="grid grid-cols-1 gap-4 p-4 md:grid-cols-4">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
                 @update:modelValue="formError.no_transaction = ''">
@@ -297,6 +255,10 @@ onMounted(() => {
                     </div>
                 </template>
             </VInput>
+
+            <VSelect placeholder="Select Supplier" :required="true" v-model="form.supplier_id"
+                :options="additional.supplier_options" label="Select Supplier" :errorMessage="formError.supplier_id"
+                @update:modelValue="formError.supplier_id = ''" />
             <div>
                 <label class="block mb-1 text-sm font-medium text-slate-600">
                     Date <span class="text-rose-500">*</span>
@@ -308,6 +270,11 @@ onMounted(() => {
                     {{ formError.date }}
                 </div>
             </div>
+
+            <VSelect placeholder="Select Account" :required="true" v-model="form.account_id"
+                :options="additional.account_options" label="Select Account Payment" :errorMessage="formError.account_id"
+                @update:modelValue="formError.account_id = ''" />
+
         </section>
 
         <section class="px-1">
@@ -318,25 +285,26 @@ onMounted(() => {
                     </td>
                 </tr>
                 <template v-else>
-                    <tr v-for="(data, index) in journalEntries" :key="index">
+                    <tr v-for="(data, index) in purchaseDetail" :key="index">
                         <td class="w-1/4 pl-3 h-14">
                             <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true"
-                                v-model="journalEntries[index].account_id" :options="additional.account_options"
-                                :errorMessage="getError('account_id', index)" @update:modelValue="" />
+                                v-model="purchaseDetail[index].product_id" :options="additional.product_options"
+                                :errorMessage="getError('product_id', index)" @update:modelValue="" />
                         </td>
                         <td class="w-1/4 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
-                                v-model="journalEntries[index].description" :errorMessage="formError.description"
-                                @update:modelValue="formError.description = ''" />
-                        </td>
-                        <td class="w-1/4 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
-                                v-model="journalEntries[index].debit" :errorMessage="getError('debit', index)"
+                            <VInput class="w-60 !z-0" placeholder="Input Quantity" :required="false"
+                                v-model="purchaseDetail[index].quantity" :errorMessage="getError('quantity', index)"
                                 @update:modelValue="onChangeAmount" type="number" />
                         </td>
                         <td class="w-1/4 pl-3 h-14">
+                            <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
+                                v-model="purchaseDetail[index].price_per_unit"
+                                :errorMessage="getError('price_per_unit', index)" @update:modelValue="onChangeAmount"
+                                type="number" />
+                        </td>
+                        <td class="w-1/4 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
-                                v-model="journalEntries[index].credit" :errorMessage="getError('credit', index)"
+                                v-model="purchaseDetail[index].total_price" :errorMessage="getError('total_price', index)"
                                 @update:modelValue="onChangeAmount" type="number" />
                         </td>
                         <td class="h-14">
@@ -352,39 +320,23 @@ onMounted(() => {
                             <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
                         </td>
                         <td class="w-1/4 h-12 pl-3">
-                            <span class="font-semibold">Total Debit</span> <br>
-                            Rp. {{ totalDebit }}
-                        </td>
-                        <td class="w-1/4 h-12 pl-3">
-                            <span class="font-semibold">Total Credit</span> <br>
+                            <span class="font-semibold">Total Biaya</span> <br>
                             Rp. {{ totalCredit }}
-                        </td>
-                    </tr>
-                    <tr class="">
-                        <td colspan="2" />
-                        <td class="w-1/4 h-12 pl-3">
-                            <!-- balance or not balance -->
-                            <span class="font-semibold">Status</span>
-                            <br>
-                            <span
-                                :class="[{ 'text-emerald-600': isBalance == true }, { 'text-rose-600': isBalance == false }]">{{
-                                    isBalance ? 'Balance' : 'Not Balance'
-                                }}</span>
-                            <br>
-                            <br>
                         </td>
                         <td class="w-1/4 h-12 pl-3">
                             <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
                                 :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
+
                         </td>
                     </tr>
+
                 </template>
             </VDataTable>
         </section>
 
         <section class="flex justify-end p-4">
-            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Journal' : 'Create Journal'" type="primary"
-                @click="submit" :disabled="!isBalance" />
+            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Purchase' : 'Create Purchase'" type="primary"
+                @click="submit" />
         </section>
     </div>
 </template>
