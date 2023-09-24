@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Database\Seeders\Transaction\PurchaseSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,6 +23,9 @@ class DatabaseSeeder extends Seeder
             ClasificationSeeder::class,
             AccountCategorySeeder::class,
             AccountSeeder::class,
+            ProductSeeder::class,
+            ContactSeeder::class,
+            PurchaseSeeder::class,
         ]);
     }
 }

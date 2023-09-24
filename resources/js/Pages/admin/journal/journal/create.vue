@@ -67,9 +67,9 @@ const breadcrumb = [
         to: route('contacts.customer.index')
     },
     {
-        name: "Create",
+        name: props.additional.data ? 'Edit' :'Create' ,
         active: true,
-        // to: 
+        // to:
     },
 ]
 
@@ -281,24 +281,24 @@ onMounted(() => {
 <template>
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
-    <div class="mb-4 sm:mb-6 flex justify-between items-center">
-        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">Create Journal</h1>
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' :'Create' }} Journal</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 mb-5">
+        <section class="grid grid-cols-1 gap-4 p-4 mb-5 md:grid-cols-4">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
                 @update:modelValue="formError.no_transaction = ''">
                 <template v-slot:tooltip>
                     <div class="text-xs">
-                        <div class="font-semibold text-slate-800 mb-1">No Transaction.</div>
+                        <div class="mb-1 font-semibold text-slate-800">No Transaction.</div>
                         <div class="mb-0.5">The transaction number will be automatically created by the system, and you can
                             create your own version</div>
                     </div>
                 </template>
             </VInput>
             <div>
-                <label class="block text-sm font-medium text-slate-600 mb-1">
+                <label class="block mb-1 text-sm font-medium text-slate-600">
                     Date <span class="text-rose-500">*</span>
                 </label>
                 <Datepicker v-model="form.date" @update:modelValue="handleDate" :enableTimePicker="false" position="left"
@@ -319,22 +319,22 @@ onMounted(() => {
                 </tr>
                 <template v-else>
                     <tr v-for="(data, index) in journalEntries" :key="index">
-                        <td class="h-14 w-1/4 pl-3">
+                        <td class="w-1/4 pl-3 h-14">
                             <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true"
                                 v-model="journalEntries[index].account_id" :options="additional.account_options"
                                 :errorMessage="getError('account_id', index)" @update:modelValue="" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
+                        <td class="w-1/4 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
                                 v-model="journalEntries[index].description" :errorMessage="formError.description"
                                 @update:modelValue="formError.description = ''" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
+                        <td class="w-1/4 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Debit" :required="false"
                                 v-model="journalEntries[index].debit" :errorMessage="getError('debit', index)"
                                 @update:modelValue="onChangeAmount" type="number" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
+                        <td class="w-1/4 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Credit" :required="false"
                                 v-model="journalEntries[index].credit" :errorMessage="getError('credit', index)"
                                 @update:modelValue="onChangeAmount" type="number" />
@@ -348,21 +348,21 @@ onMounted(() => {
                         </td>
                     </tr>
                     <tr class="h-20 border-t">
-                        <td colspan="2" class="h-12 w-1/4 pl-3">
+                        <td colspan="2" class="w-1/4 h-12 pl-3">
                             <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
                         </td>
-                        <td class="h-12 w-1/4 pl-3">
+                        <td class="w-1/4 h-12 pl-3">
                             <span class="font-semibold">Total Debit</span> <br>
                             Rp. {{ totalDebit }}
                         </td>
-                        <td class="h-12 w-1/4 pl-3">
+                        <td class="w-1/4 h-12 pl-3">
                             <span class="font-semibold">Total Credit</span> <br>
                             Rp. {{ totalCredit }}
                         </td>
                     </tr>
                     <tr class="">
                         <td colspan="2" />
-                        <td class="h-12 w-1/4 pl-3">
+                        <td class="w-1/4 h-12 pl-3">
                             <!-- balance or not balance -->
                             <span class="font-semibold">Status</span>
                             <br>
@@ -373,7 +373,7 @@ onMounted(() => {
                             <br>
                             <br>
                         </td>
-                        <td class="h-12 w-1/4 pl-3">
+                        <td class="w-1/4 h-12 pl-3">
                             <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
                                 :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
                         </td>
@@ -382,8 +382,9 @@ onMounted(() => {
             </VDataTable>
         </section>
 
-        <section class="p-4 flex justify-end">
-            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Journal' : 'Create Journal'" type="primary" @click="submit" :disabled="!isBalance" />
+        <section class="flex justify-end p-4">
+            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Journal' : 'Create Journal'" type="primary"
+                @click="submit" :disabled="!isBalance" />
         </section>
     </div>
 </template>

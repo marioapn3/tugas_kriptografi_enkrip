@@ -34,13 +34,13 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Accounting",
+        name: "Transaction",
         active: false,
     },
     {
-        name: "Journal",
+        name: "Purchase",
         active: true,
-        to: route('journals.account-categories.index')
+        to: route('transaction.purchase.index')
     },
 ]
 const pagination = ref({
@@ -60,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", ""]
+const heads = ["Date", "No Transaction", "Supplier", "Total", "Status", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -69,7 +69,7 @@ const props = defineProps({
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('journals.journal.getdata'), {
+    axios.get(route('transaction.purchase.getdata'), {
         params: {
             page: page,
             search: searchFilter.value
@@ -105,11 +105,11 @@ const searchHandle = (search) => {
 };
 
 const handleCreate = () => {
-    Inertia.visit(route('journals.journal.create'));
+    Inertia.visit(route('transaction.purchase.create'));
 }
 
 const handleEdit = (id) => {
-    Inertia.visit(route('journals.journal.edit', id));
+    Inertia.visit(route('transaction.purchase.edit', id));
 }
 
 const handleEditModal = (data) => {
@@ -143,7 +143,7 @@ const closeAlert = () => {
 }
 
 const deleteHandle = async () => {
-    axios.delete(route('journals.journal.delete', { 'id': itemSelected.value.id })
+    axios.delete(route('transaction.purchase.delete', { 'id': itemSelected.value.id })
     ).then((res) => {
         notify({
             type: "success",
@@ -171,17 +171,17 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Journal</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Purchases</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Journals <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Purchase <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
                 <VFilter @search="searchHandle" />
-                <VButton label="Create Journal" type="primary" @click="handleCreate" class="mt-auto" />
+                <VButton label="Create Purchase" type="primary" @click="handleCreate" class="mt-auto" />
             </div>
         </header>
 
@@ -201,37 +201,18 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-24 px-4"> {{ data.no_transaction ?? '-' }} </td>
-                <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
-                <td class="h-24 px-4 whitespace-nowrap"> no implement </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                {{ detail.account_name }}
-                            </td>
-                        </tr>
-                    </table>
+                <td class="h-16 px-4 whitespace-nowrap">{{ data.date }} </td>
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                    {{ data.no_transaction }} </td>
+                <td class="h-16 px-4 whitespace-nowrap">
+                    {{ data.supplier }}
                 </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                Rp. {{ detail.debit }}
-                            </td>
-                        </tr>
-                    </table>
+                <td class="h-16 px-4 whitespace-nowrap">Rp. {{ data.total_price }}</td>
+                <td class="h-16 px-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Success
+                    </span>
                 </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                Rp. {{ detail.credit }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">

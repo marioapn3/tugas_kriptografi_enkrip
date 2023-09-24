@@ -14,7 +14,7 @@ class UpdateSaleRequest extends FormRequest
     public function rules()
     {
         return [
-            'no_transaction' => 'string|nullable|unique:journals,no_transaction,' . $this->id,
+            'no_transaction' => 'string|nullable|unique:sales,no_transaction,' . $this->id,
             'date' => 'date|required',
             'description' => 'string|nullable',
             'customer_id' => 'required|exists:contacts,id',

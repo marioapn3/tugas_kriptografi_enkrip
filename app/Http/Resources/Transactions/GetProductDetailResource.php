@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Transactions\Selling;
+namespace App\Http\Resources\Transactions;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,6 +31,7 @@ class GetProductDetailResource extends JsonResource
                 'name' => $this->name,
                 'unit' => $this->unit,
                 'sale_price' => (int) $this->sale_price,
+                'purchase_price' => (int) $this->purchase_price,
                 'stock' => $this->product_stock ?? 0,
             ],
             'meta' => [
