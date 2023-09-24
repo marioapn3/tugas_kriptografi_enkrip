@@ -43,7 +43,12 @@ class GetSidebarMenuAction
                 'submenu' => [
                     [
                         'text' => 'POS',
-                        'url'  => route('transaction.selling.pos.index'),
+                        'url'  => route('transaction.pos.index'),
+                        // 'can'  => ['view_systems_role_management']
+                    ],
+                    [
+                        'text' => 'Sales',
+                        'url'  => route('transaction.sale.index'),
                         // 'can'  => ['view_systems_role_management']
                     ],
                     [

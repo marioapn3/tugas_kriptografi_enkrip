@@ -11,8 +11,9 @@ class GetProductOptions
         $product = Product::all();
 
         $new_product = [];
+
         foreach ($product as $data) {
-            $new_product[$data->id] = $data->name;
+            $new_product[$data->id] = $data->code . ' - ' . $data->name;
         }
 
         return $new_product;
