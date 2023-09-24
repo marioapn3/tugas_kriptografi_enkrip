@@ -90,6 +90,7 @@ const handleDeleteRow = (index) => {
 
     // slice row by index 
     productEntries.value.splice(index, 1)
+    onChangeSubtotal()
 }
 
 const onSelectProduct = (index) => {
@@ -158,7 +159,7 @@ const handleDate = () => {
 
 const submit = () => {
     if (props.additional.data) {
-        // update()
+        update()
     } else {
         create()
     }
@@ -227,31 +228,24 @@ const update = () => {
     const data = {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
+        customer_id: form.value.customer_id,
+        account_id: form.value.account_id,
         description: form.value.description,
-        journal_entries: productEntries.value
+        product_entries: productEntries.value
     }
-
     isLoading.value = true
-    debounce(axios.post(route('journals.journal.update', { id: props.additional.data.id }), data)
+    debounce(axios.post(route('transaction.sale.update', { id: props.additional.data.id }), data)
         .then((res) => {
             isLoading.value = false
-
-            isBalance.value = false
-            totalDebit.value = 0
-            totalCredit.value = 0
+            totalPrice.value = 0
             form.value = ref({})
 
             productEntries.value = [
                 {
                     product_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
-                }, {
-                    product_id: null,
-                    description: '',
-                    debit: 0,
-                    credit: 0,
+                    qty: 0,
+                    price: 0,
+                    subtotal: 0
                 }
             ]
 
@@ -289,12 +283,18 @@ const update = () => {
 }
 
 onMounted(() => {
+    // check if props data is ready (for edit) 
     if (props.additional.data) {
         form.value = props.additional.data
-        productEntries.value = props.additional.data.journal_details
-        totalDebit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['debit']) || 0), 0)
-        totalCredit.value = props.additional.data.journal_details.reduce((a, b) => parseInt(a) + (parseInt(b['credit']) || 0), 0)
-        isBalance.value = totalDebit.value == totalCredit.value
+        form.value.account_id = props.additional.data.deposit_to_account_id
+        productEntries.value = props.additional.data.sale_details
+
+        // loop for update price and subtotal
+        productEntries.value.map((item,index) => {
+            productEntries.value[index].price = parseInt(item.price)
+            onChangePrice(index)
+        })
+        onChangeSubtotal()
     }
 })
 

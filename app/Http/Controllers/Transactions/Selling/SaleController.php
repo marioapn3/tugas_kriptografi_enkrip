@@ -7,6 +7,7 @@ use App\Actions\Options\GetCustomerOptions;
 use App\Actions\Options\GetProductOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Transactions\Selling\CreateSaleRequest;
+use App\Http\Requests\Transactions\Selling\UpdateSaleRequest;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Http\Resources\Transactions\Selling\GetProductDetailResource;
 use App\Http\Resources\Transactions\Selling\SaleListResource;
@@ -59,6 +60,20 @@ class SaleController extends AdminBaseController
         ]);
     }
 
+    public function edit($id)
+    {
+        $data = $this->sellingService->getDataById($id);
+        return Inertia::render($this->source . 'transactions/selling/create', [
+            'title' => 'Create Sales | Jurnalin',
+            'additional' => [
+                'account_options' => $this->getAccountOptions->handle(),
+                'customer_options' => $this->getCustomerOptions->handle(),
+                'product_options' => $this->getProductOptions->handle(),
+                'data' => $data
+            ]
+        ]);
+    }
+
     public function getProduct($id)
     {
         try {
@@ -70,7 +85,7 @@ class SaleController extends AdminBaseController
         }
     }
 
-    public function store(CreateSaleRequest $request)
+    public function storeData(CreateSaleRequest $request)
     {
         try {
             DB::beginTransaction();
@@ -80,6 +95,31 @@ class SaleController extends AdminBaseController
             return $this->respond($result);
         } catch (\Exception $e) {
             DB::rollBack();
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function updateData($id, UpdateSaleRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $this->sellingService->update($id, $request);
+            $result = new SubmitDefaultResource($data, 'Sale updated');
+            DB::commit();
+            return $this->respond($result);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->exceptionError($e->getMessage());
+        }
+    }
+
+    public function deleteData($id)
+    {
+        try {
+            $data = $this->sellingService->destroy($id);
+            $result = new SubmitDefaultResource($data, 'Sale deleted');
+            return $this->respond($result);
+        } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
     }
