@@ -33,7 +33,10 @@ class ProductListResource extends ResourceCollection
             'description' => $data->description,
             'purchase_price' => number_format($data->purchase_price, 0, ',', '.'),
             'sale_price' => number_format($data->sale_price, 0, ',', '.'),
-            'stock' => $data->stock,
+            //  make stock if type out is negative and type in is positive
+            'stock' => $data->productStock->sum(function ($stock) {
+                return $stock->type == 'in' ? $stock->quantity : -$stock->quantity;
+            }),
             'purchase_account' => $data->purchase_account,
             'sale_account' => $data->sale_account,
             'inventory_account' => $data->inventory_account,
