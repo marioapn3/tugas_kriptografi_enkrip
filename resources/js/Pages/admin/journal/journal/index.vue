@@ -60,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", ""]
+const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", "Status", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -230,6 +230,11 @@ onMounted(() => {
                             </td>
                         </tr>
                     </table>
+                </td>
+                <td class="h-16 px-4 whitespace-nowrap">
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                        Balance
+                    </span>
                 </td>
 
                 <td class="h-16 px-4 text-right whitespace-nowrap">

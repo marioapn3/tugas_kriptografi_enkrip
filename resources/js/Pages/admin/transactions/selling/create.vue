@@ -289,7 +289,7 @@ onMounted(() => {
         <section class="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 pt-4">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
-                @update:modelValue="formError.no_transaction = ''">
+                @update:modelValue="formError.no_transaction = ''" :disabled="additional.data">
                 <template v-slot:tooltip>
                     <div class="text-xs">
                         <div class="font-semibold text-slate-800 mb-1">No Transaction.</div>

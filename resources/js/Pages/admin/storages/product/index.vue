@@ -205,7 +205,12 @@ onMounted(() => {
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.code }} </td>
                 <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
                     {{ data.name }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
+                <td class="h-16 px-4 whitespace-nowrap">
+                    <!-- if value is negative text red -->
+                    <span v-if="data.stock < 0" class="text-red-500"> {{ data.stock }} </span>
+                    <!-- if value is zero text black -->
+                    <span v-else> {{ data.stock }} </span>
+                </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.purchase_price }} </td>

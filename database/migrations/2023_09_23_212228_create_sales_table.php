@@ -20,7 +20,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->foreignId('customer_id')->constrained('contacts')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('deposit_to_account_id')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
-
+            $table->foreignId('journal_id')->constrained('journals')->cascadeOnUpdate()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

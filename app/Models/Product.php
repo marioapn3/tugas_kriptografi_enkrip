@@ -33,4 +33,19 @@ class Product extends Model
     {
         return $this->belongsTo(Account::class, 'inventory_account', 'id');
     }
+
+    public function getPurchaseDebitOrCreditAttribute()
+    {
+        return $this->purchaseAccount()->first()->AccountCategory()->first()->classification->debit_or_credit;
+    }
+
+    public function getSaleDebitOrCreditAttribute()
+    {
+        return $this->saleAccount()->first()->AccountCategory()->first()->classification->debit_or_credit;
+    }
+
+    public function getInventoryDebitOrCreditAttribute()
+    {
+        return $this->inventoryAccount()->first()->AccountCategory()->first()->classification->debit_or_credit;
+    }
 }
