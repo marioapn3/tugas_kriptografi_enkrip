@@ -206,6 +206,9 @@ const update = () => {
         account_id: form.value.account_id,
         supplier_id: form.value.supplier_id,
         purchase_details: purchaseDetail.value
+
+
+
     }
 
     isLoading.value = true
@@ -263,6 +266,14 @@ onMounted(() => {
         form.value.account_id = props.additional.data.pay_with_account_id
         purchaseDetail.value = props.additional.data.purchase_details
         onChangeSubtotal()
+
+
+          // no_transaction: form.value.no_transaction,
+        // date: form.value.date,
+        // description: form.value.description,
+        // account_id: form.value.account_id,
+        // supplier_id: form.value.supplier_id,
+        // purchase_details: purchaseDetail.value
     }
 })
 
@@ -275,7 +286,7 @@ onMounted(() => {
         <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' : 'Create' }} Purchase</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 pt-4">
+        <section class="grid grid-cols-1 gap-4 px-4 pt-4 md:grid-cols-4">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
                 @update:modelValue="formError.no_transaction = ''">
@@ -350,11 +361,11 @@ onMounted(() => {
                         </td>
                     </tr>
                     <tr class="h-20 border-t">
-                        <td colspan="3" class="h-12 w-1/4 pl-3">
+                        <td colspan="3" class="w-1/4 h-12 pl-3">
                             <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
                         </td>
-                        <td class="h-12 w-1/4 pl-3">
-                            <span class="font-semibold text-lg">Total</span> <br>
+                        <td class="w-1/4 h-12 pl-3">
+                            <span class="text-lg font-semibold">Total</span> <br>
                             <span class="text-md">
                                 Rp. {{ isNaN(totalPrice) ? 0 : totalPrice }}
                             </span>
@@ -362,7 +373,7 @@ onMounted(() => {
                     </tr>
                     <tr class="">
                         <td colspan="3" />
-                        <td class="h-12 w-1/4 pl-3">
+                        <td class="w-1/4 h-12 pl-3">
                             <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
                                 :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
                         </td>

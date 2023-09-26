@@ -88,7 +88,7 @@ class PurchaseService
     public function destroy($id)
     {
         $purchase = Purchase::findOrFail($id);
-        $journal = Journal::findOrFail($purchase->id);
+        $journal = Journal::findOrFail($purchase->journal_id);
         $purchase->delete();
         $journal->delete();
         return $purchase;

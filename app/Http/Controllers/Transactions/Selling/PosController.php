@@ -14,4 +14,6 @@ class PosController extends AdminBaseController
             'title' => 'POS | Jurnalin'
         ]);
     }
+
+    
 }

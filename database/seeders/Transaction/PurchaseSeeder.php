@@ -27,7 +27,7 @@ class PurchaseSeeder extends Seeder
         Purchase::create([
             'id' => 3,
             'date' => date("Y-m-d H:i:s"),
-            'no_purchase' => '1',
+            'no_transaction' => '1',
             'supplier_id' => 1,
             'journal_id' => 5,
         ]);
