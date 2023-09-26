@@ -26,19 +26,19 @@ const props = defineProps({
     additional: object(),
 })
 
-const heads = ["Product *", "Qty *", "Price *", "Subtotal", ""]
+const heads = ["Expense Account *", "Description *", "Total Price*", ""]
 
 const isLoading = ref(false);
 
 const totalPrice = ref(0)
 
-const productEntries = ref([
+const expense_details = ref([
     {
-        product_id: null,
-        qty: 0,
-        price: 0,
-        subtotal: 0
-    }
+        expense_account: null,
+        description: "",
+        total_expense: 0,
+
+    },
 ])
 
 const formError = ref({})
@@ -55,78 +55,41 @@ const breadcrumb = [
         active: false,
     },
     {
-        name: "Sales",
+        name: "Expense",
         active: false,
-        to: route('transaction.sale.index')
+        to: route('transaction.expense.index')
     },
     {
         name: props.additional.data ? 'Edit' : 'Create',
         active: true,
-        // to:
     },
 ]
 
 
 const handleAddRow = () => {
-    productEntries.value.push({
-        product_id: null,
-        qty: 0,
-        price: 0,
-        subtotal: 0
+    expense_details.value.push({
+        expense_account: null,
+        description: "",
+        total_expense: 0,
     })
 }
 
 
 const getError = (property, index) => {
-    return formError.value['product_entries.' + index + '.' + property]
+    return formError.value['purchase_details.' + index + '.' + property]
 }
 
 
 const handleDeleteRow = (index) => {
     // if count row == 1 then not delete
-    if (productEntries.value.length == 1) {
+    if (expense_details.value.length == 1) {
         return
     }
-
     // slice row by index
-    productEntries.value.splice(index, 1)
-    onChangeSubtotal()
+    expense_details.value.splice(index, 1)
 }
 
-const onSelectProduct = (index) => {
-    const id = productEntries.value[index].product_id
-    axios.get(route('transaction.sale.getproduct', { id: id }))
-        .then((res) => {
-            productEntries.value[index].qty = 1
-            productEntries.value[index].price = parseInt(res.data.data.sale_price)
-            productEntries.value[index].subtotal = parseInt(productEntries.value[index].price) * parseInt(productEntries.value[index].qty)
-            onChangeSubtotal()
-        }).catch((res) => {
-            notify({
-                type: "error",
-                group: "top",
-                text: res.response.data.message
-            }, 2500)
-        }).finally(() => isLoading.value = false)
 
-}
-
-const onChangeQty = (index) => {
-    productEntries.value[index].subtotal = parseInt(productEntries.value[index].price) * parseInt(productEntries.value[index].qty)
-    onChangeSubtotal()
-}
-
-const onChangeSubtotal = () => {
-    totalPrice.value = 0
-    productEntries.value.forEach((item) => {
-        totalPrice.value += parseInt(item.subtotal)
-    })
-}
-
-const onChangePrice = (index) => {
-    productEntries.value[index].subtotal = parseInt(productEntries.value[index].price) * parseInt(productEntries.value[index].qty)
-    onChangeSubtotal()
-}
 
 const handleDate = () => {
     if (form.value.date) {
@@ -144,30 +107,27 @@ const submit = () => {
     }
 }
 
+
 const create = () => {
     const data = {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
-        customer_id: form.value.customer_id,
-        account_id: form.value.account_id,
         description: form.value.description,
-        product_entries: productEntries.value
+        payment_account: form.value.account_id,
+        expense_details: expense_details.value
     }
 
     isLoading.value = true
-    debounce(axios.post(route('transaction.sale.store'), data)
+    debounce(axios.post(route('transaction.expense.store'), data)
         .then((res) => {
             isLoading.value = false
-            totalPrice.value = 0
             form.value = ref({})
-
-            productEntries.value = [
+            expense_details.value = [
                 {
-                    product_id: null,
-                    qty: 0,
-                    price: 0,
-                    subtotal: 0
-                }
+                    expense_account: null,
+                    description: "",
+                    total_expense: 0,
+                },
             ]
 
             notify({
@@ -201,31 +161,36 @@ const create = () => {
             }
         }).finally(() => isLoading.value = false), 1000)
 
+}
+const onChangeSubtotal = () => {
+    totalPrice.value = 0
+    expense_details.value.forEach((item) => {
+        totalPrice.value += parseInt(item.total_expense)
+    })
 }
 
 const update = () => {
     const data = {
         no_transaction: form.value.no_transaction,
         date: form.value.date,
-        customer_id: form.value.customer_id,
-        account_id: form.value.account_id,
         description: form.value.description,
-        product_entries: productEntries.value
+        payment_account: form.value.account_id,
+        expense_details: expense_details.value
     }
+
     isLoading.value = true
-    debounce(axios.post(route('transaction.sale.update', { id: props.additional.data.id }), data)
+    debounce(axios.post(route('transaction.expense.update', { id: props.additional.data.id }), data)
         .then((res) => {
             isLoading.value = false
-            totalPrice.value = 0
+
             form.value = ref({})
 
-            productEntries.value = [
+            expense_details.value = [
                 {
-                    product_id: null,
-                    qty: 0,
-                    price: 0,
-                    subtotal: 0
-                }
+                    expense_account: null,
+                    description: "",
+                    total_expense: 0,
+                },
             ]
 
             notify({
@@ -261,20 +226,11 @@ const update = () => {
 
 }
 
-//onMounted menjalankan pertama kali ketika view di buka
 onMounted(() => {
-    // check if props data is ready (for edit)
-    //kirim data dari edit di index
     if (props.additional.data) {
         form.value = props.additional.data
-        form.value.account_id = props.additional.data.deposit_to_account_id
-        productEntries.value = props.additional.data.sale_details
-
-        // loop for update price and subtotal
-        productEntries.value.map((item, index) => {
-            productEntries.value[index].price = parseInt(item.price)
-            onChangePrice(index)
-        })
+        form.value.account_id = props.additional.data.payment_account
+        expense_details.value = props.additional.data.expense_details
         onChangeSubtotal()
     }
 })
@@ -284,24 +240,24 @@ onMounted(() => {
 <template>
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
-    <div class="mb-4 sm:mb-6 flex justify-between items-center">
-        <h1 class="text-2xl md:text-3xl text-slate-800 font-bold">{{ additional.data ? 'Edit' : 'Create' }} Sale</h1>
+    <div class="flex items-center justify-between mb-4 sm:mb-6">
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' : 'Create' }} Expense</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 px-4 pt-4">
+        <section class="grid grid-cols-1 gap-4 px-4 pt-4 md:grid-cols-4 mb-5 !z-60">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
-                @update:modelValue="formError.no_transaction = ''" :disabled="additional.data">
+                @update:modelValue="formError.no_transaction = ''">
                 <template v-slot:tooltip>
                     <div class="text-xs">
-                        <div class="font-semibold text-slate-800 mb-1">No Transaction.</div>
+                        <div class="mb-1 font-semibold text-slate-800">No Transaction.</div>
                         <div class="mb-0.5">The transaction number will be automatically created by the system, and you can
                             create your own version</div>
                     </div>
                 </template>
             </VInput>
             <div>
-                <label class="block text-sm font-medium text-slate-600 mb-1">
+                <label class="block mb-1 text-sm font-medium text-slate-600">
                     Date <span class="text-rose-500">*</span>
                 </label>
                 <Datepicker v-model="form.date" @update:modelValue="handleDate" :enableTimePicker="false" position="left"
@@ -311,13 +267,9 @@ onMounted(() => {
                     {{ formError.date }}
                 </div>
             </div>
-        </section>
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 mb-5 !z-60">
-            <VSelect label="Customer" class="" placeholder="Choose Customer" :required="true" v-model="form.customer_id"
-                :options="additional.customer_options" :errorMessage="formError.customer_id" @update:modelValue="" />
-            <VSelect label="Deposit to Account" class="" placeholder="Choose Account" :required="true"
-                v-model="form.account_id" :options="additional.account_options" :errorMessage="formError.account_id"
-                @update:modelValue="" />
+            <VSelect placeholder="Select Account" :required="true" v-model="form.account_id"
+                :options="additional.account_options" label="Select Account Payment" :errorMessage="formError.account_id"
+                @update:modelValue="formError.account_id = ''" />
         </section>
 
         <section class="px-1">
@@ -328,27 +280,25 @@ onMounted(() => {
                     </td>
                 </tr>
                 <template v-else>
-                    <tr v-for="(data, index) in productEntries" :key="index">
-                        <td class="h-14 w-1/4 pl-3">
-                            <VSelect class="w-60 !z-0" placeholder="Choose Product" :required="true" :clearable="false"
-                                v-model="productEntries[index].product_id" :options="additional.product_options"
-                                :errorMessage="getError('product_id', index)" @update:modelValue="onSelectProduct(index)" />
+                    <tr v-for="(data, index) in expense_details" :key="index">
+                        <td class="w-1/3 pl-3 h-14">
+                            <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true" :clearable="false"
+                                v-model="expense_details[index].expense_account"
+                                :options="additional.expense_account_options"
+                                :errorMessage="getError('expense_account', index)"
+                                @update:modelValue="onSelectProduct(index)" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
-                            <VInput class="w-60 !z-0" placeholder="Input qty" :required="false"
-                                v-model="productEntries[index].qty" :errorMessage="getError('qty', index)"
-                                @update:modelValue="onChangeQty(index)" type="number" />
+                        <td class="w-1/3 pl-3 h-14">
+                            <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
+                                v-model="expense_details[index].description" :errorMessage="getError('description', index)"
+                                type="text" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
+                        <td class="w-1/3 pl-3 h-14">
                             <VInput class="w-60 !z-0" placeholder="Input Price" :required="false"
-                                v-model="productEntries[index].price" :errorMessage="getError('price', index)"
-                                @update:modelValue="onChangePrice(index)" type="number" />
+                                v-model="expense_details[index].total_expense" @update:model-value="onChangeSubtotal"
+                                :errorMessage="getError('total_expense', index)" type="number" />
                         </td>
-                        <td class="h-14 w-1/4 pl-3">
-                            <VInput class="w-60 !z-0" placeholder="Subtotal" :required="false"
-                                v-model="productEntries[index].subtotal" :errorMessage="getError('subtotal', index)"
-                                @update:modelValue="onChangeSubtotal" type="number" disabled />
-                        </td>
+
                         <td class="h-14">
                             <div class="cursor-pointer" @click="handleDeleteRow(index)">
                                 <span>
@@ -358,29 +308,30 @@ onMounted(() => {
                         </td>
                     </tr>
                     <tr class="h-20 border-t">
-                        <td colspan="3" class="h-12 w-1/4 pl-3">
+                        <td colspan="2" class="w-1/4 h-12 pl-3">
                             <VButton label="Add Row" type="primary" @click="handleAddRow" size="small" />
                         </td>
-                        <td class="h-12 w-1/4 pl-3">
-                            <span class="font-semibold text-lg">Total</span> <br>
+                        <td class="w-1/3 h-12 pl-3">
+                            <span class="text-lg font-semibold">Total</span> <br>
                             <span class="text-md">
                                 Rp. {{ isNaN(totalPrice) ? 0 : totalPrice }}
                             </span>
                         </td>
                     </tr>
                     <tr class="">
-                        <td colspan="3" />
-                        <td class="h-12 w-1/4 pl-3">
+                        <td colspan="2" />
+                        <td class="w-1/3 h-12 pl-3">
                             <VTextarea placeholder="Insert Description" label="Description" v-model="form.description"
                                 :errorMessage="formError.description" @update:modelValue="formError.description = ''" />
                         </td>
                     </tr>
+
                 </template>
             </VDataTable>
         </section>
 
-        <section class="p-4 flex justify-end">
-            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Sale' : 'Create Sale'" type="primary"
+        <section class="flex justify-end p-4">
+            <VButton :is-loading="isLoading" :label="additional.data ? 'Update Expense' : 'Create Expense'" type="primary"
                 @click="submit" :disabled="isNaN(totalPrice) || totalPrice == 0" />
         </section>
     </div>

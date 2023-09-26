@@ -56,6 +56,18 @@ class AccountSeeder extends Seeder
                 'name' => 'Beban Pokok Pendapatan'
 
             ],
+            [
+                'account_category_id' => 8,
+                'code' => '5-1002',
+                'name' => 'Biaya Listrik'
+
+            ],
+            [
+                'account_category_id' => 8,
+                'code' => '5-1003',
+                'name' => 'Biaya Sewa Bangunan'
+
+            ],
         ];
 
         // Create role and assign permission to role

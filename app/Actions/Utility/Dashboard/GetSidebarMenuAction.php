@@ -55,6 +55,11 @@ class GetSidebarMenuAction
                         'text' => 'Purchase',
                         'url'  => route('transaction.purchase.index'),
                         // 'can'  => ['view_systems_role_management']
+                    ],
+                    [
+                        'text' => 'Expense',
+                        'url'  => route('transaction.expense.index'),
+                        // 'can'  => ['view_systems_role_management']
                     ]
                 ],
             ],
