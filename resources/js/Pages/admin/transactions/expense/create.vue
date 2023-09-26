@@ -76,7 +76,7 @@ const handleAddRow = () => {
 
 
 const getError = (property, index) => {
-    return formError.value['purchase_details.' + index + '.' + property]
+    return formError.value['expense_details.' + index + '.' + property]
 }
 
 
@@ -247,7 +247,7 @@ onMounted(() => {
         <section class="grid grid-cols-1 gap-4 px-4 pt-4 md:grid-cols-4 mb-5 !z-60">
             <VInput tooltip tooltipBg="white" placeholder="Auto" label="No Transaction" :required="false"
                 v-model="form.no_transaction" :errorMessage="formError.no_transaction"
-                @update:modelValue="formError.no_transaction = ''">
+                @update:modelValue="formError.no_transaction = ''" :disabled="additional.data">
                 <template v-slot:tooltip>
                     <div class="text-xs">
                         <div class="mb-1 font-semibold text-slate-800">No Transaction.</div>

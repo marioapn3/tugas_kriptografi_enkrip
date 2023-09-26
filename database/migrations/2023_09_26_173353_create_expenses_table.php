@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('no_transaction');
             $table->date('date');
             $table->foreignId('payment_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->text('description');
+            $table->text('description')->nullable();
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

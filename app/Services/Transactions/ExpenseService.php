@@ -45,7 +45,7 @@ class ExpenseService
 
         $expense =  Expense::create([
             'journal_id' => $journal->id,
-            'no_transaction' => "E" .  $journal->no_transaction,
+            'no_transaction' => "EXPENSE-" .  $inputs['no_transaction'],
             'date' => $journal->date,
             'payment_account' => $inputs['payment_account'],
             'description' => $journal->description
@@ -109,7 +109,6 @@ class ExpenseService
         $journal = Journal::findOrFail($expense->journal_id);
         $journal->update(
             [
-                'no_transaction' => $inputs['no_transaction'],
                 'date' => $inputs['date'],
                 'description' => $inputs['description'],
             ]
