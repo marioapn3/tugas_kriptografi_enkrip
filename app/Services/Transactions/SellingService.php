@@ -240,7 +240,6 @@ class SellingService
         $debit_or_credit = Account::findOrFail($inputs['deposit_to_account_id'])->AccountCategory->classification->debit_or_credit;
 
         // collect data journal details
-
         $journal_data = [
             // the amount in the deposit account increases 
             [
