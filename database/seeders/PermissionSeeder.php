@@ -88,11 +88,11 @@ class PermissionSeeder extends Seeder
                         ]
                     ],
                     [
-                        'name' => 'expanse',
+                        'name' => 'expense',
                         'permission' => [
                             [
-                                'name' => 'view_transaction_expanse',
-                                'label' => 'View Transaction expanse',
+                                'name' => 'view_transaction_expense',
+                                'label' => 'View Transaction expense',
                             ]
                         ]
                     ]

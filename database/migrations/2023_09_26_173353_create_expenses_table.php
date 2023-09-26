@@ -20,6 +20,10 @@ return new class extends Migration
             $table->date('date');
             $table->foreignId('payment_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
             $table->text('description')->nullable();
+
+
+            $table->softDeletes();
+
             $table->timestamps();
         });
     }

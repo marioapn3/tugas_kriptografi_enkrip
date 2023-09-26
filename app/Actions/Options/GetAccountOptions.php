@@ -6,12 +6,24 @@ use App\Models\Account;
 
 class GetAccountOptions
 {
-    public function handle()
+    /**
+     * Get account options
+     * params classification value is array
+    */
+    public function handle($classification = null)
     {
-        $account = Account::all();
+        $account = Account::query();
+
+        if ($classification) {
+            $account->whereHas('AccountCategory', function ($q) use ($classification) {
+                $q->whereHas('classification', function ($q) use ($classification) {
+                    $q->whereIn('name', $classification);
+                });
+            });
+        }
 
         $new_account = [];
-        foreach ($account as $data) {
+        foreach ($account->get() as $data) {
             $new_account[$data->id] = $data->code . ' - ' . $data->name;
         }
 
