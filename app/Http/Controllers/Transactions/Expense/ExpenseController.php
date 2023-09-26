@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transactions\Expense;
 
 use App\Actions\Options\GetAccountOptions;
 use App\Actions\Options\GetExpenseAccountOptions;
+use App\Enum\Accounts\Classification;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Transactions\Expense\CreateExpenseRequest;
@@ -52,7 +53,7 @@ class ExpenseController extends AdminBaseController
         return Inertia::render($this->source . 'transactions/expense/create', [
             'title' => 'Create Expense | Jurnalin',
             'additional' => [
-                'account_options' => $this->getAccountOptions->handle(),
+                'account_options' => $this->getAccountOptions->handle([Classification::BEBAN]),
                 'expense_account_options' => $this->getExpenseAccountOptions->handle(),
                 // 'product_options' => $this->getProductOptions->handle()
             ]

@@ -267,6 +267,8 @@ onMounted(() => {
                     {{ formError.date }}
                 </div>
             </div>
+        </section>
+        <section class="grid grid-cols-1 gap-4 px-4 md:grid-cols-4 mb-5 !z-60">
             <VSelect placeholder="Select Account" :required="true" v-model="form.account_id"
                 :options="additional.account_options" label="Select Account Payment" :errorMessage="formError.account_id"
                 @update:modelValue="formError.account_id = ''" />
@@ -282,19 +284,19 @@ onMounted(() => {
                 <template v-else>
                     <tr v-for="(data, index) in expense_details" :key="index">
                         <td class="w-1/3 pl-3 h-14">
-                            <VSelect class="w-60 !z-0" placeholder="Choose Account" :required="true" :clearable="false"
+                            <VSelect class="w-60 md:w-80 !z-0" placeholder="Choose Account" :required="true" :clearable="false"
                                 v-model="expense_details[index].expense_account"
                                 :options="additional.expense_account_options"
                                 :errorMessage="getError('expense_account', index)"
                                 @update:modelValue="onSelectProduct(index)" />
                         </td>
                         <td class="w-1/3 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Description" :required="false"
+                            <VInput class="w-60 md:w-80 !z-0" placeholder="Input Description" :required="false"
                                 v-model="expense_details[index].description" :errorMessage="getError('description', index)"
                                 type="text" />
                         </td>
                         <td class="w-1/3 pl-3 h-14">
-                            <VInput class="w-60 !z-0" placeholder="Input Price" :required="false"
+                            <VInput class="w-60 md:w-80 !z-0" placeholder="Input Price" :required="false"
                                 v-model="expense_details[index].total_expense" @update:model-value="onChangeSubtotal"
                                 :errorMessage="getError('total_expense', index)" type="number" />
                         </td>
