@@ -7,6 +7,7 @@ export default {
 import VBreadcrumb from '@/components/VBreadcrumb/index.vue';
 import VDataTable from '@/components/VDataTable/index.vue';
 import AppLayout from '@/layouts/apps.vue';
+import VButton from '@/components/VButton/index.vue';
 import { Head } from "@inertiajs/inertia-vue3";
 import { onMounted, ref } from "vue";
 import { any, string } from "vue-types";
@@ -145,6 +146,14 @@ onMounted(() => {
                     </td>
                 </tr>
             </VDataTable>
+            <div class="flex justify-between px-4 mt-3">
+                <VButton label="Delete" type="danger" class="mt-auto" />
+                <div class="flex">
+                    <VButton label="Edit" type="success" class="mt-auto" />
+                    <VButton label="Print & Review" type="primary" class="mt-auto" />
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
