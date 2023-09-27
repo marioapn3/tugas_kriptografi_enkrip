@@ -14,6 +14,8 @@ Route::prefix('journals')->name('journals.')->group(function () {
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::post('/update-data/{id}', 'updateData')->name('update');
         Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
+
+        Route::get('{id}', 'show')->name('show');
     });
 
     Route::controller(AccountCategoryController::class)->middleware('can:view_account_category')->prefix('account-categories')->name('account-categories.')->group(function () {

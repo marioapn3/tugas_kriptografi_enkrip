@@ -56,10 +56,8 @@ const alertData = reactive({
     closeLabel: '',
     submitLabel: '',
 })
-const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
-const openModalForm = ref(false)
 const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", "Status", ""]
 const isLoading = ref(true)
 
@@ -112,21 +110,10 @@ const handleEdit = (id) => {
     Inertia.visit(route('journals.journal.edit', id));
 }
 
-const handleEditModal = (data) => {
-    updateAction.value = true
-    itemSelected.value = data
-    openModalForm.value = true
+const handleDetail = (id) => {
+    Inertia.visit(route('journals.journal.show', id));
 }
 
-const successSubmit = () => {
-    isLoading.value = true
-    getData(pagination.value.current_page)
-}
-
-const closeModalForm = () => {
-    itemSelected.value = ref({})
-    openModalForm.value = false
-}
 
 const alertDelete = (data) => {
     itemSelected.value = data
@@ -201,7 +188,9 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-24 px-4"> {{ data.no_transaction ?? '-' }} </td>
+                <td class=" px-4 whitespace-nowrap h-12 text-sky-600 underline cursor-pointer" @click="handleDetail(data.id)">
+                    {{ data.no_transaction ?? '-' }}
+                </td>
                 <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
                 <td class="h-24 px-4 whitespace-nowrap"> no implement </td>
                 <td class="h-24 px-4 whitespace-nowrap">

@@ -6,6 +6,7 @@ use App\Actions\Options\GetAccountOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Journals\Journal\CreateJournalRequest;
 use App\Http\Requests\Journals\Journal\UpdateJournalRequest;
+use App\Http\Resources\Journal\JournalDetailResource;
 use App\Http\Resources\Journal\JournalListResource;
 use App\Http\Resources\SubmitDefaultResource;
 use App\Services\Journal\JournalService;
@@ -41,6 +42,18 @@ class JournalController extends AdminBaseController
         } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
+    }
+
+    public function show($id)
+    {
+        $data  = $this->journalServices->getDataById($id);
+        $result = new JournalDetailResource($data, 'Success get journal detail');
+        return Inertia::render($this->source . 'journal/journal/detail', [
+            'title' => 'Journal Detail | Jurnalin',
+            'additional' => [
+                'data' => $result
+            ]
+        ]);
     }
 
     public function create()
