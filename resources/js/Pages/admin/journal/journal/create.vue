@@ -64,7 +64,7 @@ const breadcrumb = [
     {
         name: "Journal",
         active: false,
-        to: route('contacts.customer.index')
+        to: route('journals.journal.index')
     },
     {
         name: props.additional.data ? 'Edit' :'Create' ,
