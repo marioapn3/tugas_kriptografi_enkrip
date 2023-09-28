@@ -78,9 +78,9 @@ class JournalService
     public function destroy($id)
     {
         $journal = Journal::findOrFail($id);
-        // $journal_detail = $journal->journalDetails();
+        $journal_detail = $journal->journalDetails();
         $journal->delete();
-        // $journal_detail->delete();
+        $journal_detail->delete();
         return $journal;
     }
 }
