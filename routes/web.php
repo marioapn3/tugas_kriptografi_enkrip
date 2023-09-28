@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Models\Account;
 use Inertia\Inertia;
 
 /*
@@ -21,6 +22,44 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return redirect(route('dashboard.index'));
 });
+Route::get('/testing/jurnal-umum', function () {
+
+    $accounts = Account::all();
+
+    foreach ($accounts as $account) {
+        $totalAmount = $account->getTotalAmount();
+
+        echo "{$account->name} (kode akun : {$account->code})";
+        echo "Total Amount: {$totalAmount}  <br>";
+    }
+});
+
+
+Route::get('/neraca', function () {
+
+
+    // Mengambil akun-akun yang memiliki accountCategory dengan classification_id 4 atau 5
+    $pendapatan = Account::whereHas('AccountCategory', function ($query) {
+        $query->where('classification_id', 4);
+    })->get();
+    $beban = Account::whereHas('AccountCategory', function ($query) {
+        $query->where('classification_id', 5);
+    })->get();
+
+    foreach ($pendapatan as $account) {
+        $totalAmount = $account->getTotalAmount();
+
+        echo "{$account->name} (kode akun : {$account->code})";
+        echo "Total Amount: {$totalAmount}  <br>";
+    }
+    foreach ($beban as $account) {
+        $totalAmount = $account->getTotalAmount();
+
+        echo "{$account->name} (kode akun : {$account->code})";
+        echo "Total Amount: {$totalAmount}  <br>";
+    }
+});
+
 
 Route::prefix('admin')->group(function () {
     Route::controller(LoginController::class)->group(function () {
@@ -59,6 +98,7 @@ Route::prefix('admin')->group(function () {
         require __DIR__ . '/admin/transaction/selling.php';
         require __DIR__ . '/admin/transaction/purchase.php';
         require __DIR__ . '/admin/transaction/expense.php';
+        require __DIR__ . '/admin/report/general_ledger.php';
 
         Route::get('data/test', function () {
             return Inertia::render('admin/test/test1');

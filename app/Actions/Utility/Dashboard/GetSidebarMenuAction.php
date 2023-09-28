@@ -18,6 +18,24 @@ class GetSidebarMenuAction
                 'can'  => 'view_general_dashboard'
             ],
             [
+                'text' => 'Report',
+                'group' => true,
+                'icon' => 'VJournal',
+                'submenu' => [
+                    [
+                        'text' => 'General Ledger Report',
+                        'url'  => route('report.ledger.index'),
+                        // 'can'  => 'view_admin_logs',
+                    ],
+                    [
+                        'text' => 'Trial Balance Report',
+                        'url'  => route('audits.api-logs.index'),
+                        // 'can'  => 'view_admin_logs',
+                    ]
+                ],
+                // 'can'  => 'view_general_dashboard'
+            ],
+            [
                 'text' => 'Audit Trails',
                 'icon' => 'VEmployee',
                 'group' => true,

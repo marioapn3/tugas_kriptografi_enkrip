@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('debit');
             $table->integer('credit');
             $table->text('description')->nullable();
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

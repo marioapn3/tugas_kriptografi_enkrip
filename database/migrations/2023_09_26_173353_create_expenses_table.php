@@ -21,7 +21,9 @@ return new class extends Migration
             $table->foreignId('payment_account')->constrained('accounts')->cascadeOnUpdate()->cascadeOnDelete();
             $table->text('description')->nullable();
 
+
             $table->softDeletes();
+
             $table->timestamps();
         });
     }
