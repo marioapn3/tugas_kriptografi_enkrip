@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('no_transaction')->unique();
             $table->date('date');
             $table->text('description')->nullable();
-
             $table->softDeletes();
             $table->timestamps();
         });
