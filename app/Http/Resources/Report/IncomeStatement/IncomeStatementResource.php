@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Report\Balance;
+namespace App\Http\Resources\Report\IncomeStatement;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class BalanceReportResource extends ResourceCollection
+class IncomeStatementResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -41,14 +41,15 @@ class BalanceReportResource extends ResourceCollection
             });
         }
 
-        $debit = $journalEntries->reduce(function ($carry, $journal_detail) use ($data) {
-            $debit = $journal_detail->debit;
-            return $carry + $debit;
-        }, 0);
+        $totalAmount = $journalEntries->reduce(function ($carry, $journal_detail) use ($data) {
 
-        $credit = $journalEntries->reduce(function ($carry, $journal_detail) use ($data) {
-            $credit = $journal_detail->credit;
-            return $carry + $credit;
+            if ($data->AccountCategory->classification->debit_or_credit === 'debit') {
+                $amount = $journal_detail->debit - $journal_detail->credit;
+            } elseif ($data->AccountCategory->classification->debit_or_credit === 'credit') {
+                $amount = $journal_detail->credit - $journal_detail->debit;
+            }
+
+            return $carry + $amount;
         }, 0);
 
 
@@ -57,8 +58,8 @@ class BalanceReportResource extends ResourceCollection
             'name' => $data->name,
             'code' => $data->code,
             'description' => $data->description,
-            'debit' => number_format($debit),
-            'credit' => number_format($credit),
+            'expense' => number_format($data->AccountCategory->classification->debit_or_credit === 'debit' ? $totalAmount : 0),
+            'income' => number_format($data->AccountCategory->classification->debit_or_credit === 'credit' ? $totalAmount : 0),
             // 'is_profit' =>  intval($totalCredit) > intval($totalDebit) ? "True" : "False",
         ];
     }

@@ -6,7 +6,7 @@ export default {
 <script setup>
 import axios from "axios";
 import { notify } from "notiwind";
-import { any, object, string } from "vue-types";
+import { any, bool, object, string } from "vue-types";
 import { Head } from "@inertiajs/inertia-vue3";
 import { ref, onMounted, reactive } from "vue";
 import AppLayout from '@/layouts/apps.vue';
@@ -23,10 +23,11 @@ import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VFilter from './Filter.vue';
 
-const totalDebit = ref(0);
-const totalCredit = ref(0);
+const totalIncome = ref(0);
+const totalExpense = ref(0);
 const query = ref([])
 const filter = ref({});
+
 
 
 const breadcrumb = [
@@ -40,9 +41,9 @@ const breadcrumb = [
         active: false,
     },
     {
-        name: "Balance Report",
+        name: "Income Statement",
         active: true,
-        to: route('report.balance.index')
+        to: route('report.income-statement.index')
     },
 ]
 const pagination = ref({
@@ -62,7 +63,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["Account Code", "Account Name", "Debit", "Credit"]
+const heads = ["Account Code", "Account Name", "Income Balance", "Expense Balance"]
 const isLoading = ref(true)
 
 
@@ -72,19 +73,17 @@ const props = defineProps({
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('report.balance.getdata'), {
+    axios.get(route('report.income-statement.getdata'), {
         params: {
             page: page,
             start_date: filter.value.start_date,
             end_date: filter.value.end_date
         }
-
     }).then((res) => {
         query.value = res.data.data
         pagination.value = res.data.meta.pagination;
-        // Hitung total debit dan total kredit dari data
-        totalDebit.value = query.value.reduce((total, data) => total + parseFloat(data.debit.replace(/,/g, '')), 0);
-        totalCredit.value = query.value.reduce((total, data) => total + parseFloat(data.credit.replace(/,/g, '')), 0);
+        totalIncome.value = query.value.reduce((total, data) => total + parseFloat(data.income.replace(/,/g, '')), 0);
+        totalExpense.value = query.value.reduce((total, data) => total + parseFloat(data.expense.replace(/,/g, '')), 0);
     }).catch((res) => {
         notify({
             type: "error",
@@ -167,12 +166,12 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Balance Sheet Report</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Income Statement Report</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Balance Sheet Report <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Income Statement Report <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
@@ -200,17 +199,32 @@ onMounted(() => {
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.debit }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.credit }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.income }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.expense }} </td>
             </tr>
             <tr>
                 <td class="h-16 px-4">
-                    Total Balance Sheet
+                    Total Income Statement
                 </td>
                 <td class="h-16 px-4"></td>
-                <td class="h-16 px-4"> Rp. {{ totalDebit.toLocaleString('id-ID') }} </td>
-                <td class="h-16 px-4"> Rp. {{ totalCredit.toLocaleString('id-ID') }} </td>
-
+                <td class="h-16 px-4"> Rp. {{ totalIncome.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4"> Rp. {{ totalExpense.toLocaleString('id-ID') }} </td>
+            </tr>
+            <tr v-if="totalIncome > totalExpense">
+                <td class="h-16 px-4">
+                    Total profit
+                </td>
+                <td class="h-16 px-4"></td>
+                <td class="h-16 px-4"> </td>
+                <td class="h-16 px-4"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
+            </tr>
+            <tr v-else-if="totalExpense > totalIncome">
+                <td class="h-16 px-4">
+                    Total loss amounted
+                </td>
+                <td class="h-16 px-4"></td>
+                <td class="h-16 px-4"> </td>
+                <td class="h-16 px-4"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">

@@ -23,13 +23,18 @@ class GetSidebarMenuAction
                 'icon' => 'VJournal',
                 'submenu' => [
                     [
-                        'text' => 'General Ledger Report',
+                        'text' => 'General Ledger',
                         'url'  => route('report.ledger.index'),
                         // 'can'  => 'view_admin_logs',
                     ],
                     [
-                        'text' => 'Trial Balance Report',
+                        'text' => 'Balance Sheet',
                         'url'  => route('report.balance.index'),
+                        // 'can'  => 'view_admin_logs',
+                    ],
+                    [
+                        'text' => 'Income Statement',
+                        'url'  => route('report.income-statement.index'),
                         // 'can'  => 'view_admin_logs',
                     ]
                 ],
