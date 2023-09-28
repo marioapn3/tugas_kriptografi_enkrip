@@ -99,6 +99,7 @@ Route::prefix('admin')->group(function () {
         require __DIR__ . '/admin/transaction/purchase.php';
         require __DIR__ . '/admin/transaction/expense.php';
         require __DIR__ . '/admin/report/general_ledger.php';
+        require __DIR__ . '/admin/report/balance.php';
 
         Route::get('data/test', function () {
             return Inertia::render('admin/test/test1');

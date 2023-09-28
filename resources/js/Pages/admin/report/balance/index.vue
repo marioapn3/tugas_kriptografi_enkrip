@@ -23,9 +23,12 @@ import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
 import VFilter from './Filter.vue';
 
-
+const totalDebit = ref(0);
+const totalCredit = ref(0);
 const query = ref([])
 const filter = ref({});
+
+
 const breadcrumb = [
     {
         name: "Dashboard",
@@ -37,9 +40,9 @@ const breadcrumb = [
         active: false,
     },
     {
-        name: "General Ledger",
+        name: "Balance Report",
         active: true,
-        to: route('report.ledger.index')
+        to: route('report.balance.index')
     },
 ]
 const pagination = ref({
@@ -59,8 +62,9 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No / Date", "Trasaction Name", "Date", "Transaction Number", "Credit", "Debit", "Balance"]
+const heads = ["Account Code", "Account Name", "Debit", "Credit"]
 const isLoading = ref(true)
+
 
 const props = defineProps({
     title: string(),
@@ -68,15 +72,19 @@ const props = defineProps({
 })
 
 const getData = debounce(async (page) => {
-    axios.get(route('report.ledger.getdata'), {
+    axios.get(route('report.balance.getdata'), {
         params: {
             page: page,
             start_date: filter.value.start_date,
             end_date: filter.value.end_date
         }
+
     }).then((res) => {
         query.value = res.data.data
-        pagination.value = res.data.meta.pagination
+        pagination.value = res.data.meta.pagination;
+        // Hitung total debit dan total kredit dari data
+        totalDebit.value = query.value.reduce((total, data) => total + parseFloat(data.debit.replace(/,/g, '')), 0);
+        totalCredit.value = query.value.reduce((total, data) => total + parseFloat(data.credit.replace(/,/g, '')), 0);
     }).catch((res) => {
         notify({
             type: "error",
@@ -159,12 +167,12 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">General Ledger Report</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">Balance Report</h1>
     </div>
     <div class="bg-white border rounded-sm shadow-lg border-slate-200" :class="isLoading && 'min-h-[40vh] sm:min-h-[50vh]'">
         <header class="items-center justify-between block px-4 py-6 sm:flex">
             <h2 class="font-semibold text-slate-800">
-                All Ledger Report <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
+                All Balance Report <span class="text-slate-400 !font-medium ml">({{ pagination.total }})</span>
             </h2>
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
@@ -188,50 +196,21 @@ onMounted(() => {
                     </div>
                 </td>
             </tr>
+
             <tr v-for="(data, index) in query" :key="index" v-else>
-                <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
                 <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.debit }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.credit }} </td>
+            </tr>
+            <tr>
+                <td class="h-16 px-4">
+                    Total Balance
+                </td>
+                <td class="h-16 px-4"></td>
+                <td class="h-16 px-4"> Rp. {{ totalDebit.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4"> Rp. {{ totalCredit.toLocaleString('id-ID') }} </td>
 
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                {{ detail.date }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                {{ detail.transaction_number }}
-                            </td>
-                        </tr>
-                    </table>
-
-                </td>
-
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                Rp. {{ detail.credit }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="h-24 px-4 whitespace-nowrap">
-                    <table>
-                        <tr class="h-10" v-for="(detail, index) in data.journal_entries">
-                            <td>
-                                Rp. {{ detail.debit }}
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.total_amount }} </td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">

@@ -33,7 +33,23 @@ class AccountListResource extends ResourceCollection
             'code' => $data->code,
             'name' => $data->name,
             'account_category' => $data->AccountCategory,
+            'balance' => number_format($this->getTotalAmount($data))
         ];
+    }
+
+    private function getTotalAmount($data)
+    {
+        $total = 0;
+
+        foreach ($data->journalDetails as $journal_detail) {
+            if ($data->AccountCategory->classification->debit_or_credit === 'debit') {
+                $amount = $journal_detail->debit - $journal_detail->credit;
+            } elseif ($data->AccountCategory->classification->debit_or_credit === 'credit') {
+                $amount = $journal_detail->credit - $journal_detail->debit;
+            }
+            $total += $amount;
+        }
+        return $total;
     }
 
     private function transformCollection($collection)

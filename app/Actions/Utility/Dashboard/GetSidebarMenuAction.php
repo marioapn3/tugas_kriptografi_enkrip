@@ -29,7 +29,7 @@ class GetSidebarMenuAction
                     ],
                     [
                         'text' => 'Trial Balance Report',
-                        'url'  => route('audits.api-logs.index'),
+                        'url'  => route('report.balance.index'),
                         // 'can'  => 'view_admin_logs',
                     ]
                 ],
