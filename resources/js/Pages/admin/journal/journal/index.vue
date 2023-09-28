@@ -58,7 +58,7 @@ const alertData = reactive({
 })
 const itemSelected = ref({})
 const openAlert = ref(false)
-const heads = ["No", "Date", "Contact", "Account", "Debit", "Credit", "Status", ""]
+const heads = ["No", "Date", "Description", "Account", "Debit", "Credit", "Status", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -188,11 +188,22 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class=" px-4 whitespace-nowrap h-12 text-sky-600 underline cursor-pointer" @click="handleDetail(data.id)">
+                <td class=" px-4 whitespace-nowrap h-12 text-sky-600 underline cursor-pointer"
+                    @click="handleDetail(data.id)">
                     {{ data.no_transaction ?? '-' }}
                 </td>
                 <td class="h-24 px-4 whitespace-nowrap">{{ data.date }} </td>
-                <td class="h-24 px-4 whitespace-nowrap"> no implement </td>
+                <td class="h-24 px-4 whitespace-nowrap">
+                    <span v-if="data.purchase" class="text-sky-600 underline cursor-pointer">
+                        {{ data.purchase.no_transaction }}
+                    </span>
+                    <span v-else-if="data.sales" class="text-sky-600 underline cursor-pointer">
+                        {{ data.sales.no_transaction }}
+                    </span>
+                    <span v-else>
+                        {{ data.description}}
+                    </span>
+                </td>
                 <td class="h-24 px-4 whitespace-nowrap">
                     <table>
                         <tr class="h-10" v-for="(detail, index) in data.journal_entries">

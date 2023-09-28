@@ -20,6 +20,7 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { onMounted, ref } from 'vue';
 import { object, string } from "vue-types";
 import { notify } from 'notiwind';
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
     title: string(),
@@ -168,11 +169,14 @@ const create = () => {
                 }
             ]
 
+            Inertia.visit(route('journals.journal.show', res.data.data.id));
+
             notify({
                 type: "success",
                 group: "top",
                 text: res.data.meta.message
             }, 2500)
+
         }).catch((res) => {
             // Handle validation errors
             const result = res.response.data
@@ -232,6 +236,8 @@ const update = () => {
                     credit: 0,
                 }
             ]
+
+            Inertia.visit(route('journals.journal.show', res.data.data.id));
 
             notify({
                 type: "success",

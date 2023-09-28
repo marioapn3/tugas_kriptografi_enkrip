@@ -31,6 +31,8 @@ class JournalListResource extends ResourceCollection
             'no_transaction' => $data->no_transaction,
             'date' => $data->date,
             'description' => $data->description,
+            'purchase' => $data->purchase,
+            'sales' => $data->sales,
             'journal_entries' => $data->journalDetails->map(function ($journal_detail) {
                 return [
                     'id' => $journal_detail->id,

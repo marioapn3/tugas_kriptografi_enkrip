@@ -18,4 +18,14 @@ class Journal extends Model
     {
         return $this->hasMany(JournalDetail::class);
     }
+
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class);
+    }
+
+    public function sales()
+    {
+        return $this->hasOne(Sale::class);
+    }
 }

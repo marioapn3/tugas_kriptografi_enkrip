@@ -9,7 +9,7 @@ class JournalService
     public function getData($request)
     {
         $search = $request->search;
-        $query = Journal::query();
+        $query = Journal::with(['purchase', 'sales'])->orderBy('date','desc');
 
         $query->when(request('search', false), function ($q) use ($search) {
             $q->where('no_transaction', 'like', '%' . $search . '%');
