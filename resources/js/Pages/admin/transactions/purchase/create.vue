@@ -95,7 +95,7 @@ const onSelectProduct = (index) => {
     axios.get(route('transaction.sale.getproduct', { id: id }))
         .then((res) => {
             purchaseDetail.value[index].quantity = 1
-            purchaseDetail.value[index].price_per_unit = parseInt(res.data.data.sale_price)
+            purchaseDetail.value[index].price_per_unit = parseInt(res.data.data.purchase_price)
             purchaseDetail.value[index].total_price = parseInt(purchaseDetail.value[index].price_per_unit) * parseInt(purchaseDetail.value[index].quantity)
             onChangeSubtotal()
         }).catch((res) => {

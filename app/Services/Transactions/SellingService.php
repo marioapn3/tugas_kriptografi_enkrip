@@ -393,6 +393,10 @@ class SellingService
             $sale_detail->product->productStock()->where('journal_id', $journal->id)->delete();
         }
 
+        // delete detail sale and journal
+        $sale->sale_details()->delete();
+        $journal->journalDetails()->delete();
+
         $journal->delete();
         $sale->delete();
 

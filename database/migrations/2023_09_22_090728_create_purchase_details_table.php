@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('quantity');
             $table->integer('price_per_unit');
             $table->integer('total_price');
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }
