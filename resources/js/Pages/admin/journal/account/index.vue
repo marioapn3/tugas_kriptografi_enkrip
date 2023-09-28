@@ -59,7 +59,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No", "Code", "Name", "Account Category", ""]
+const heads = ["No", "Code", "Name", "Account Category", "Balance", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -200,6 +200,7 @@ onMounted(() => {
                 <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.account_category.name }} </td>
+                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.balance }} </td>
 
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"

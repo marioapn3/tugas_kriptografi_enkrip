@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Journal;
+namespace App\Http\Resources\Report\IncomeStatement;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AccountListResource extends ResourceCollection
+class IncomeStatementResource extends ResourceCollection
 {
     /**
      * Transform the resource into an array.
@@ -19,7 +19,7 @@ class AccountListResource extends ResourceCollection
             'data' => $this->transformCollection($this->collection),
             'meta' => [
                 "success" => true,
-                "message" => "Success get Account list",
+                "message" => "Success get report lists",
                 'pagination' => $this->metaData()
             ]
         ];
@@ -27,29 +27,41 @@ class AccountListResource extends ResourceCollection
 
     private function transformData($data)
     {
-        return [
-            'id' => $data->id,
-            'account_category_id' => $data->account_category_id,
-            'code' => $data->code,
-            'name' => $data->name,
-            'account_category' => $data->AccountCategory,
-            'balance' => number_format($this->getTotalAmount($data))
-        ];
-    }
 
-    private function getTotalAmount($data)
-    {
-        $total = 0;
+        $start_date = request('start_date'); // Ambil tanggal awal dari request
+        $end_date = request('end_date'); // Ambil tanggal akhir dari request
 
-        foreach ($data->journalDetails as $journal_detail) {
+        $journalEntries = $data->journalDetails;
+
+        if ($start_date && $end_date) {
+
+            $journalEntries = $journalEntries->filter(function ($journal_detail) use ($start_date, $end_date) {
+                $journalDate = $journal_detail->journal->date;
+                return $journalDate >= $start_date && $journalDate <= $end_date;
+            });
+        }
+
+        $totalAmount = $journalEntries->reduce(function ($carry, $journal_detail) use ($data) {
+
             if ($data->AccountCategory->classification->debit_or_credit === 'debit') {
                 $amount = $journal_detail->debit - $journal_detail->credit;
             } elseif ($data->AccountCategory->classification->debit_or_credit === 'credit') {
                 $amount = $journal_detail->credit - $journal_detail->debit;
             }
-            $total += $amount;
-        }
-        return $total;
+
+            return $carry + $amount;
+        }, 0);
+
+
+        return [
+            'id' => $data->id,
+            'name' => $data->name,
+            'code' => $data->code,
+            'description' => $data->description,
+            'expense' => number_format($data->AccountCategory->classification->debit_or_credit === 'debit' ? $totalAmount : 0),
+            'income' => number_format($data->AccountCategory->classification->debit_or_credit === 'credit' ? $totalAmount : 0),
+            // 'is_profit' =>  intval($totalCredit) > intval($totalDebit) ? "True" : "False",
+        ];
     }
 
     private function transformCollection($collection)
