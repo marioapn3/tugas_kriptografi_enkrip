@@ -41,6 +41,18 @@ class ProductService
     {
         $product = Product::with(['purchaseAccount', 'saleAccount', 'inventoryAccount'])->findOrFail($id);
 
+        // dd($product);
+        return $product;
+    }
+
+    public function getDetailWithTransaction($id)
+    {
+        $product = Product::with(['purchaseAccount', 'saleAccount', 'inventoryAccount', 'productStock.journal.purchase', 'productStock.journal.purchase.purchase_details' => function ($query) use ($id) {
+            $query->where('product_id', $id);
+        }, 'productStock.journal.sales'])
+            ->findOrFail($id);
+
+        // dd($product);
         return $product;
     }
 

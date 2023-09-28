@@ -15,4 +15,10 @@ class ProductStock extends Model
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function journal()
+    {
+        return $this->belongsTo(Journal::class, 'journal_id', 'id');
+    }
+
 }
