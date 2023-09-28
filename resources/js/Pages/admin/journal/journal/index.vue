@@ -201,7 +201,7 @@ onMounted(() => {
                         {{ data.sales.no_transaction }}
                     </span>
                     <span v-else>
-                        {{ data.description ?? '-' }}
+                        {{ data.description}}
                     </span>
                 </td>
                 <td class="h-24 px-4 whitespace-nowrap">

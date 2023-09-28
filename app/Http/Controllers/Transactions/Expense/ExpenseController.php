@@ -53,8 +53,8 @@ class ExpenseController extends AdminBaseController
         return Inertia::render($this->source . 'transactions/expense/create', [
             'title' => 'Create Expense | Jurnalin',
             'additional' => [
-                'account_options' => $this->getAccountOptions->handle([Classification::BEBAN]),
-                'expense_account_options' => $this->getExpenseAccountOptions->handle(),
+                'account_options' => $this->getAccountOptions->handle([Classification::HARTA]),
+                'expense_account_options' => $this->getAccountOptions->handle([Classification::BEBAN]),
                 // 'product_options' => $this->getProductOptions->handle()
             ]
         ]);
@@ -79,8 +79,8 @@ class ExpenseController extends AdminBaseController
         return Inertia::render($this->source . 'transactions/expense/create', [
             'title' => 'Create Sales | Jurnalin',
             'additional' => [
-                'account_options' => $this->getAccountOptions->handle(),
-                'expense_account_options' => $this->getExpenseAccountOptions->handle(),
+                'account_options' => $this->getAccountOptions->handle([Classification::HARTA]),
+                'expense_account_options' => $this->getAccountOptions->handle([Classification::BEBAN]),
                 'data' => $data
             ]
         ]);
