@@ -40,7 +40,7 @@ class ExpenseService
         $journal = Journal::create([
             'no_transaction' => 'J-' . $inputs['no_transaction'],
             'date' => $inputs['date'],
-            'description' => $inputs['description'],
+            'description' => $inputs['description'] == null ? null : $inputs['description'],
         ]);
 
         $expense =  Expense::create([
