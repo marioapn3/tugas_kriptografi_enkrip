@@ -35,24 +35,10 @@ const breadcrumb = [
     },
 ]
 
-const heads = ["No", "Date", "Type Transaction", "Qty", "Purchase Price", "Total"]
+const heads = ["No", "Date", "Transaction", "Price", "Total", "Action", "Quantity"]
 
-const pagination = ref({
-    count: '',
-    current_page: 1,
-    per_page: '',
-    total: 0,
-    total_pages: 1
-})
-const alertData = reactive({
-    headerLabel: '',
-    contentLabel: '',
-    closeLabel: '',
-    submitLabel: '',
-})
+
 const updateAction = ref(false)
-const itemSelected = ref({})
-const openAlert = ref(false)
 const openModalForm = ref(false)
 const isLoading = ref(true)
 
@@ -149,14 +135,91 @@ onMounted(() => {
             </header>
 
             <VDataTable :heads="heads" bordered>
-                <tr>
-                    <td class=" px-4 whitespace-nowrap h-10"> 1</td>
-                    <td class=" px-4 whitespace-nowrap h-10"> 30/02/2023</td>
-                    <td class=" px-4 whitespace-nowrap h-10 text-sky-600 underline cursor-pointer"> Invoice Pembelian 0001
+                <tr v-for="(data, index) in additional.data.data.transaction_history" :key="index">
+                    <td class=" px-4 whitespace-nowrap h-10">{{ index + 1 }}</td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        <p v-if="data.purchase">
+                            {{ data.purchase.date }}
+                        </p>
+                        <p v-else>
+                            {{ data.sales.date }}
+                        </p>
                     </td>
-                    <td class=" px-4 whitespace-nowrap h-10"> 12</td>
-                    <td class=" px-4 whitespace-nowrap h-10"> Rp. 1.000.000,00</td>
-                    <td class=" px-4 whitespace-nowrap h-10"> Rp. 2.000.000,00</td>
+                    <td class=" px-4 whitespace-nowrap h-14 text-xs">
+                        <div v-if="data.purchase">
+                            <p class="text-sky-600 underline cursor-pointer ">
+                                {{ data.purchase.no_transaction }}
+                            </p>
+                            <p>
+                                {{ data.purchase.description }}
+                            </p>
+                        </div>
+                        <div v-else>
+                            <p class="text-sky-600 underline cursor-pointer ">
+                                {{ data.sales.no_transaction }}
+                            </p>
+                            <p>
+                                {{ data.sales.description }}
+                            </p>
+                        </div>
+                    </td>
+                    <!-- <td class=" px-4 whitespace-nowrap h-14 text-xs">
+                        <div v-if="data.journal.purchase">
+                            <p class="text-sky-600 underline cursor-pointer ">
+                                {{ data.journal.purchase.no_transaction }}
+                            </p>
+                            <p>
+                                {{ data.journal.purchase.description }}
+                            </p>
+                        </div>
+                        <div v-else>
+                            <p class="text-sky-600 underline cursor-pointer ">
+                                {{ data.journal.sales.no_transaction }}
+                            </p>
+                            <p>
+                                {{ data.journal.sales.description }}
+                            </p>
+                        </div>
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        <div v-if="data.journal.purchase">
+                            {{ data.journal.purchase.purchase_details[0].quantity }}
+                        </div>
+                    </td> -->
+
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        <p v-if="data.purchase">
+                            Rp. {{ data.purchase.details[0].price }}
+                        </p>
+                        <p v-else>
+                            Rp. {{ data.sales.details[0].price }}
+                        </p>
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        <p v-if="data.purchase">
+                            Rp. {{ data.purchase.details[0].total }}
+                        </p>
+                        <p v-else>
+                            Rp. {{ data.sales.details[0].total }}
+                        </p>
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        <span :class="[{'text-emerald-700': data.type == 'in'},{'text-rose-700': data.type == 'out'}]">
+                            {{ data.type }}
+                        </span>
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        {{ data.qty }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5"></td>
+                    <td class="px-4 font-bold text-lg" align="right">
+                        Total :
+                    </td>
+                    <td class="px-4 font-bold h-10 text-lg">
+                        {{ additional.data.data.stock }}
+                    </td>
                 </tr>
             </VDataTable>
         </div>

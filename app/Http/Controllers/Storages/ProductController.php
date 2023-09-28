@@ -34,8 +34,10 @@ class ProductController extends AdminBaseController
 
     public function show($id)
     {
-        $data = $this->productService->getDetail($id);
-        $result = new ProductDetailResource($data, 'Success get product detail');
+        $data = $this->productService->getDetailWithTransaction($id);
+        $result = new ProductDetailResource($data, 'Success get product detail with transction');
+
+        // return $this->respond($result);
         return Inertia::render($this->source . 'storages/product/detail', [
             "title" => 'Product Detail | Jurnalin',
             "additional" => [

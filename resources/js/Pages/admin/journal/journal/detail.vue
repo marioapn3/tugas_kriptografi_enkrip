@@ -87,7 +87,7 @@ onMounted(() => {
                 <div class="mb-2">
                     <label class="font-bold text-base text-slate-800">Description</label>
                     <p class="text-sm">
-                        {{ additional.data.data.desciption ?? '-' }}
+                        {{ additional.data.data.description ?? '-' }}
                     </p>
                 </div>
             </div>
@@ -105,7 +105,7 @@ onMounted(() => {
                         {{ data.account_name }}
                     </td>
                     <td class=" px-4 whitespace-nowrap h-12">
-                        {{ data.desciption ?? '-' }}
+                        {{ data.description ?? '-' }}
                     </td>
                     <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ data.debit }}</td>
                     <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ data.credit }}</td>
