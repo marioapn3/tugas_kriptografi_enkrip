@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             // $table->integer('quantity');
             $table->integer('total_expense');
+
+            $table->softDeletes();
             $table->timestamps();
         });
     }

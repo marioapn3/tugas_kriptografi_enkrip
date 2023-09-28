@@ -149,8 +149,14 @@ class ExpenseService
     {
         $expense = Expense::findOrFail($id);
         $journal = Journal::findOrFail($expense->journal_id);
+
+        // delete detail expense and journal
+        $expense->expense_details()->delete();
+        $journal->journalDetails()->delete();
+
         $expense->delete();
         $journal->delete();
+
         return $expense;
     }
 }

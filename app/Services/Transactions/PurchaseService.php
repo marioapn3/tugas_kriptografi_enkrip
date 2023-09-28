@@ -234,6 +234,10 @@ class PurchaseService
             $purchase_detail->product->productStock()->where('journal_id', $journal->id)->delete();
         }
 
+        //  delete detail purchase and journal
+        $purchase->purchase_details()->delete();
+        $journal->journalDetails()->delete();
+
         $purchase->delete();
         $journal->delete();
         return $purchase;
