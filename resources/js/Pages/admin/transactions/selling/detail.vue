@@ -11,6 +11,7 @@ import VButton from '@/components/VButton/index.vue';
 import { Head } from "@inertiajs/inertia-vue3";
 import { onMounted, ref } from "vue";
 import { any, string } from "vue-types";
+import ModalJournalEntry from './ModalJournalEntry.vue';
 
 const breadcrumb = [
     {
@@ -19,13 +20,13 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Accounting",
+        name: "Transaction",
         active: false,
     },
     {
-        name: "Journal",
+        name: "Sales",
         active: false,
-        to: route('journals.journal.index')
+        to: route('transaction.sale.index')
     },
     {
         name: "Detail",
@@ -34,7 +35,7 @@ const breadcrumb = [
     },
 ]
 
-const heads = ["Account Code", "Account Name", "Desciption", "Debit", "Credit"]
+const heads = ["Product", "Desciption", "Quantity", "Price", "Total"]
 
 const isLoading = ref(true)
 
@@ -43,6 +44,15 @@ const props = defineProps({
     additional: any()
 })
 
+const openModal = ref(false)
+
+const handleOpenModal = () => {
+    openModal.value = true
+}
+
+const handleCloseModal = () => {
+    openModal.value = false
+}
 
 onMounted(() => {
     console.log(props.additional.data)
@@ -55,10 +65,10 @@ onMounted(() => {
     <div class="mb-4 sm:mb-6 flex justify-between items-center">
         <div>
             <h1 class="text-2xl md:text-3xl text-blue-500 font-bold mb-1">
-                Journal Detail
+                Sale Detail
             </h1>
             <h3 class="text-md md:text-lg text-blue-500">
-                {{ additional.data.data.no_transaction }}
+                {{ additional.data.no_transaction }}
             </h3>
         </div>
         <div>
@@ -75,19 +85,30 @@ onMounted(() => {
                 <div class="mb-2">
                     <label class="font-bold text-base text-slate-800">Date Transaction</label>
                     <p class="text-sm">
-                        {{ additional.data.data.date }}
+                        {{ additional.data.date }}
                     </p>
                 </div>
                 <div class="mb-2">
                     <label class="font-bold text-base text-slate-800">No Transaction</label>
                     <p class="text-sm">
-                        {{ additional.data.data.no_transaction }}
+                        {{ additional.data.no_transaction }}
+                    </p>
+                </div>
+                <div class="mb-2">
+                    <label class="font-bold text-base text-slate-800">Deposit Account</label>
+                    <p class="text-sm">
+                        {{ additional.data.deposit_to_account.code }} - {{ additional.data.deposit_to_account.name }}
                     </p>
                 </div>
                 <div class="mb-2">
                     <label class="font-bold text-base text-slate-800">Description</label>
                     <p class="text-sm">
-                        {{ additional.data.data.desciption ?? '-' }}
+                        {{ additional.data.desciption ?? '-' }}
+                    </p>
+                </div>
+                <div class="mb-2">
+                    <p class="text-sm underline text-sky-500 cursor-pointer" @click="handleOpenModal">
+                        View Journal Entry
                     </p>
                 </div>
             </div>
@@ -99,50 +120,24 @@ onMounted(() => {
             </header>
 
             <VDataTable :heads="heads" bordered :divide-y="false">
-                <tr v-for="(data, index) in additional.data.data.journal_entries">
-                    <td class=" px-4 whitespace-nowrap h-12">{{ data.account_code }}</td>
-                    <td class=" px-4 whitespace-nowrap h-12 text-sky-600 underline cursor-pointer">
-                        {{ data.account_name }}
-                    </td>
+                <tr v-for="(data, index) in additional.data.sale_details">
+                    <td class=" px-4 whitespace-nowrap h-12">{{ data.product.name }}</td>
                     <td class=" px-4 whitespace-nowrap h-12">
                         {{ data.desciption ?? '-' }}
                     </td>
-                    <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ data.debit }}</td>
-                    <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ data.credit }}</td>
+                    <td class=" px-4 whitespace-nowrap h-12"> {{ data.qty }}</td>
+                    <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ parseInt(data.price).toLocaleString('id-ID') }}</td>
+                    <td class=" px-4 whitespace-nowrap h-12"> Rp. {{ (parseInt(data.price) *
+                        parseInt(data.qty)).toLocaleString('id-ID') }}</td>
                 </tr>
                 <tr class="h-20 border-t">
                     <td colspan="3" />
-                    <td class="pl-4 h-12">
-                        <br>
-                        <!-- balance or not balance -->
-                        <span class="font-semibold">Total Debit</span>
-                        <br>
-                        <p>
-                            Rp. {{ additional.data.data.total_debit }}
-                        </p>
+                    <td class="pl-4 h-12 font-semibold text-base" align="right">
+                        Total :
                     </td>
-                    <td class="pl-4 h-12">
-                        <br>
-                        <!-- balance or not balance -->
-                        <span class="font-semibold">Total Credit</span>
-                        <br>
-                        <p>
-                            Rp. {{ additional.data.data.total_credit }}
-                        </p>
-                    </td>
-                </tr>
-                <tr class="">
-                    <td colspan="3" />
-                    <td class="w-1/4 h-12 pl-4">
-                        <br>
-                        <!-- balance or not balance -->
-                        <span class="font-semibold">Status</span>
-                        <br>
-                        <span class="text-emerald-600">
-                            Balance
-                        </span>
-                        <br>
-                        <br>
+                    <td class="pl-4 h-12 font-semibold text-base">
+                        Rp. {{ parseInt(additional.data.sale_details.reduce((a, b) => a + (b.price *
+                            b.qty), 0)).toLocaleString('id-ID') }}
                     </td>
                 </tr>
             </VDataTable>
@@ -156,4 +151,5 @@ onMounted(() => {
 
         </div>
     </div>
+    <ModalJournalEntry :data="additional.data.journal" :open-dialog="openModal" @close="handleCloseModal" />
 </template>

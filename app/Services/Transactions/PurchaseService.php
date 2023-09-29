@@ -206,7 +206,7 @@ class PurchaseService
 
         // delete old journal details
         $journal->journalDetails()->delete();
-        
+
         // concat journal data and journal data details
         $journal_data = collect(array_merge($journal_data, $journal_data_details));
 
@@ -221,7 +221,7 @@ class PurchaseService
 
     public function getDataById($id)
     {
-        return Purchase::findOrFail($id);
+        return Purchase::with(['journal'])->findOrFail($id);
     }
 
     public function destroy($id)

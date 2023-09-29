@@ -20,6 +20,7 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { onMounted, ref } from 'vue';
 import { object, string } from "vue-types";
 import { notify } from 'notiwind';
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
     title: string(),
@@ -130,6 +131,7 @@ const create = () => {
                 },
             ]
 
+            Inertia.visit(route('transaction.expense.show', res.data.data.id));
             notify({
                 type: "success",
                 group: "top",
@@ -192,6 +194,8 @@ const update = () => {
                     total_expense: 0,
                 },
             ]
+
+            Inertia.visit(route('transaction.expense.show', res.data.data.id));
 
             notify({
                 type: "success",
@@ -284,8 +288,8 @@ onMounted(() => {
                 <template v-else>
                     <tr v-for="(data, index) in expense_details" :key="index">
                         <td class="w-1/3 pl-3 h-14">
-                            <VSelect class="w-60 md:w-80 !z-0" placeholder="Choose Account" :required="true" :clearable="false"
-                                v-model="expense_details[index].expense_account"
+                            <VSelect class="w-60 md:w-80 !z-0" placeholder="Choose Account" :required="true"
+                                :clearable="false" v-model="expense_details[index].expense_account"
                                 :options="additional.expense_account_options"
                                 :errorMessage="getError('expense_account', index)"
                                 @update:modelValue="onSelectProduct(index)" />

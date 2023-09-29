@@ -36,6 +36,17 @@ class ExpenseController extends AdminBaseController
         ]);
     }
 
+    public function show($id)
+    {
+        $data = $this->expenseService->getDataByIdWithAccount($id);
+        return Inertia::render($this->source . 'transactions/expense/detail', [
+            'title' => 'Expense Detail | Jurnalin',
+            'additional' => [
+                'data' => $data
+            ]
+        ]);
+    }
+
 
     public function getData(Request $request)
     {

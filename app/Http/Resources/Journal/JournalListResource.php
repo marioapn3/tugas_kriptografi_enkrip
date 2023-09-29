@@ -33,6 +33,7 @@ class JournalListResource extends ResourceCollection
             'description' => $data->description,
             'purchase' => $data->purchase,
             'sales' => $data->sales,
+            'expense'=>$data->expense,
             'journal_entries' => $data->journalDetails->map(function ($journal_detail) {
                 return [
                     'id' => $journal_detail->id,

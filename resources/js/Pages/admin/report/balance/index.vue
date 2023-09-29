@@ -204,12 +204,12 @@ onMounted(() => {
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.credit }} </td>
             </tr>
             <tr>
-                <td class="h-16 px-4">
+                <td class="h-16 px-4 font-semibold">
                     Total Balance Sheet
                 </td>
-                <td class="h-16 px-4"></td>
-                <td class="h-16 px-4"> Rp. {{ totalDebit.toLocaleString('id-ID') }} </td>
-                <td class="h-16 px-4"> Rp. {{ totalCredit.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4 "></td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ totalDebit.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ totalCredit.toLocaleString('id-ID') }} </td>
 
             </tr>
         </VDataTable>

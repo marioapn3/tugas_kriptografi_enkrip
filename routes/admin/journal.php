@@ -35,5 +35,7 @@ Route::prefix('journals')->name('journals.')->group(function () {
         Route::post('/create-data', 'createData')->name('create');
         Route::put('/update-data/{account}', 'updateData')->name('update');
         Route::delete('/delete-data/{id}', 'deleteData')->name('delete');
+
+        Route::get('{id}', 'show')->name('show');
     });
 });

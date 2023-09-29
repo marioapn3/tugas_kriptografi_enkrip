@@ -42,6 +42,17 @@ class PurchaseController extends AdminBaseController
         ]);
     }
 
+    public function show($id)
+    {
+        $data = $this->purchaseService->getDataById($id);
+        return Inertia::render($this->source . 'transactions/purchase/detail', [
+            'title' => 'Purchase Detail | Jurnalin',
+            'additional' => [
+                'data' => $data
+            ]
+        ]);
+    }
+
     public function getData(Request $request)
     {
         try {

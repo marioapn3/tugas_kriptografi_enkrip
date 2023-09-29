@@ -31,7 +31,7 @@ class SellingService
 
     public function getDataById($id)
     {
-        $sale = Sale::with(['customer', 'deposit_to_account', 'sale_details'])->find($id);
+        $sale = Sale::with(['journal', 'customer', 'deposit_to_account', 'sale_details'])->find($id);
 
         return $sale;
     }

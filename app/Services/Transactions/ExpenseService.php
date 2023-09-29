@@ -88,6 +88,13 @@ class ExpenseService
         return $expense;
     }
 
+    public function getDataByIdWithAccount($id)
+    {
+        $expense = Expense::with(['journal', 'expense_details.expense_account', 'payment_account'])->find($id);
+
+        return $expense;
+    }
+
     public function updateData($id, $request)
     {
         $inputs = [

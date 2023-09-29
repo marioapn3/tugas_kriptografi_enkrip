@@ -12,6 +12,8 @@ class PurchaseDetail extends Model
     use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
 
+    protected $with = ['product'];
+
 
     /**
      * Get the purchase that owns the PurchaseDetail

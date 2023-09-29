@@ -111,25 +111,8 @@ const handleEdit = (data) => {
     Inertia.visit(route('transaction.sale.edit', { 'id': data.id }));
 }
 
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
-}
-
-const handleEditModal = (data) => {
-    updateAction.value = true
-    itemSelected.value = data
-    openModalForm.value = true
-}
-
-const successSubmit = () => {
-    isLoading.value = true
-    getData(pagination.value.current_page)
-}
-
-const closeModalForm = () => {
-    itemSelected.value = ref({})
-    openModalForm.value = false
+const handleDetail = (id) => {
+    Inertia.visit(route('transaction.sale.show', id));
 }
 
 const alertDelete = (data) => {
@@ -205,7 +188,7 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.date }} </td>
-                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data.id)">
                     {{ data.no_transaction }} </td>
                 <td class="h-16 px-4"> {{ data.customer_name ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap">Rp. {{ data.total_price ?? '-' }} </td>

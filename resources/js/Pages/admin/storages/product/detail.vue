@@ -20,18 +20,17 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Contacts",
+        name: "Storages",
         active: false,
     },
     {
-        name: "Customer",
+        name: "Product",
         active: false,
-        to: route('contacts.customer.index')
+        to: route('storages.product.index')
     },
     {
         name: "Detail",
         active: true,
-        to: route('contacts.customer.show', props.additional.data.data.id)
     },
 ]
 
@@ -87,14 +86,14 @@ onMounted(() => {
                         <label class="font-bold text-slate-800">Description</label>
                         <p class="text-sm">{{ additional.data.data.description ?? '-' }}</p>
                     </div>
-                    <div class="col-span-2 md:col-span-1 mb-2">
+                    <!-- <div class="col-span-2 md:col-span-1 mb-2">
                         <label class="font-bold text-slate-800">Average Price</label>
                         <p class="text-sm">Rp. {{ additional.data.data.phone_number ?? '-' }}</p>
                     </div>
                     <div class="col-span-2 md:col-span-1 mb-2">
                         <label class="font-bold text-slate-800">Last Purchase Price</label>
                         <p class="text-sm">Rp. {{ additional.data.data.description ?? '-' }}</p>
-                    </div>
+                    </div> -->
                     <div class="col-span-2 md:col-span-1 mb-2">
                         <label class="font-bold text-slate-800">Purchase Price</label>
                         <p class="text-sm">Rp. {{ additional.data.data.purchase_price ?? '-' }}</p>
@@ -204,7 +203,7 @@ onMounted(() => {
                         </p>
                     </td>
                     <td class=" px-4 whitespace-nowrap h-10">
-                        <span :class="[{'text-emerald-700': data.type == 'in'},{'text-rose-700': data.type == 'out'}]">
+                        <span :class="[{ 'text-emerald-700': data.type == 'in' }, { 'text-rose-700': data.type == 'out' }]">
                             {{ data.type }}
                         </span>
                     </td>

@@ -21,6 +21,7 @@ import VButton from '@/components/VButton/index.vue';
 import VAlert from '@/components/VAlert/index.vue';
 import VEdit from '@/components/src/icons/VEdit.vue';
 import VTrash from '@/components/src/icons/VTrash.vue';
+import { Inertia } from "@inertiajs/inertia";
 import VFilter from './Filter.vue';
 import VModalForm from './ModalForm.vue';
 
@@ -114,6 +115,10 @@ const handleEditModal = (data) => {
     openModalForm.value = true
 }
 
+const handleDetail = (id) => {
+    Inertia.visit(route('journals.accounts.show', id));
+}
+
 const successSubmit = () => {
     isLoading.value = true
     getData(pagination.value.current_page)
@@ -197,7 +202,8 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td>
-                <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
+                <td class="px-4 whitespace-nowrap h-16 text-sky-600 underline cursor-pointer" @click="handleDetail(data)">
+                    {{ data.code ?? '-' }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.account_category.name }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.balance }} </td>
