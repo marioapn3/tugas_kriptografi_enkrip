@@ -20,6 +20,11 @@ class AccountService
         return $query->paginate(10);
     }
 
+    public function getDataById($id)
+    {
+        return Account::with(['journalDetails','journalDetails.journal', 'journalDetails.journal.purchase', 'journalDetails.journal.sales', 'journalDetails.journal.expense'])->findOrFail($id);
+    }
+
     public function createData($request)
     {
         $data = $request->only([

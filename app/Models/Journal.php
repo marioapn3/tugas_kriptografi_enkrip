@@ -28,4 +28,9 @@ class Journal extends Model
     {
         return $this->hasOne(Sale::class);
     }
+
+    public function expense()
+    {
+        return $this->hasOne(Expense::class);
+    }
 }

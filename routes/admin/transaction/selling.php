@@ -17,5 +17,7 @@ Route::prefix('transaction')->name('transaction.')->group(function () {
         Route::get('/edit/{id}', 'edit')->name('edit');
         Route::post('/update/{id}', 'updateData')->name('update');
         Route::delete('/delete/{id}', 'deleteData')->name('delete');
+
+        Route::get('{id}', 'show')->name('show');
     });
 });

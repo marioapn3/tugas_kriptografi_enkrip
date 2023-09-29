@@ -20,6 +20,7 @@ import { Head } from "@inertiajs/inertia-vue3";
 import { onMounted, ref } from 'vue';
 import { object, string } from "vue-types";
 import { notify } from 'notiwind';
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
     title: string(),
@@ -165,6 +166,8 @@ const create = () => {
                 },
             ]
 
+            Inertia.visit(route('transaction.purchase.show', res.data.data.id));
+
             notify({
                 type: "success",
                 group: "top",
@@ -227,6 +230,8 @@ const update = () => {
                 },
             ]
 
+            Inertia.visit(route('transaction.purchase.show', res.data.data.id));
+
             notify({
                 type: "success",
                 group: "top",
@@ -268,7 +273,7 @@ onMounted(() => {
         onChangeSubtotal()
 
 
-          // no_transaction: form.value.no_transaction,
+        // no_transaction: form.value.no_transaction,
         // date: form.value.date,
         // description: form.value.description,
         // account_id: form.value.account_id,

@@ -60,7 +60,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["Code", "Name", "Stock", "Avegare Price", "Last Purchase Price", "Purchase Price", "Selling Price", ""]
+const heads = ["Code", "Name", "Stock", "Purchase Price", "Selling Price", ""]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -211,8 +211,6 @@ onMounted(() => {
                     <!-- if value is zero text black -->
                     <span v-else> {{ data.stock }} </span>
                 </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.stock }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.purchase_price }} </td>
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.sale_price }} </td>
                 <td class="h-16 px-4 text-right whitespace-nowrap">

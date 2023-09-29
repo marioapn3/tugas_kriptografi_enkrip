@@ -59,7 +59,7 @@ const updateAction = ref(false)
 const itemSelected = ref({})
 const openAlert = ref(false)
 const openModalForm = ref(false)
-const heads = ["No / Date", "Trasaction Name", "Date", "Transaction Number", "Credit", "Debit", "Balance"]
+const heads = ["Code - Account", "Date", "Transaction Number", "Credit", "Debit", "Balance"]
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -190,8 +190,7 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <!-- <td class="h-16 px-4 whitespace-nowrap"> {{ index + 1 }} </td> -->
-                <td class="h-16 px-4"> {{ data.code ?? '-' }} </td>
-                <td class="h-16 px-4 whitespace-nowrap"> {{ data.name }} </td>
+                <td class="h-16 px-4 !w-60 !z-0 font-semibold"> {{ data.code ?? '-' }} <br> {{ data.name }}</td>
 
                 <td class="h-24 px-4 whitespace-nowrap">
                     <table>
@@ -231,7 +230,7 @@ onMounted(() => {
                         </tr>
                     </table>
                 </td>
-                <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.total_amount }} </td>
+                <td class="h-16 px-4 whitespace-nowrap font-semibold"> Rp. {{ data.total_amount }} </td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">

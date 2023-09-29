@@ -40,6 +40,18 @@ class SaleController extends AdminBaseController
         ]);
     }
 
+    public function show($id)
+    {
+        $data = $this->sellingService->getDataById($id);
+        // dd($data);
+        return Inertia::render($this->source . 'transactions/selling/detail', [
+            'title' => 'Selling Detail | Jurnalin',
+            'additional' => [
+                'data' => $data
+            ]
+        ]);
+    }
+
     public function getData(Request $request)
     {
         try {

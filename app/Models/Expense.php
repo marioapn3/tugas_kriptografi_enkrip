@@ -33,4 +33,9 @@ class Expense extends Model
     {
         return $this->hasMany(ExpenseDetail::class, 'expense_id', 'id');
     }
+
+    public function payment_account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'payment_account', 'id');
+    }
 }

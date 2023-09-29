@@ -200,6 +200,9 @@ onMounted(() => {
                     <span v-else-if="data.sales" class="text-sky-600 underline cursor-pointer">
                         {{ data.sales.no_transaction }}
                     </span>
+                    <span v-else-if="data.expense" class="text-sky-600 underline cursor-pointer">
+                        {{ data.expense.no_transaction }}
+                    </span>
                     <span v-else>
                         {{ data.description}}
                     </span>

@@ -34,7 +34,7 @@ const breadcrumb = [
         to: route('dashboard.index')
     },
     {
-        name: "Transactions",
+        name: "Transaction",
         active: false,
     },
     {
@@ -85,6 +85,11 @@ const getData = debounce(async (page) => {
     }).finally(() => isLoading.value = false)
 }, 500);
 
+
+const handleDetail = (id) => {
+    Inertia.visit(route('transaction.expense.show', id));
+}
+
 const nextPaginate = () => {
     pagination.value.current_page += 1
     isLoading.value = true
@@ -109,27 +114,6 @@ const handleCreate = () => {
 
 const handleEdit = (data) => {
     Inertia.visit(route('transaction.expense.edit', { 'id': data.id }));
-}
-
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
-}
-
-const handleEditModal = (data) => {
-    updateAction.value = true
-    itemSelected.value = data
-    openModalForm.value = true
-}
-
-const successSubmit = () => {
-    isLoading.value = true
-    getData(pagination.value.current_page)
-}
-
-const closeModalForm = () => {
-    itemSelected.value = ref({})
-    openModalForm.value = false
 }
 
 const alertDelete = (data) => {
@@ -261,6 +245,4 @@ onMounted(() => {
     <VAlert :open-dialog="openAlert" @closeAlert="closeAlert" @submitAlert="deleteHandle" type="danger"
         :headerLabel="alertData.headerLabel" :content-label="alertData.contentLabel" :close-label="alertData.closeLabel"
         :submit-label="alertData.submitLabel" />
-    <!-- <VModalForm :data="itemSelected" :update-action="updateAction" :open-dialog="openModalForm" @close="closeModalForm"
-        @successSubmit="successSubmit" /> -->
 </template>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Journal;
 use App\Actions\Options\GetAccountCategoryOptions;
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Requests\Journals\AccountRequest;
+use App\Http\Resources\Journal\AccountDetailResource;
 use App\Http\Resources\Journal\AccountListResource;
 use App\Http\Resources\Journal\CategoryCodeResource;
 use App\Http\Resources\SubmitDefaultResource;
@@ -31,6 +32,18 @@ class AccountController extends AdminBaseController
             'additional' => [
                 'category_options' => $this->getAccountCategoryOptions->handle()
             ]
+        ]);
+    }
+
+    public function show($id)
+    {
+        $data = $this->accountServices->getDataById($id);
+        $result = new AccountDetailResource($data, 'Success get detail account');
+        // return $result;
+        return Inertia::render($this->source . 'journal/account/detail', [
+            "title" => 'Account Detail | Jurnalin',
+            'data' => $result,
+
         ]);
     }
 

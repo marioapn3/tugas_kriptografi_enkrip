@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
@@ -27,5 +28,15 @@ class Sale extends Model
     public function sale_details()
     {
         return $this->hasMany(SaleDetail::class, 'sale_id', 'id');
+    }
+
+    /**
+     * Get the user that owns the Expense
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function journal(): BelongsTo
+    {
+        return $this->belongsTo(Journal::class, 'journal_id', 'id');
     }
 }

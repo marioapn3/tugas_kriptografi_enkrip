@@ -105,41 +105,6 @@ const previousPaginate = () => {
     getData(pagination.value.current_page)
 }
 
-const searchHandle = (search) => {
-    searchFilter.value = search
-    isLoading.value = true
-    getData(1)
-};
-
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
-}
-
-const handleEditModal = (data) => {
-    updateAction.value = true
-    itemSelected.value = data
-    openModalForm.value = true
-}
-
-const successSubmit = () => {
-    isLoading.value = true
-    getData(pagination.value.current_page)
-}
-
-const closeModalForm = () => {
-    itemSelected.value = ref({})
-    openModalForm.value = false
-}
-
-const alertDelete = (data) => {
-    itemSelected.value = data
-    openAlert.value = true
-    alertData.headerLabel = 'Are you sure to delete this?'
-    alertData.contentLabel = "You won't be able to revert this!"
-    alertData.closeLabel = 'Cancel'
-    alertData.submitLabel = 'Delete'
-}
 
 const closeAlert = () => {
     itemSelected.value = ref({})
@@ -203,28 +168,28 @@ onMounted(() => {
                 <td class="h-16 px-4 whitespace-nowrap"> Rp. {{ data.expense }} </td>
             </tr>
             <tr>
-                <td class="h-16 px-4">
+                <td class="h-16 px-4 font-semibold">
                     Total Income Statement
                 </td>
                 <td class="h-16 px-4"></td>
-                <td class="h-16 px-4"> Rp. {{ totalIncome.toLocaleString('id-ID') }} </td>
-                <td class="h-16 px-4"> Rp. {{ totalExpense.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ totalIncome.toLocaleString('id-ID') }} </td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ totalExpense.toLocaleString('id-ID') }} </td>
             </tr>
             <tr v-if="totalIncome > totalExpense">
-                <td class="h-16 px-4">
+                <td class="h-16 px-4 font-semibold ">
                     Total profit
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
             </tr>
             <tr v-else-if="totalExpense > totalIncome">
-                <td class="h-16 px-4">
+                <td class="h-16 px-4 font-semibold">
                     Total loss amounted
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">
