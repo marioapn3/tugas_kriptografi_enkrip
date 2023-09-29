@@ -24,10 +24,12 @@ class GeneralLedgerReportService
 
     public function getPdfData($start_date, $end_date)
     {
-        // $transactions = Account::with('cashier')->whereBetween('created_at', [$start_date, $end_date])->get();
-        // return [
-        //     'transactions' => $transactions,
-        //     'total' => collect($transactions)->sum('grand_total')
-        // ];
+        $accounts = Account::with('journalDetails')->whereHas('journalDetails.journal', function ($query) use ($start_date, $end_date) {
+            $query->whereBetween('date', [$start_date, $end_date]);
+        })->get();
+        return [
+            'accounts' => $accounts,
+        ];
     }
 }
+
