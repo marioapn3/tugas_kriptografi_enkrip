@@ -22,7 +22,6 @@ import VButton from '@/components/VButton/index.vue';
 import VSelect from '@/components/VSelect/index.vue';
 import VDetail from '@/components/src/icons/VDetail.vue';
 import VModalForm from './ModalForm.vue';
-import VFilter from './Filter.vue';
 
 const query = ref([])
 const searchFilter = ref("");
@@ -120,7 +119,7 @@ onMounted(() => {
             </h2>
             <div class="mt-3 sm:mt-0 flex space-x-2 sm:justify-between justify-end">
                 <!-- Filter -->
-                <VFilter @search="searchHandle" :additional="additional"/>
+                <!-- <VFilter @search="searchHandle" :additional="additional"/> -->
             </div>
         </header>
 
