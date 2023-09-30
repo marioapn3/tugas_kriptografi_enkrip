@@ -4,14 +4,18 @@ export default {
 }
 </script>
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { array, object, string } from 'vue-types';
 import AppLayout from '@/layouts/apps.vue';
 import VSetting from "@/components/src/icons/VSetting.vue";
+import VLoading from '@/components/VLoading/index.vue';
 import VSelect from '@/components/VSelect/index.vue';
 import VButtonRounded from "@/components/VButtonRounded/index.vue";
 import VFilter from "./FilterPos.vue"
 import { Head } from '@inertiajs/inertia-vue3';
+import debounce from '@/composables/debounce';
+import axios from 'axios';
+import { notify } from 'notiwind';
 
 const props = defineProps({
     title: string(),
@@ -23,6 +27,34 @@ const props = defineProps({
 const formError = ref({})
 const form = ref({})
 
+const query = ref([])
+const cart = ref([])
+const searchFilter = ref("");
+const isLoading = ref(true)
+
+const getData = debounce(async () => {
+    axios.get(route('transaction.pos.getproduct'), {
+        params: {
+            search: searchFilter.value
+        }
+    }).then((res) => {
+        query.value = res.data.data
+    }).catch((res) => {
+        notify({
+            type: "error",
+            group: "top",
+            text: res.response.data.message
+        }, 2500)
+    }).finally(() => isLoading.value = false)
+}, 500);
+
+const addToCart = (data) => {
+    cart.value.push(data)
+}
+
+onMounted(() => {
+    getData();
+});
 </script>
 
 <template>
@@ -32,20 +64,23 @@ const form = ref({})
             <VFilter @search="searchHandle" />
 
             <div
-                class="h-[calc(100vh-180px)] overflow-auto w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-10 mt-7">
-                <div v-for="(data, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]"
-                    class="h-48 rounded-md cursor-pointer md:h-52 bg-slate-100">
+                class="max-h-[calc(100vh-180px)] overflow-auto w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-10 mt-7">
+                <div class="col-span-full" v-if="isLoading">
+                    <VLoading />
+                </div>
+                <div class="h-48 rounded-md cursor-pointer md:h-52 bg-slate-100 hover:bg-slate-200"
+                    v-for="(data, index) in query" :key="index" v-else @click="addToCart(data)">
                     <img class="w-full h-32 md:h-[142px]  object-cover rounded-t-md"
-                        src="https://img.freepik.com/free-photo/skin-products-arrangement-wooden-blocks_23-2148761445.jpg"
-                        alt="">
+                        :src="data.image ? data.image_preview : 'https://klipaa.com/images/default_image.png'" alt="">
                     <div class="flex flex-col gap-2 px-2 pt-2">
-                        <h1 class="text-sm font-semibold truncate">Product Name asdasdasdasd</h1>
+                        <h1 class="text-sm font-semibold truncate">{{ data.name }}</h1>
                         <div class="flex items-center justify-between">
-                            <p class="text-xs">Rp. 30.000</p>
-                            <p class="text-xs">10</p>
+                            <p class="text-xs">Rp. {{ data.sale_price }}</p>
+                            <p class="text-xs">{{ data.stock }}</p>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
         <section class="px-5 py-3 h-[calc(100vh-110px)] bg-white w-full md:w-[33%] rounded-md">
@@ -62,7 +97,7 @@ const form = ref({})
             </section>
 
             <section class="mt-5 h-[calc(100vh-55vh)] overflow-auto w-full">
-                <div v-for="(data, index) in [1, 2, 3]" :key="index" class="flex flex-row w-full gap-2 my-4 min-h-16">
+                <div v-for="(data, index) in cart" :key="index" class="flex flex-row w-full gap-2 my-4 min-h-16">
                     <img class="hidden object-cover w-16 h-16 rounded-md xl:block"
                         src="https://img.freepik.com/free-photo/skin-products-arrangement-wooden-blocks_23-2148761445.jpg"
                         alt="">

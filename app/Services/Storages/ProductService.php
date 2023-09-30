@@ -37,6 +37,20 @@ class ProductService
         return $query->paginate(10);
     }
 
+    public function getDataPos($request)
+    {
+        $search = $request->search;
+
+        $query = Product::query();
+
+        $query->when(request('search', false), function ($q) use ($search) {
+            $q->where('code', 'like', '%' . $search . '%')->orWhere('name', 'like', '%' . $search . '%');
+        });
+
+        // return all product without pagination
+        return $query->get();
+    }
+
     public function getDetail($id)
     {
         $product = Product::with(['purchaseAccount', 'saleAccount', 'inventoryAccount'])->findOrFail($id);

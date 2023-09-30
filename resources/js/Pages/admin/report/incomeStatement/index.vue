@@ -176,20 +176,20 @@ onMounted(() => {
                 <td class="h-16 px-4 font-semibold"> Rp. {{ totalExpense.toLocaleString('id-ID') }} </td>
             </tr>
             <tr v-if="totalIncome > totalExpense">
-                <td class="h-16 px-4 font-semibold ">
+                <td class="h-16 px-4 font-semibold text-emerald-600">
                     Total profit
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4 font-semibold"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold text-emerald-600"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
             </tr>
             <tr v-else-if="totalExpense > totalIncome">
-                <td class="h-16 px-4 font-semibold">
+                <td class="h-16 px-4 font-semibold text-rose-600">
                     Total loss amounted
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4 font-semibold"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold text-rose-600"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">

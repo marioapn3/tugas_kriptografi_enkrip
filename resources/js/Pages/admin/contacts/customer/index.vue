@@ -213,14 +213,6 @@ onMounted(() => {
                 <td class="h-16 px-4 text-right whitespace-nowrap">
                     <VDropdownEditMenu class="relative inline-flex r-0" :align="'right'"
                         :last="index === query.length - 1 ? true : false">
-                        <li class="cursor-pointer hover:bg-slate-100">
-                            <div class="flex items-center justify-between p-3 space-x-2" @click="handleDetail(data)">
-                                <span>
-                                    <VTrash color="danger" />
-                                </span>
-                                <span>Detail</span>
-                            </div>
-                        </li>
                         <li class="cursor-pointer hover:bg-slate-100" @click="handleEditModal(data)">
                             <div class="flex items-center p-3 space-x-2">
                                 <span>
@@ -229,7 +221,7 @@ onMounted(() => {
                                 <span>Edit</span>
                             </div>
                         </li>
-                        <li class="cursor-pointer hover:bg-slate-100">
+                        <li v-if="data.default == false" class="cursor-pointer hover:bg-slate-100">
                             <div class="flex items-center justify-between p-3 space-x-2" @click="alertDelete(data)">
                                 <span>
                                     <VTrash color="danger" />
