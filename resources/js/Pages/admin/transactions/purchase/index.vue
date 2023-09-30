@@ -112,20 +112,8 @@ const handleEdit = (id) => {
     Inertia.visit(route('transaction.purchase.edit', id));
 }
 
-const handleEditModal = (data) => {
-    updateAction.value = true
-    itemSelected.value = data
-    openModalForm.value = true
-}
-
-const successSubmit = () => {
-    isLoading.value = true
-    getData(pagination.value.current_page)
-}
-
-const closeModalForm = () => {
-    itemSelected.value = ref({})
-    openModalForm.value = false
+const handleDetail = (id) => {
+    Inertia.visit(route('transaction.purchase.show', id));
 }
 
 const alertDelete = (data) => {
