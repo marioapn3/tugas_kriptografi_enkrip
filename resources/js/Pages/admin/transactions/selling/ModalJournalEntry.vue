@@ -18,8 +18,8 @@ const totalCredit = ref(0)
 
 onMounted(() => {
     props.data.journal_details.forEach((journal) => {
-        totalDebit.value += journal.debit
-        totalCredit.value += journal.credit
+        totalDebit.value += parseInt(journal.debit)
+        totalCredit.value += parseInt(journal.credit)
     })
 
 })
