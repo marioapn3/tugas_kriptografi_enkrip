@@ -189,7 +189,7 @@ onMounted(() => {
             </tr>
             <tr v-for="(data, index) in query" :key="index" v-else>
                 <td class="h-16 px-4 whitespace-nowrap"> {{ data.date }} </td>
-                <td class="h-16 px-4 underline cursor-pointer whitespace-nowrap text-sky-600" @click="handleDetail(data)">
+                <td class="h-16 px-4 underline cursor-pointer whitespace-nowrap text-sky-600" @click="handleDetail(data.id)">
                     {{ data.no_transaction }} </td>
                 <td class="h-16 px-4">
                     <table>
