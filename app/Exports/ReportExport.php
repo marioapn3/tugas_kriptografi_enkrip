@@ -37,7 +37,7 @@ class ReportExport implements FromView
             $query->whereBetween('date', [$this->start_date, $this->end_date]);
         })->get();
 
-        return view('export.general_ledger_report', [
+        return view('export.general_ledger_report_excel', [
             'accounts' => $accounts,
             'start_date' => $this->start_date,
             'end_date' => $this->end_date

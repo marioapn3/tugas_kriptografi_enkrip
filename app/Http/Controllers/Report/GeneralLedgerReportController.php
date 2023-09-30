@@ -76,7 +76,7 @@ class GeneralLedgerReportController extends AdminBaseController
 
             $accounts = Account::all();
 
-            return view('export.general_ledger_report', compact('accounts'));
+            return view('export.general_ledger_report_excel', compact('accounts'));
         } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());
         }

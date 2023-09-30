@@ -16,8 +16,7 @@
     </thead>
     <tbody style="">
         @foreach ($accounts as $account)
-            <tr style="border: 1px solid black;
-  border-collapse: collapse;">
+            <tr style="border: 1px solid black; border-collapse: collapse;">
                 <td>{{ $account->code }} - {{ $account->name }}</td>
                 <td>
                     <table>
