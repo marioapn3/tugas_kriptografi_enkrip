@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('sale_id')->constrained('sales')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained('products')->cascadeOnUpdate()->cascadeOnDelete();
             $table->integer('qty');
-            $table->decimal('price');
+            $table->integer('price');
             $table->softDeletes();
             $table->timestamps();
         });

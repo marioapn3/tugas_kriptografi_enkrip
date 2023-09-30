@@ -8,6 +8,9 @@ import Notifications from "notiwind";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
+import FloatingVue from 'floating-vue'
+import 'floating-vue/dist/style.css'
+
 // Font Awesome Setup
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -30,6 +33,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(Notifications)
+            .use(FloatingVue)
             .component("Datepicker", Datepicker)
             .component("font-awesome-icon", FontAwesomeIcon)
             .mount(el);

@@ -18,21 +18,61 @@ class ProductSeeder extends Seeder
         // Generate 10 produk secara acak
         $faker = \Faker\Factory::create();
 
-        for ($i = 0; $i < 5; $i++) {
-            Product::create([
-                'code' => $faker->unique()->ean13,
-                // product name
-                'name' =>   'Produk ' . $i,
-                'description' => $faker->sentence,
-                'purchase_price' => $faker->randomFloat(2, 10000, 100000),
+        $data = [
+            [
+                'code' => 'ITEM-' . $faker->unique(false, 10)->ean13,
+                'name' => 'Laptop Asus ROG',
+                'description' => '-',
+                'purchase_price' => 10000000,
                 'purchase_account' => 7,
-                'sale_price' => $faker->randomFloat(2, 10000, 100000),
+                'sale_price' => 15000000,
                 'sale_account' => 6,
                 'inventory_account' => 3,
-                'stock' => $faker->numberBetween(0, 100),
-                'unit' => $faker->word,
-                'image' => $faker->imageUrl(),
-            ]);
+            ],
+            [
+                'code' => 'ITEM-' . $faker->unique(false, 10)->ean13,
+                'name' => 'Laptop Asus Zenbook',
+                'description' => '-',
+                'purchase_price' => 11000000,
+                'purchase_account' => 7,
+                'sale_price' => 13000000,
+                'sale_account' => 6,
+                'inventory_account' => 3,
+            ],
+            [
+                'code' => 'ITEM-' . $faker->unique(false, 10)->ean13,
+                'name' => 'Laptop Asus Vivobook',
+                'description' => '-',
+                'purchase_price' => 9000000,
+                'purchase_account' => 7,
+                'sale_price' => 11000000,
+                'sale_account' => 6,
+                'inventory_account' => 3,
+            ],
+            [
+                'code' => 'ITEM-' . $faker->unique(false, 10)->ean13,
+                'name' => 'Laptop Asus TUF',
+                'description' => '-',
+                'purchase_price' => 15000000,
+                'purchase_account' => 7,
+                'sale_price' => 17500000,
+                'sale_account' => 6,
+                'inventory_account' => 3,
+            ],
+            [
+                'code' => 'ITEM-' . $faker->unique(false, 10)->ean13,
+                'name' => 'Laptop Asus Expertbook',
+                'description' => '-',
+                'purchase_price' => 20000000,
+                'purchase_account' => 7,
+                'sale_price' => 22000000,
+                'sale_account' => 6,
+                'inventory_account' => 3,
+            ],
+        ];
+
+        foreach ($data as $key => $value) {
+            Product::create($value);
         }
     }
 }

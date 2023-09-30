@@ -4,14 +4,19 @@ export default {
 }
 </script>
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { array, object, string } from 'vue-types';
 import AppLayout from '@/layouts/apps.vue';
 import VSetting from "@/components/src/icons/VSetting.vue";
+import VLoading from '@/components/VLoading/index.vue';
 import VSelect from '@/components/VSelect/index.vue';
 import VButtonRounded from "@/components/VButtonRounded/index.vue";
 import VFilter from "./FilterPos.vue"
 import { Head } from '@inertiajs/inertia-vue3';
+import debounce from '@/composables/debounce';
+import axios from 'axios';
+import { notify } from 'notiwind';
+import VEmpty from '@/components/src/icons/VEmpty.vue';
 
 const props = defineProps({
     title: string(),
@@ -23,6 +28,122 @@ const props = defineProps({
 const formError = ref({})
 const form = ref({})
 
+const query = ref([])
+const cart = ref([])
+const searchFilter = ref("");
+const isLoading = ref(true)
+
+const searchHandle = (search) => {
+    searchFilter.value = search
+    isLoading.value = true
+    getData(1)
+};
+
+const getData = debounce(async () => {
+    axios.get(route('transaction.pos.getproduct'), {
+        params: {
+            search: searchFilter.value
+        }
+    }).then((res) => {
+        query.value = res.data.data
+    }).catch((res) => {
+        notify({
+            type: "error",
+            group: "top",
+            text: res.response.data.message
+        }, 2500)
+    }).finally(() => isLoading.value = false)
+}, 500);
+
+const addToCart = (data) => {
+    console.log(data)
+
+    // check if stock is 0 cannot add to cart
+    if (data.stock === 0) {
+        notify({
+            type: "warning",
+            title: "Sorry",
+            group: "top",
+            text: "This product is out of stock"
+        }, 2500)
+        return
+    }
+
+    // if data product is same update quantity only
+    // else add new product to cart
+    if (cart.value.length > 0) {
+        const index = cart.value.findIndex((item) => item.id === data.id)
+        if (index !== -1) {
+            // check if quantity is same with stock
+            if (cart.value[index].quantity === data.stock) {
+                notify({
+                    type: "warning",
+                    title: "Sorry",
+                    group: "top",
+                    text: "Quantity has reached the limit"
+                }, 2500)
+                return
+            }
+            cart.value[index].quantity += 1
+        } else {
+            cart.value.push({
+                id: data.id,
+                name: data.name,
+                price: data.sale_price_number_format,
+                quantity: 1,
+                image: data.image,
+                image_preview: data.image_preview
+            })
+        }
+    } else {
+        cart.value.push({
+            id: data.id,
+            name: data.name,
+            price: data.sale_price_number_format,
+            quantity: 1,
+            image: data.image,
+            image_preview: data.image_preview
+        })
+    }
+}
+
+const updateQuantity = (index, action) => {
+    // if action is minus
+    // check if quantity is 1
+    // if 1 remove from cart
+    // else minus quantity
+    if (action === 'minus') {
+        if (cart.value[index].quantity === 1) {
+            cart.value.splice(index, 1)
+        } else {
+            cart.value[index].quantity -= 1
+        }
+    } else {
+        // if action is plus
+        // check if quantity is same with stock
+        // if same show alert
+        // else plus quantity
+
+        // get data product by id
+        const data = query.value.find((item) => item.id === cart.value[index].id)
+        // check if quantity is same with stock
+        if (cart.value[index].quantity === data.stock) {
+            notify({
+                type: "warning",
+                title: "Sorry",
+                group: "top",
+                text: "Quantity has reached the limit"
+            }, 2500)
+            return
+        }
+
+        cart.value[index].quantity += 1
+    }
+}
+
+onMounted(() => {
+    getData();
+});
 </script>
 
 <template>
@@ -32,20 +153,25 @@ const form = ref({})
             <VFilter @search="searchHandle" />
 
             <div
-                class="h-[calc(100vh-180px)] overflow-auto w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-10 mt-7">
-                <div v-for="(data, index) in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]"
-                    class="h-48 rounded-md cursor-pointer md:h-52 bg-slate-100">
-                    <img class="w-full h-32 md:h-[142px]  object-cover rounded-t-md"
-                        src="https://img.freepik.com/free-photo/skin-products-arrangement-wooden-blocks_23-2148761445.jpg"
-                        alt="">
+                class="max-h-[calc(100vh-180px)] overflow-auto w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pb-10 mt-7">
+                <div class="col-span-full" v-if="isLoading">
+                    <VLoading />
+                </div>
+                <div class="h-48 rounded-md cursor-pointer md:h-52 bg-slate-100 hover:bg-slate-200 border border-slate-100 hover:border-slate-200 transition-all"
+                    v-for="(data, index) in query" :key="index" v-else @click="addToCart(data)">
+                    <img class="w-full h-32 md:h-[142px]  object-cover rounded-t-md bg-white"
+                        :src="data.image ? data.image_preview : 'https://klipaa.com/images/default_image.png'" alt="">
                     <div class="flex flex-col gap-2 px-2 pt-2">
-                        <h1 class="text-sm font-semibold truncate">Product Name asdasdasdasd</h1>
+                        <h1 class="text-sm font-semibold truncate" v-tooltip="{ content: data.name }">
+                            {{ data.name }}
+                        </h1>
                         <div class="flex items-center justify-between">
-                            <p class="text-xs">Rp. 30.000</p>
-                            <p class="text-xs">10</p>
+                            <p class="text-xs">Rp. {{ data.sale_price }}</p>
+                            <p class="text-xs">{{ data.stock }}</p>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
         <section class="px-5 py-3 h-[calc(100vh-110px)] bg-white w-full md:w-[33%] rounded-md">
@@ -62,21 +188,27 @@ const form = ref({})
             </section>
 
             <section class="mt-5 h-[calc(100vh-55vh)] overflow-auto w-full">
-                <div v-for="(data, index) in [1, 2, 3]" :key="index" class="flex flex-row w-full gap-2 my-4 min-h-16">
-                    <img class="hidden object-cover w-16 h-16 rounded-md xl:block"
-                        src="https://img.freepik.com/free-photo/skin-products-arrangement-wooden-blocks_23-2148761445.jpg"
-                        alt="">
+                <div v-if="cart.length === 0" class="flex flex-col items-center w-full my-32">
+                    <div class="text-md font-medium mt-9 text-slate-500">
+                        Let's add some product to cart
+                    </div>
+                </div>
+                <div v-for="(data, index) in cart" :key="index" v-else
+                    class="flex flex-row w-full gap-2 my-3 min-h-16 border border-slate-100 p-1 rounded-md">
+                    <img class="hidden object-cover w-16 h-16 rounded-md xl:block "
+                        :src="data.image ? data.image_preview : 'https://klipaa.com/images/default_image.png'" alt="">
                     <div class="flex flex-col justify-between w-full">
                         <h2 class="text-sm font-semibold lg:text-md">
-                            Ponds White Beauty Day Cream 50gr
+                            {{ data.name }}
                         </h2>
                         <!-- <p class="text-sm font-medium">Rp. 10.100</p> -->
                         <div class="flex justify-between w-full ">
-                            <p class="text-xs font-medium lg:text-sm">Rp. 10.100</p>
+                            <p class="text-xs font-medium lg:text-sm">Rp. {{ data.price.toLocaleString('id-ID') }}</p>
 
                             <div class="flex items-center">
                                 <!-- button minus -->
-                                <button class="px-2 py-1 transition-all rounded-full bg-slate-200 hover:bg-slate-400">
+                                <button class="px-2 py-1 transition-all rounded-full bg-slate-200 hover:bg-slate-400"
+                                    @click="updateQuantity(index, 'minus')">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-black" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -85,11 +217,12 @@ const form = ref({})
                                 </button>
 
                                 <!-- input -->
-                                <input type="text" class="flex-grow w-12 h-6 text-sm font-medium text-center border-0"
-                                    value="10" readonly>
+                                <input type="text" class="flex-grow w-10 h-6 text-sm font-medium text-center border-0"
+                                    readonly v-model="data.quantity">
 
                                 <!-- button plus -->
-                                <button class="px-2 py-1 transition-all rounded-full bg-slate-200 hover:bg-slate-400">
+                                <button class="px-2 py-1 transition-all rounded-full bg-slate-200 hover:bg-slate-400"
+                                    @click="updateQuantity(index, 'plus')">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-black" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -103,10 +236,10 @@ const form = ref({})
             </section>
 
             <section class="mt-7">
-                <div class="flex justify-between">
+                <!-- <div class="flex justify-between">
                     <p class="text-sm font-medium">Subtotal</p>
                     <p class="text-sm font-medium">Rp. 10.100</p>
-                </div>
+                </div> -->
                 <!-- <div class="flex justify-between">
                     <p class="text-sm font-medium">Discount</p>
                     <p class="text-sm font-medium">Rp. 10.100</p>
@@ -116,8 +249,12 @@ const form = ref({})
                     <p class="text-sm font-medium">Rp. 10.100</p>
                 </div> -->
                 <div class="flex justify-between">
-                    <p class="text-sm font-medium">Total</p>
-                    <p class="text-sm font-medium">Rp. 10.100</p>
+                    <p class="text-sm font-medium text-lg">Total</p>
+                    <p class="text-sm font-medium text-lg">Rp.
+                        {{ cart.reduce((acc, item) => {
+                            return acc + (parseInt(item.price) * parseInt(item.quantity))
+                        }, 0).toLocaleString('id-ID') }}
+                    </p>
                 </div>
             </section>
             <section class="mt-7">

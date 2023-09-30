@@ -15,6 +15,11 @@ class ContactSeeder extends Seeder
      */
     public function run()
     {
+        Contact::create([
+            'name' => 'Walking Customer',
+            'type' => 'customer',
+            'default' => true,
+        ]);
         for ($i = 0; $i < 10; $i++) {
             Contact::create([
                 'name' => fake()->name(),

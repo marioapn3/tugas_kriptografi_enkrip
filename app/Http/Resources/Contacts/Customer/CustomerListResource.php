@@ -36,6 +36,7 @@ class CustomerListResource extends ResourceCollection
             'type' => $data->type,
             'city' => $data->city,
             'portal_code' => $data->portal_code,
+            'default' => (bool) $data->default
         ];
     }
 
