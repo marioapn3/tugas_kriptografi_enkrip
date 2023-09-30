@@ -34,6 +34,8 @@ const fileSelected = (evt) => {
 const openForm = () => {
     if (props.updateAction) {
         form.value = Object.assign(form.value, props.data)
+        form.value.sale_price = props.data.sale_price_number_format
+        form.value.purchase_price = props.data.purchase_price_number_format
         previewPicUrl.value = props.data.image_preview
     } else {
         form.value = ref({})

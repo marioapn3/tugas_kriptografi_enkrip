@@ -31,7 +31,9 @@ class ProductPosListResource extends ResourceCollection
             'code' => $data->code,
             'description' => $data->description,
             'purchase_price' => number_format($data->purchase_price, 0, ',', '.'),
+            'purchase_price_number_format' => (int) $data->purchase_price,
             'sale_price' => number_format($data->sale_price, 0, ',', '.'),
+            'sale_price_number_format' => (int) $data->sale_price,
             //  make stock if type out is negative and type in is positive
             'stock' => $data->productStock->sum(function ($stock) {
                 return $stock->type == 'in' ? $stock->quantity : -$stock->quantity;
