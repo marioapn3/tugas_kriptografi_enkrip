@@ -29,14 +29,14 @@
                         <tr>
                             <td>Date</td>
                             <td>Transaction Number</td>
-                            <td>Credit</td>
                             <td>Debit</td>
+                            <td>Credit</td>
                         </tr>
                         @foreach ($account->journalDetails as $item)
                             <tr>
                                 <td>{{ $item->journal->date }}</td>
                                 <td>{{ $item->journal->no_transaction }}</td>
-                                <td>Rp. {{ $item->credit }}</td>
+                                <td>Rp. {{ $item->debit }}</td>
                                 <td>Rp. {{ $item->credit }}</td>
                             </tr>
                         @endforeach
