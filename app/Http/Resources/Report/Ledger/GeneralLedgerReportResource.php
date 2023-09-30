@@ -71,23 +71,7 @@ class GeneralLedgerReportResource extends ResourceCollection
             'total_amount' => number_format($totalAmount),
         ];
     }
-    private function getTotalAmount($classification, $data)
-    {
-        $total = 0;
-        foreach ($data->journalDetails as $detail) {
-            $amount = 0;
 
-            if ($classification === 'debit') {
-                $amount = $detail->debit - $detail->credit;
-            } elseif ($classification === 'credit') {
-                $amount = $detail->credit - $detail->debit;
-            }
-
-            $total += $amount;
-        }
-
-        return $total;
-    }
     private function transformCollection($collection)
     {
         return $collection->transform(function ($data) {

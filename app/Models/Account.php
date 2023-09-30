@@ -30,4 +30,23 @@ class Account extends Model
     {
         return $this->hasMany(JournalDetail::class, 'account_id', 'id');
     }
+
+    public function getTotalAmount()
+    {
+        $classification = $this->AccountCategory->classification->debit_or_credit;
+        $total = 0;
+        foreach ($this->journalDetails as $detail) {
+            $amount = 0;
+
+            if ($classification === 'debit') {
+                $amount = $detail->debit - $detail->credit;
+            } elseif ($classification === 'credit') {
+                $amount = $detail->credit - $detail->debit;
+            }
+
+            $total += $amount;
+        }
+
+        return $total;
+    }
 }
