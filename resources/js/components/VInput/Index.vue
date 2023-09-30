@@ -21,7 +21,6 @@ const updateValue = (event) => {
 }
 
 </script>
-
 <template>
     <div>
         <div class="mb-1" :class="{'flex items-center my-auto' : tooltip, 'block' : !tooltip}" v-if="label">
