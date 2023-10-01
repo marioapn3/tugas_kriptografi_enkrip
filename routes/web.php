@@ -21,7 +21,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return redirect(route('dashboard.index'));
+    return view('landing-page');
 });
 Route::controller(GeneralLedgerReportController::class)->group(function () {
     Route::get('/testing',  "showPdf");

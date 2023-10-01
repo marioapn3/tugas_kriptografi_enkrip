@@ -58,7 +58,7 @@ const handleCloseModal = () => {
 onMounted(() => {
     console.log(props.additional.data)
     // total 
-    total.value = props.additional.data.expense_details.reduce((a, b) => a + b.total_expense, 0)
+    total.value = props.additional.data.expense_details.reduce((a, b) => parseInt(a) + parseInt(b.total_expense), 0)
 });
 </script>
 
