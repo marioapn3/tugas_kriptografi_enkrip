@@ -335,7 +335,7 @@
                             <div class="pb-4">
                                 <h6 class="fw-bold text-muted">Subscribe</h6>
                                 <h4 class="display-5 fw-bold mb-4">
-                                    $15<span style="font-size: 20px">&nbsp;/ Month</span>
+                                    $18<span style="font-size: 20px">&nbsp;/ Month</span>
                                 </h4>
                                 <ul class="list-unstyled">
                                     <li class="d-flex mb-2">
