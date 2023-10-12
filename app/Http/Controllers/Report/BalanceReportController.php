@@ -47,8 +47,16 @@ class BalanceReportController extends AdminBaseController
             $end_date = $request->end_date ?: Carbon::now()->endOfMonth()->format('Y-m-d');
             $data = $this->balanceReportService->getPdfData($start_date, $end_date);
 
+            // 'accounts' => $result,
+            // 'totalDebit' => number_format($this->totalDebit),
+            // 'totalCredit' => number_format($this->totalCredit),
+
+
+
             $pdf = PDF::loadView('export.balance.balance_pdf', [
                 'accounts' => $data['accounts'],
+                'total_debit' => $data['totalDebit'],
+                'total_credit' => $data['totalCredit'],
                 'start_date' => $start_date,
                 'end_date' => $end_date
             ])->setPaper('a4', 'portrait');

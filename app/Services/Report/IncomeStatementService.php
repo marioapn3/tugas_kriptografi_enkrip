@@ -40,8 +40,6 @@ class IncomeStatementService
             return in_array($account->AccountCategory->classification->id, [4, 5]);
         });
 
-
-
         $result = [];
 
         foreach ($filteredAccounts as $account) {
@@ -82,4 +80,5 @@ class IncomeStatementService
             'totalExpense' => number_format($this->totalExpense),
         ];
     }
+
 }

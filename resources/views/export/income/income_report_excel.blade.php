@@ -46,15 +46,15 @@
         @if ($totalIntIncome > $totalIntExpense)
             <tr style="border: 1px solid black;
   border-collapse: collapse;">
-                <td>Total Profit </td>
-                <td></td>
+                <td colspan="2">Total Profit </td>
+
                 <td> Rp. {{ number_format($totalIntIncome - $totalIntExpense) }}</td>
             </tr>
         @elseif ($totalIntIncome < $totalIntExpense)
             <tr style="border: 1px solid black;
   border-collapse: collapse;">
-                <td>Total Loss </td>
-                <td></td>
+                <td colspan="2">Total Loss </td>
+
                 <td>Rp. {{ number_format($totalIntExpense - $totalIntIncome) }}</td>
             </tr>
         @else

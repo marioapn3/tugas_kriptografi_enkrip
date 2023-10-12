@@ -6,20 +6,29 @@
   border-collapse: collapse;">
     <thead style="border: 1px solid black;
   border-collapse: collapse;">
-        {{-- "Code - Account", "Date", "Transaction Number", "Credit", "Debit", "Balance" --}}
         <tr style="background-color: #e6e6e7;">
-            <th scope="col">Code - Account</th>
 
-            <th scope="col">Balance</th>
+            <th>Name</th>
+            <th>Code</th>
+
+            <th>Debit</th>
+            <th>Credit</th>
         </tr>
     </thead>
-    <tbody style="">
+    <tbody>
         @foreach ($accounts as $account)
-            <tr style="border: 1px solid black; border-collapse: collapse;">
-                <td>{{ $account->code }} - {{ $account->name }}</td>
-                <td class="text-end">Rp. {{ number_format($account->getTotalAmount(), 2, ',', '.') }}</td>
+            <tr>
+
+                <td>{{ $account['name'] }}</td>
+                <td>{{ $account['code'] }}</td>
+                <td>Rp. {{ $account['debit'] }}</td>
+                <td>Rp. {{ $account['credit'] }}</td>
             </tr>
         @endforeach
-
+        <tr>
+            <td colspan="2">Total Balance Sheet</td>
+            <td>Rp. {{ $total_debit }}</td>
+            <td>Rp. {{ $total_credit }}</td>
+        </tr>
     </tbody>
 </table>
