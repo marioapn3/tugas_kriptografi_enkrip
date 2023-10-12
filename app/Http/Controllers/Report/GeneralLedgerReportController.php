@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers\Report;
 
-use App\Exports\ReportExport;
+use App\Exports\LedgerExport;
+
 use App\Http\Controllers\AdminBaseController;
 use App\Http\Resources\Report\Ledger\GeneralLedgerReportResource;
 use App\Models\Account;
@@ -46,7 +47,7 @@ class GeneralLedgerReportController extends AdminBaseController
             $start_date = $request->start_date ?: Carbon::now()->startOfMonth()->format('Y-m-d');
             $end_date = $request->end_date ?: Carbon::now()->endOfMonth()->format('Y-m-d');
 
-            return Excel::download(new ReportExport($start_date, $end_date), 'transactions_' . Carbon::now()->timestamp . '.xlsx');
+            return Excel::download(new LedgerExport($start_date, $end_date), 'general_ledger_' . Carbon::now()->timestamp . '.xlsx');
         } catch (\Exception $e) {
             return $this->exceptionError($e->getMessage());
         }
@@ -59,7 +60,7 @@ class GeneralLedgerReportController extends AdminBaseController
             $end_date = $request->end_date ?: Carbon::now()->endOfMonth()->format('Y-m-d');
             $data = $this->generalLedgerReportService->getPdfData($start_date, $end_date);
 
-            $pdf = PDF::loadView('export.general_ledger_report', [
+            $pdf = PDF::loadView('export.general_ledger.general_ledger_pdf', [
                 'accounts' => $data['accounts'],
                 'start_date' => $start_date,
                 'end_date' => $end_date

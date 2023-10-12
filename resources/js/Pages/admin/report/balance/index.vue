@@ -158,6 +158,14 @@ const clearFilter = (data) => {
     isLoading.value = true
     getData(1)
 }
+
+const handleExportExcel = () => {
+    window.open(route('report.balance.exportexcel', { 'start_date': filter.value.start_date, 'end_date': filter.value.end_date }));
+}
+
+const handleExportPdf = () => {
+    window.open(route('report.balance.exportpdf', { 'start_date': filter.value.start_date, 'end_date': filter.value.end_date }));
+}
 onMounted(() => {
     getData(1);
 });
@@ -177,8 +185,8 @@ onMounted(() => {
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
                 <VFilter @apply="applyFilter" @clear="clearFilter" />
-                <VButton label="Export Excel" type="success" class="mt-auto" />
-                <VButton label="Export Pdf" type="danger" class="mt-auto" />
+                <VButton label="Export Excel" type="success" @click="handleExportExcel" class="mt-auto" />
+                <VButton label="Export Pdf" type="danger" @click="handleExportPdf" class="mt-auto" />
             </div>
         </header>
 

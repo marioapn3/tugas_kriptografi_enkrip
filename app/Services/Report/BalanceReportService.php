@@ -21,4 +21,14 @@ class BalanceReportService
 
         return $query->paginate(10);
     }
+
+    public function getPdfData($start_date, $end_date)
+    {
+        $accounts = Account::with('journalDetails')->whereHas('journalDetails.journal', function ($query) use ($start_date, $end_date) {
+            $query->whereBetween('date', [$start_date, $end_date]);
+        })->get();
+        return [
+            'accounts' => $accounts,
+        ];
+    }
 }

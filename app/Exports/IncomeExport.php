@@ -2,15 +2,16 @@
 
 namespace App\Exports;
 
-use App\Models\Account;
-use App\Models\Transaction;
+
+use App\Services\Report\IncomeStatementService;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
-class ReportExport implements FromView
+class IncomeExport implements FromView
 {
     private $start_date;
     private $end_date;
+    private $incomeStatementService;
 
     /**
      * __construct
@@ -23,6 +24,7 @@ class ReportExport implements FromView
     {
         $this->start_date = $start_date;
         $this->end_date   = $end_date;
+        $this->incomeStatementService = new IncomeStatementService(); // Inisialisasi objek IncomeStatementService
     }
 
     /**
@@ -32,15 +34,13 @@ class ReportExport implements FromView
      */
     public function view(): View
     {
-        $accounts = Account::with('journalDetails')->whereHas('journalDetails.journal', function ($query) {
-            // You can now access $this->start_date and $this->end_date here
-            $query->whereBetween('date', [$this->start_date, $this->end_date]);
-        })->get();
-
-        return view('export.general_ledger_report_excel', [
-            'accounts' => $accounts,
+        $data = $this->incomeStatementService->getPdfData($this->start_date, $this->end_date);
+        return view('export.income.income_report_excel', [
+            'data' => $data['accounts'],
+            'totalIncome' => $data['totalIncome'],
+            'totalExpense' => $data['totalExpense'],
             'start_date' => $this->start_date,
-            'end_date' => $this->end_date
+            'end_date' => $this->end_date,
         ]);
     }
 }

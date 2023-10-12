@@ -122,6 +122,13 @@ const clearFilter = (data) => {
     isLoading.value = true
     getData(1)
 }
+const handleExportExcel = () => {
+    window.open(route('report.income-statement.exportexcel', { 'start_date': filter.value.start_date, 'end_date': filter.value.end_date }));
+}
+
+const handleExportPdf = () => {
+    window.open(route('report.income-statement.exportpdf', { 'start_date': filter.value.start_date, 'end_date': filter.value.end_date }));
+}
 onMounted(() => {
     getData(1);
 });
@@ -141,8 +148,8 @@ onMounted(() => {
             <div class="flex justify-end mt-3 space-x-2 sm:mt-0 sm:justify-between">
                 <!-- Filter -->
                 <VFilter @apply="applyFilter" @clear="clearFilter" />
-                <VButton label="Export Excel" type="success" class="mt-auto" />
-                <VButton label="Export Pdf" type="danger" class="mt-auto" />
+                <VButton label="Export Excel" type="success" @click="handleExportExcel" class="mt-auto" />
+                <VButton label="Export Pdf" type="danger" @click="handleExportPdf" class="mt-auto" />
             </div>
         </header>
 
@@ -181,7 +188,8 @@ onMounted(() => {
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4 font-semibold text-emerald-600"> Rp. {{ (totalIncome - totalExpense).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold text-emerald-600"> Rp. {{ (totalIncome -
+                    totalExpense).toLocaleString('id-ID') }}</td>
             </tr>
             <tr v-else-if="totalExpense > totalIncome">
                 <td class="h-16 px-4 font-semibold text-rose-600">
@@ -189,7 +197,8 @@ onMounted(() => {
                 </td>
                 <td class="h-16 px-4"></td>
                 <td class="h-16 px-4"> </td>
-                <td class="h-16 px-4 font-semibold text-rose-600"> Rp. {{ (totalExpense - totalIncome).toLocaleString('id-ID') }}</td>
+                <td class="h-16 px-4 font-semibold text-rose-600"> Rp. {{ (totalExpense -
+                    totalIncome).toLocaleString('id-ID') }}</td>
             </tr>
         </VDataTable>
         <div class="px-4 py-6">
