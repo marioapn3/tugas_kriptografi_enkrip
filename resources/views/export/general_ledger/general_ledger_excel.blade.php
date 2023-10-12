@@ -1,5 +1,7 @@
 {{-- <h1 style="text-align: center; ">General Ledger Report {{ $start_date }} - {{ $end_date }}</h1> --}}
 <h1 style="text-align: center; ">General Ledger Report </h1>
+<p style="text-align: center">{{ $start_date . '  until  ' . $end_date }}</p>
+
 <table style="width: 100%;border: 1px solid black;
   border-collapse: collapse;">
     <thead style="border: 1px solid black;
