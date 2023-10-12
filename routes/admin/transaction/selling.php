@@ -7,6 +7,7 @@ Route::prefix('transaction')->name('transaction.')->group(function () {
     Route::controller(PosController::class)->prefix('pos')->name('pos.')->group(function () {
         Route::get('/', 'posIndex')->name('index');
         Route::get('get-product', 'getProduct')->name('getproduct');
+        Route::post('save-setting', 'saveSetting')->name('savesetting');
     });
 
     Route::controller(SaleController::class)->prefix('sale')->name('sale.')->group(function () {

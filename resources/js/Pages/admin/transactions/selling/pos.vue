@@ -17,12 +17,15 @@ import debounce from '@/composables/debounce';
 import axios from 'axios';
 import { notify } from 'notiwind';
 import VEmpty from '@/components/src/icons/VEmpty.vue';
+import VModalSettingPos from './ModalSettingPos.vue';
+import VModalSuccess from './ModalSuccess.vue';
 
 const props = defineProps({
     title: string(),
     filter: object(),
     query: array(),
     modules: array(),
+    additionals: object()
 })
 
 const formError = ref({})
@@ -32,6 +35,8 @@ const query = ref([])
 const cart = ref([])
 const searchFilter = ref("");
 const isLoading = ref(true)
+const openModalSetting = ref(false)
+const openModalSuccess = ref(false)
 
 const searchHandle = (search) => {
     searchFilter.value = search
@@ -75,7 +80,7 @@ const addToCart = (data) => {
         const index = cart.value.findIndex((item) => item.id === data.id)
         if (index !== -1) {
             // check if quantity is same with stock
-            if (cart.value[index].quantity === data.stock) {
+            if (cart.value[index].qty === data.stock) {
                 notify({
                     type: "warning",
                     title: "Sorry",
@@ -84,13 +89,13 @@ const addToCart = (data) => {
                 }, 2500)
                 return
             }
-            cart.value[index].quantity += 1
+            cart.value[index].qty += 1
         } else {
             cart.value.push({
                 id: data.id,
                 name: data.name,
                 price: data.sale_price_number_format,
-                quantity: 1,
+                qty: 1,
                 image: data.image,
                 image_preview: data.image_preview
             })
@@ -100,7 +105,7 @@ const addToCart = (data) => {
             id: data.id,
             name: data.name,
             price: data.sale_price_number_format,
-            quantity: 1,
+            qty: 1,
             image: data.image,
             image_preview: data.image_preview
         })
@@ -113,10 +118,10 @@ const updateQuantity = (index, action) => {
     // if 1 remove from cart
     // else minus quantity
     if (action === 'minus') {
-        if (cart.value[index].quantity === 1) {
+        if (cart.value[index].qty === 1) {
             cart.value.splice(index, 1)
         } else {
-            cart.value[index].quantity -= 1
+            cart.value[index].qty -= 1
         }
     } else {
         // if action is plus
@@ -127,7 +132,7 @@ const updateQuantity = (index, action) => {
         // get data product by id
         const data = query.value.find((item) => item.id === cart.value[index].id)
         // check if quantity is same with stock
-        if (cart.value[index].quantity === data.stock) {
+        if (cart.value[index].qty === data.stock) {
             notify({
                 type: "warning",
                 title: "Sorry",
@@ -137,12 +142,85 @@ const updateQuantity = (index, action) => {
             return
         }
 
-        cart.value[index].quantity += 1
+        cart.value[index].qty += 1
     }
 }
 
+const handleOpenModalSetting = () => {
+    openModalSetting.value = !openModalSetting.value
+}
+
+
+const create = () => {
+    const data = {
+        no_transaction: null,
+        date: props.additionals.cart_setting.date,
+        account_id: props.additionals.cart_setting.deposit_to_account_id,
+        customer_id: form.value.customer_id,
+        description: 'POS Transaction',
+        product_entries: cart.value.map((item) => {
+            return {
+                product_id: item.id,
+                qty: item.qty,
+                price: item.price,
+                subtotal: item.qty * item.price
+            }
+        })
+    }
+
+    isLoading.value = true
+    debounce(axios.post(route('transaction.sale.store'), data)
+        .then((res) => {
+            isLoading.value = false
+
+            // reload this
+
+            openModalSuccess.value = true
+
+            // getData();
+            // notify({
+            //     type: "success",
+            //     group: "top",
+            //     text: 'Transaction success'
+            // }, 1000)
+
+            // setTimeout(() => {
+            //     window.location.reload()
+            // }, 1500)
+        }).catch((res) => {
+            // Handle validation errors
+
+            // console.log(res)
+            const result = res.response.data
+            const metaError = res.response.data.meta?.error
+            if (result.hasOwnProperty('errors')) {
+                formError.value = ref({});
+                Object.keys(result.errors).map((key) => {
+                    formError.value[key] = result.errors[key].toString();
+                });
+            }
+
+            if (metaError) {
+                notify({
+                    type: "error",
+                    group: "top",
+                    text: metaError
+                }, 2500)
+            } else {
+                notify({
+                    type: "error",
+                    group: "top",
+                    text: result.message
+                }, 2500)
+            }
+        }).finally(() => isLoading.value = false), 2000)
+}
+
+
 onMounted(() => {
     getData();
+
+    form.value.customer_id = 1
 });
 </script>
 
@@ -177,18 +255,23 @@ onMounted(() => {
         <section class="px-5 py-3 h-[calc(100vh-110px)] bg-white w-full md:w-[33%] rounded-md">
             <section class="flex items-center justify-between">
                 <h1 class="text-2xl font-semibold text-black">Cart</h1>
-                <div class="p-1 transition-all rounded cursor-pointer bg-slate-100 hover:bg-slate-200">
+                <div class="p-1 transition-all rounded cursor-pointer bg-slate-100 hover:bg-slate-200"
+                    @click="handleOpenModalSetting()">
                     <VSetting />
                 </div>
             </section>
 
             <section class="mt-7">
-                <VSelect placeholder="Select Customer" :required="true" v-model="form.purchase_account" :options="[]"
-                    :errorMessage="formError.purchase_account" @update:modelValue="formError.purchase_account = ''" />
+                <VSelect placeholder="Select Customer" :required="true" v-model="form.customer_id"
+                    :options="additionals.customer_list" :errorMessage="formError.customer_id"
+                    @update:modelValue="formError.customer_id = ''" />
             </section>
 
             <section class="mt-5 h-[calc(100vh-55vh)] overflow-auto w-full">
-                <div v-if="cart.length === 0" class="flex flex-col items-center w-full my-32">
+                <div class="col-span-full" v-if="isLoading">
+                    <VLoading />
+                </div>
+                <div v-else-if="!isLoading && cart.length === 0" class="flex flex-col items-center w-full my-32">
                     <div class="text-md font-medium mt-9 text-slate-500">
                         Let's add some product to cart
                     </div>
@@ -201,9 +284,8 @@ onMounted(() => {
                         <h2 class="text-sm font-semibold lg:text-md">
                             {{ data.name }}
                         </h2>
-                        <!-- <p class="text-sm font-medium">Rp. 10.100</p> -->
                         <div class="flex justify-between w-full ">
-                            <p class="text-xs font-medium lg:text-sm">Rp. {{ data.price.toLocaleString('id-ID') }}</p>
+                            <p class="text-xs font-medium lg:text-sm">Rp. {{ data.price?.toLocaleString('id-ID') }}</p>
 
                             <div class="flex items-center">
                                 <!-- button minus -->
@@ -218,7 +300,7 @@ onMounted(() => {
 
                                 <!-- input -->
                                 <input type="text" class="flex-grow w-10 h-6 text-sm font-medium text-center border-0"
-                                    readonly v-model="data.quantity">
+                                    readonly v-model="data.qty">
 
                                 <!-- button plus -->
                                 <button class="px-2 py-1 transition-all rounded-full bg-slate-200 hover:bg-slate-400"
@@ -252,13 +334,13 @@ onMounted(() => {
                     <p class="text-sm font-medium text-lg">Total</p>
                     <p class="text-sm font-medium text-lg">Rp.
                         {{ cart.reduce((acc, item) => {
-                            return acc + (parseInt(item.price) * parseInt(item.quantity))
+                            return acc + (parseInt(item.price) * parseInt(item.qty))
                         }, 0).toLocaleString('id-ID') }}
                     </p>
                 </div>
             </section>
             <section class="mt-7">
-                <VButtonRounded @click="login" label="Checkout" />
+                <VButtonRounded @click="create()" label="Checkout" />
             </section>
         </section>
     </div>
@@ -270,4 +352,7 @@ onMounted(() => {
             feature.
         </p>
     </div>
+
+    <VModalSettingPos :open-dialog="openModalSetting" @close="handleOpenModalSetting()" :additional="additionals" />
+    <VModalSuccess :open-dialog="openModalSuccess" />
 </template>
