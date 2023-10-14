@@ -7,10 +7,8 @@
     <thead style="border: 1px solid black;
   border-collapse: collapse;">
         <tr style="background-color: #e6e6e7;">
-
             <th>Name</th>
             <th>Code</th>
-
             <th>Debit</th>
             <th>Credit</th>
         </tr>

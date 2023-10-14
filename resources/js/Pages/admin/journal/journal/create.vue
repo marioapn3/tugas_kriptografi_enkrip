@@ -68,7 +68,7 @@ const breadcrumb = [
         to: route('journals.journal.index')
     },
     {
-        name: props.additional.data ? 'Edit' :'Create' ,
+        name: props.additional.data ? 'Edit' : 'Create',
         active: true,
         // to:
     },
@@ -288,7 +288,7 @@ onMounted(() => {
     <Head :title="props.title" />
     <VBreadcrumb :routes="breadcrumb" />
     <div class="flex items-center justify-between mb-4 sm:mb-6">
-        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' :'Create' }} Journal</h1>
+        <h1 class="text-2xl font-bold md:text-3xl text-slate-800">{{ additional.data ? 'Edit' : 'Create' }} Journal</h1>
     </div>
     <div class="bg-white shadow-lg rounded-sm border border-slate-200 pb-20 min-h-[40vh] sm:min-h-[50vh]">
         <section class="grid grid-cols-1 gap-4 p-4 mb-5 md:grid-cols-4">
@@ -359,11 +359,11 @@ onMounted(() => {
                         </td>
                         <td class="w-1/4 h-12 pl-3">
                             <span class="font-semibold">Total Debit</span> <br>
-                            Rp. {{ totalDebit }}
+                            Rp. {{ totalDebit.toLocaleString('id-ID') }}
                         </td>
                         <td class="w-1/4 h-12 pl-3">
                             <span class="font-semibold">Total Credit</span> <br>
-                            Rp. {{ totalCredit }}
+                            Rp. {{ totalCredit.toLocaleString('id-ID') }}
                         </td>
                     </tr>
                     <tr class="">

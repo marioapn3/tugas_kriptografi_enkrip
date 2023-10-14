@@ -320,7 +320,7 @@ onMounted(() => {
                         <td class="w-1/3 h-12 pl-3">
                             <span class="text-lg font-semibold">Total</span> <br>
                             <span class="text-md">
-                                Rp. {{ isNaN(totalPrice) ? 0 : totalPrice }}
+                                Rp. {{ isNaN(totalPrice) ? 0 : totalPrice.toLocaleString('id-ID') }}
                             </span>
                         </td>
                     </tr>

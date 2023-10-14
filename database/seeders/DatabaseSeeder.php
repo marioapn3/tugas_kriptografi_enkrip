@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             AccountSeeder::class,
             ProductSeeder::class,
             ContactSeeder::class,
+            CartSettingSeeder::class,
             // PurchaseSeeder::class,
             // ExpenseSeeder::class
         ]);

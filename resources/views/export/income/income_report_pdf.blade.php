@@ -39,7 +39,6 @@
             $expense_string = str_replace(',', '', $totalExpense);
             $totalIntExpense = intval($expense_string);
             $totalIntExpense = (int) $expense_string;
-
         @endphp
 
 

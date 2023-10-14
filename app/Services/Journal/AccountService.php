@@ -15,14 +15,15 @@ class AccountService
 
         $query->when(request('search', false), function ($q) use ($search) {
             $q->where('name', 'like', '%' . $search . '%');
-        });
+        })->orderBy('code', 'asc');
+
 
         return $query->paginate(10);
     }
 
     public function getDataById($id)
     {
-        return Account::with(['journalDetails','journalDetails.journal', 'journalDetails.journal.purchase', 'journalDetails.journal.sales', 'journalDetails.journal.expense'])->findOrFail($id);
+        return Account::with(['journalDetails', 'journalDetails.journal', 'journalDetails.journal.purchase', 'journalDetails.journal.sales', 'journalDetails.journal.expense'])->findOrFail($id);
     }
 
     public function createData($request)
@@ -63,7 +64,7 @@ class AccountService
     }
     public function generateCode($account_category_id)
     {
-        $account = Account::where('account_category_id', $account_category_id)->first();
+        $account = Account::where('account_category_id', $account_category_id)->latest()->first();
 
         if ($account) {
             // Jika akun ditemukan, ekstrak angka dari kode dan tambahkan 1

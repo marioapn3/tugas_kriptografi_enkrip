@@ -61,7 +61,6 @@ class BalanceReportService
                 'description' => $account->description,
                 'debit' => number_format($debit),
                 'credit' => number_format($credit),
-
             ];
         }
         return [
