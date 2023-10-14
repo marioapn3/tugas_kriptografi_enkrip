@@ -7,7 +7,7 @@ import route from "ziggy-js";
 import Notifications from "notiwind";
 import Datepicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
-import "@/components/charts/ChartjsConfig.js";
+import "@/components/charts/ChartJsConfig.js";
 
 import FloatingVue from "floating-vue";
 import "floating-vue/dist/style.css";
