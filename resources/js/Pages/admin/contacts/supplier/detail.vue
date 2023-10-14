@@ -7,12 +7,12 @@ export default {
 import VBreadcrumb from '@/components/VBreadcrumb/index.vue';
 import VDataTable from '@/components/VDataTable/index.vue';
 import AppLayout from '@/layouts/apps.vue';
+import { Inertia } from '@inertiajs/inertia';
 import { Head } from "@inertiajs/inertia-vue3";
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { any, string } from "vue-types";
 
-const query = ref([])
-const searchFilter = ref("");
+
 const breadcrumb = [
     {
         name: "Dashboard",
@@ -35,25 +35,8 @@ const breadcrumb = [
     },
 ]
 
-const heads = ["No", "Date", "Type Transaction", "Total"]
+const heads = ["No", "Date", "No Transaction", "Products Purchased", "Qty", "Total"]
 
-const pagination = ref({
-    count: '',
-    current_page: 1,
-    per_page: '',
-    total: 0,
-    total_pages: 1
-})
-const alertData = reactive({
-    headerLabel: '',
-    contentLabel: '',
-    closeLabel: '',
-    submitLabel: '',
-})
-const updateAction = ref(false)
-const itemSelected = ref({})
-const openAlert = ref(false)
-const openModalForm = ref(false)
 const isLoading = ref(true)
 
 const props = defineProps({
@@ -61,10 +44,8 @@ const props = defineProps({
     additional: any()
 })
 
-
-const handleAddModalForm = () => {
-    updateAction.value = false
-    openModalForm.value = true
+const handleDetailPurchase = (id) => {
+    Inertia.visit(route('transaction.purchase.show', id))
 }
 
 onMounted(() => {
@@ -130,12 +111,31 @@ onMounted(() => {
             </header>
 
             <VDataTable :heads="heads" bordered>
-                <tr>
-                    <td class=" px-4 whitespace-nowrap h-10"> 1</td>
-                    <td class=" px-4 whitespace-nowrap h-10"> 30/02/2023</td>
-                    <td class=" px-4 whitespace-nowrap h-10 text-sky-600 underline cursor-pointer"> Invoice Pembelian 0001
+                <tr v-for="(data, index) in additional.data.purchases" :key="index">
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        {{ index + 1 }}
                     </td>
-                    <td class=" px-4 whitespace-nowrap h-10"> Rp. 2.000.000,00</td>
+                    <td class=" px-4 whitespace-nowrap h-10"> {{ data.date }}</td>
+                    <td class=" px-4 whitespace-nowrap h-10 text-sky-600 underline cursor-pointer"
+                        @click="handleDetailPurchase(data.id)">
+                        {{ data.no_transaction }}
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        {{
+                            // total length sale_details
+                            data.purchase_details.length
+                        }} Products
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10">
+                        {{ data.purchase_details?.reduce((acc, item) => {
+                            return parseInt(acc + parseInt(item.quantity))
+                        }, 0) }}
+                    </td>
+                    <td class=" px-4 whitespace-nowrap h-10"> Rp.
+                        {{ data.purchase_details?.reduce((acc, item) => {
+                            return parseInt(acc + (parseInt(item.price_per_unit) * parseInt(item.quantity)))
+                        }, 0).toLocaleString('id-ID') }}
+                    </td>
                 </tr>
             </VDataTable>
         </div>
