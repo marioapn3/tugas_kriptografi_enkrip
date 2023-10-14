@@ -22,7 +22,13 @@ class ContactService
 
     public function getDetail($id)
     {
-        $contact = Contact::findOrFail($id);
+        $contact = Contact::with([
+            'sales',
+            'purchases',
+        ])->findOrFail($id);
+
+
+        // get history transactions of contact
 
         return $contact;
     }

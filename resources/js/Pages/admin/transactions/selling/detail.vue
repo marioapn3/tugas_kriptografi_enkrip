@@ -103,7 +103,7 @@ onMounted(() => {
                 <div class="mb-2">
                     <label class="font-bold text-base text-slate-800">Description</label>
                     <p class="text-sm">
-                        {{ additional.data.desciption ?? '-' }}
+                        {{ additional.data.description ?? '-' }}
                     </p>
                 </div>
                 <div class="mb-2">
