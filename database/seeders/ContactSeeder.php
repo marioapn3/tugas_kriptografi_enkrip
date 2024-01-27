@@ -20,17 +20,17 @@ class ContactSeeder extends Seeder
             'type' => 'customer',
             'default' => true,
         ]);
-        for ($i = 0; $i < 10; $i++) {
-            Contact::create([
-                'name' => fake()->name(),
-                'description' => fake()->sentence(),
-                'email' => fake()->unique()->safeEmail(),
-                'phone_number' => fake()->phoneNumber(),
-                'address' => fake()->address(),
-                'type' => fake()->randomElement(['customer', 'supplier']),
-                'city' => fake()->city(),
-                'portal_code' => fake()->postcode(),
-            ]);
-        }
+        // for ($i = 0; $i < 10; $i++) {
+        //     Contact::create([
+        //         'name' => fake()->name(),
+        //         'description' => fake()->sentence(),
+        //         'email' => fake()->unique()->safeEmail(),
+        //         'phone_number' => fake()->phoneNumber(),
+        //         'address' => fake()->address(),
+        //         'type' => fake()->randomElement(['customer', 'supplier']),
+        //         'city' => fake()->city(),
+        //         'portal_code' => fake()->postcode(),
+        //     ]);
+        // }
     }
 }

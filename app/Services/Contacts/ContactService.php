@@ -3,10 +3,17 @@
 namespace App\Services\Contacts;
 
 use App\Enum\Contacts\ContactType;
+use App\Helpers\EncryptOrthogonal;
 use App\Models\Contact;
+
 
 class ContactService
 {
+    private $encryptService;
+    public function __construct()
+    {
+        $this->encryptService = new EncryptOrthogonal();
+    }
     public function getData($request, $type = ContactType::CUSTOMER)
     {
         $search = $request->search;
@@ -44,6 +51,21 @@ class ContactService
             'city',
             'portal_code',
         ]);
+
+        $fieldsToEncrypt = [
+            'name',
+            'description',
+            'email',
+            'phone_number',
+            'address',
+            'city',
+            'portal_code',
+        ];
+        $step_size = 4;
+
+        foreach ($fieldsToEncrypt as $field) {
+            $data[$field] = $this->encryptService->orthogonal_encrypt($data[$field], $step_size);
+        }
 
         $data['type'] = $type;
 
